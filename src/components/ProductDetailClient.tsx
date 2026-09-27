@@ -58,17 +58,31 @@ export interface ProductDetailProps {
 }
 
 // Dynamic Estimated Delivery Calculation: Today + 3 to 4 business days
-function getEstimatedDeliveryDates(minOffsetDays = 3, maxOffsetDays = 4) {
+function getEstimatedDeliveryDates(minOffsetDays = 2, maxOffsetDays = 3) {
   const now = new Date();
   const start = new Date(now);
   start.setDate(now.getDate() + minOffsetDays);
   const end = new Date(now);
   end.setDate(now.getDate() + maxOffsetDays);
 
-  const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
+  const monthName = end.toLocaleDateString('en-US', { month: 'long' });
+  const startDay = start.getDate();
+  const endDay = end.getDate();
+
+  // If both days fall in same month: "1-2 October"
+  // If they span months (e.g. 31 Oct - 1 Nov): "31 Oct - 1 Nov"
+  let range: string;
+  if (start.getMonth() === end.getMonth()) {
+    range = `${startDay}-${endDay} ${monthName}`;
+  } else {
+    const startMonth = start.toLocaleDateString('en-US', { month: 'short' });
+    const endMonth = end.toLocaleDateString('en-US', { month: 'short' });
+    range = `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
+  }
+
   return {
-    range: `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`,
-    startDate: start.toLocaleDateString('en-US', options),
+    range,
+    startDate: `${startDay} ${monthName}`,
   };
 }
 
@@ -86,7 +100,7 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
   const [deliveryDateRange, setDeliveryDateRange] = useState('');
 
   useEffect(() => {
-    const { range } = getEstimatedDeliveryDates(3, 4);
+    const { range } = getEstimatedDeliveryDates(2, 3);
     setDeliveryDateRange(range);
   }, []);
 
@@ -105,8 +119,8 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
   const handlePincodeCheck = (e: React.FormEvent) => {
     e.preventDefault();
     if (pincode.trim().length === 6 && /^\d+$/.test(pincode.trim())) {
-      const dates = getEstimatedDeliveryDates(3, 4);
-      const targetDate = deliveryDateRange ? deliveryDateRange.split(' - ')[0] : dates.startDate;
+      const dates = getEstimatedDeliveryDates(2, 3);
+      const targetDate = dates.startDate;
       setPincodeStatus(`Available! Free Express delivery by ${targetDate} • Cash on Delivery eligible.`);
     } else {
       setPincodeStatus('Please enter a valid 6-digit postal code.');
@@ -379,7 +393,7 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
               <span>
                 Ships in 1 day, estimated delivery:{' '}
                 <strong style={{ color: '#000000' }} suppressHydrationWarning>
-                  {deliveryDateRange || getEstimatedDeliveryDates(3, 4).range}
+                  {deliveryDateRange || getEstimatedDeliveryDates(2, 3).range}
                 </strong>
               </span>
             </div>
