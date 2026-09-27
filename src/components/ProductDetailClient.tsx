@@ -236,24 +236,6 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
               </span>
             </div>
 
-            {/* Summer Sale Promo Banner Image */}
-            <div style={{ marginBottom: '12px' }}>
-              <img
-                src="https://cdn.shopify.com/s/files/1/0621/7829/6040/files/antiyellow_banner_1.jpg?v=1778741440"
-                alt="Summer Sale - Buy More & Save More"
-                style={{ width: '100%', borderRadius: '4px', display: 'block' }}
-              />
-            </div>
-
-            {/* 3 Free Gifts Promo Banner Image */}
-            <div style={{ marginBottom: '18px' }}>
-              <img
-                src="https://cdn.shopify.com/s/files/1/0621/7829/6040/files/free_gifts_copy_2_jpg.jpg?v=1778750717"
-                alt="3 Free Gifts With Every Order"
-                style={{ width: '100%', borderRadius: '4px', display: 'block' }}
-              />
-            </div>
-
             {/* Model Dropdown Selection */}
             <div style={{ marginBottom: '16px' }}>
               <label

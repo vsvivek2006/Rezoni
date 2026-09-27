@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 
@@ -8,6 +8,17 @@ export default function MiniCart() {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice } = useCart();
   const [orderNote, setOrderNote] = useState('');
   const [isNoteOpen, setIsNoteOpen] = useState(false);
+
+  useEffect(() => {
+    if (isCartOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isCartOpen]);
 
   if (!isCartOpen) return null;
 
@@ -24,7 +35,7 @@ export default function MiniCart() {
         right: 0,
         bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.65)',
-        zIndex: 90,
+        zIndex: 99999,
         display: 'flex',
         justifyContent: 'flex-end',
         transition: 'opacity 0.3s ease',
