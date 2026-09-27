@@ -57,6 +57,21 @@ export interface ProductDetailProps {
   };
 }
 
+// Dynamic Estimated Delivery Calculation: Today + 3 to 4 business days
+function getEstimatedDeliveryDates(minOffsetDays = 3, maxOffsetDays = 4) {
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(now.getDate() + minOffsetDays);
+  const end = new Date(now);
+  end.setDate(now.getDate() + maxOffsetDays);
+
+  const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
+  return {
+    range: `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`,
+    startDate: start.toLocaleDateString('en-US', options),
+  };
+}
+
 export default function ProductDetailClient({ product }: ProductDetailProps) {
   const { addToCart } = useCart();
 
@@ -71,14 +86,8 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
   const [deliveryDateRange, setDeliveryDateRange] = useState('');
 
   useEffect(() => {
-    const today = new Date();
-    const d1 = new Date(today);
-    d1.setDate(today.getDate() + 2);
-    const d2 = new Date(today);
-    d2.setDate(today.getDate() + 4);
-
-    const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
-    setDeliveryDateRange(`${d1.toLocaleDateString('en-US', options)} - ${d2.toLocaleDateString('en-US', options)}`);
+    const { range } = getEstimatedDeliveryDates(3, 4);
+    setDeliveryDateRange(range);
   }, []);
 
   const handleAddToCart = () => {
@@ -96,7 +105,9 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
   const handlePincodeCheck = (e: React.FormEvent) => {
     e.preventDefault();
     if (pincode.trim().length === 6 && /^\d+$/.test(pincode.trim())) {
-      setPincodeStatus(`Available! Free Express delivery by ${deliveryDateRange.split(' - ')[0]} • Cash on Delivery eligible.`);
+      const dates = getEstimatedDeliveryDates(3, 4);
+      const targetDate = deliveryDateRange ? deliveryDateRange.split(' - ')[0] : dates.startDate;
+      setPincodeStatus(`Available! Free Express delivery by ${targetDate} • Cash on Delivery eligible.`);
     } else {
       setPincodeStatus('Please enter a valid 6-digit postal code.');
     }
@@ -364,10 +375,12 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
                 marginBottom: '16px',
               }}
             >
-              <span>🚚</span>
+              <span>📦</span>
               <span>
                 Ships in 1 day, estimated delivery:{' '}
-                <strong style={{ color: '#000000' }}>{deliveryDateRange}</strong>
+                <strong style={{ color: '#000000' }} suppressHydrationWarning>
+                  {deliveryDateRange || getEstimatedDeliveryDates(3, 4).range}
+                </strong>
               </span>
             </div>
 
