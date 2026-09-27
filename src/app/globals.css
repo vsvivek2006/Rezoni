@@ -200,8 +200,67 @@ img {
   .desktop-search-btn {
     display: none !important;
   }
+  .desktop-account-btn {
+    display: none !important;
+  }
   .mobile-left {
     display: flex !important;
   }
+  .header-logo-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }
+
+/* Mobile-First Product Grid */
+.rezoni-product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 12px;
+}
+
+@media (min-width: 768px) {
+  .rezoni-product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rezoni-product-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px 24px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .rezoni-product-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 32px 20px;
+  }
+}
+
+/* Mobile Carousel Cards */
+.carousel-card-item {
+  flex: 0 0 calc(25% - 15px);
+  min-width: 220px;
+}
+
+@media (max-width: 640px) {
+  .carousel-card-item {
+    flex: 0 0 165px !important;
+    min-width: 165px !important;
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 

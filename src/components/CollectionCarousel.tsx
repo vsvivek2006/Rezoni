@@ -56,9 +56,8 @@ export default function CollectionCarousel({ title, items }: CollectionCarouselP
               <Link
                 key={item.id}
                 href={item.link}
+                className="carousel-card-item"
                 style={{
-                  flex: '0 0 calc(25% - 15px)',
-                  minWidth: '220px',
                   scrollSnapAlign: 'start',
                   position: 'relative',
                   borderRadius: '0px',

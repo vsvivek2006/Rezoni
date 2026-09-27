@@ -11,19 +11,13 @@ interface ProductGridSectionProps {
 
 export default function ProductGridSection({ title, products }: ProductGridSectionProps) {
   return (
-    <section style={{ padding: '48px 0', backgroundColor: '#ffffff' }}>
+    <section style={{ padding: '36px 0 48px', backgroundColor: '#ffffff' }}>
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <h3 className="section-title">{title}</h3>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-            gap: '24px 18px',
-          }}
-        >
+        <div className="rezoni-product-grid">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
