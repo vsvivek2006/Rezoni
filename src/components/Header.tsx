@@ -310,65 +310,76 @@ export default function Header() {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.65)',
+            backgroundColor: 'rgba(0,0,0,0.55)',
             zIndex: 150,
           }}
           onClick={() => setIsMobileMenuOpen(false)}
         >
           <div
             style={{
-              width: '84%',
-              maxWidth: '340px',
+              width: '85%',
+              maxWidth: '360px',
               height: '100%',
-              backgroundColor: '#000000',
-              color: '#ffffff',
-              padding: '24px 20px',
+              backgroundColor: '#ffffff',
+              color: '#111111',
+              padding: '24px 24px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
               animation: 'slideFromLeft 0.25s ease-out',
               overflowY: 'auto',
+              boxShadow: '10px 0 30px rgba(0,0,0,0.15)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div>
-              {/* Drawer Top */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
-                <img
-                  src="https://www.rezoni.com/cdn/shop/files/final_Horizontal_logo_copy-01_200x.png?v=1647520936"
-                  alt="Rezoni"
-                  style={{ height: '22px' }}
-                />
+              {/* Drawer Top matching live_02_menu.png: Clean Close Button on Top Left */}
+              <div style={{ marginBottom: '20px' }}>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
                   aria-label="Close menu"
-                  style={{ color: '#fff', fontSize: '20px', padding: '4px' }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#111111',
+                    fontSize: '22px',
+                    cursor: 'pointer',
+                    padding: '4px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
                 >
-                  ✕
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
                 </button>
               </div>
 
-              {/* Navigation List with Accordions */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '15px', fontWeight: 600 }}>
+              {/* Navigation List matching live_02_menu.png */}
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {/* Shop By Category Accordion */}
-                <div style={{ borderBottom: '1px solid #1a1a1a', paddingBottom: '10px' }}>
+                <div style={{ borderBottom: '1px solid #f0f0f0' }}>
                   <div
                     onClick={() => toggleMobileCategory('category')}
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      padding: '8px 0',
+                      padding: '16px 0',
                       cursor: 'pointer',
+                      fontSize: '18px',
+                      fontWeight: 800,
+                      color: '#111111',
                     }}
                   >
                     <span>Shop By Category</span>
-                    <span style={{ fontSize: '18px', color: '#ff6700' }}>
+                    <span style={{ fontSize: '20px', fontWeight: 400, color: '#222222' }}>
                       {mobileExpanded['category'] ? '−' : '+'}
                     </span>
                   </div>
                   {mobileExpanded['category'] && (
-                    <div style={{ paddingLeft: '14px', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px', color: '#ccc' }}>
+                    <div style={{ paddingLeft: '12px', paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px', fontWeight: 600, color: '#555555' }}>
                       <Link href="/collections/iphone-cases" onClick={() => setIsMobileMenuOpen(false)}>
                         iPhone Cases
                       </Link>
@@ -392,24 +403,27 @@ export default function Header() {
                 </div>
 
                 {/* Shop By Device Accordion */}
-                <div style={{ borderBottom: '1px solid #1a1a1a', paddingBottom: '10px' }}>
+                <div style={{ borderBottom: '1px solid #f0f0f0' }}>
                   <div
                     onClick={() => toggleMobileCategory('device')}
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      padding: '8px 0',
+                      padding: '16px 0',
                       cursor: 'pointer',
+                      fontSize: '18px',
+                      fontWeight: 800,
+                      color: '#111111',
                     }}
                   >
                     <span>Shop By Device</span>
-                    <span style={{ fontSize: '18px', color: '#ff6700' }}>
+                    <span style={{ fontSize: '20px', fontWeight: 400, color: '#222222' }}>
                       {mobileExpanded['device'] ? '−' : '+'}
                     </span>
                   </div>
                   {mobileExpanded['device'] && (
-                    <div style={{ paddingLeft: '14px', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px', color: '#ccc' }}>
+                    <div style={{ paddingLeft: '12px', paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px', fontWeight: 600, color: '#555555' }}>
                       <Link href="/collections/iphone-cases" onClick={() => setIsMobileMenuOpen(false)}>
                         Apple iPhone
                       </Link>
@@ -432,23 +446,64 @@ export default function Header() {
                 <Link
                   href="/products/anti-yellow-magsafe-clear-case"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ padding: '10px 0', borderBottom: '1px solid #1a1a1a' }}
+                  style={{ padding: '16px 0', borderBottom: '1px solid #f0f0f0', fontSize: '18px', fontWeight: 800, color: '#111111' }}
                 >
-                  Anti-Yellow Case
+                  Anti-Yellow Clear Case
                 </Link>
 
                 <Link
-                  href="/collections/football"
+                  href="/products/reverb-2-0-impact-magsafe-clear-case"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ padding: '10px 0', borderBottom: '1px solid #1a1a1a' }}
+                  style={{ padding: '16px 0', borderBottom: '1px solid #f0f0f0', fontSize: '18px', fontWeight: 800, color: '#111111' }}
                 >
-                  Football Collection
+                  Reverb 2.0 Clear Case
                 </Link>
+
+                {/* Collections Accordion */}
+                <div style={{ borderBottom: '1px solid #f0f0f0' }}>
+                  <div
+                    onClick={() => toggleMobileCategory('collections')}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '16px 0',
+                      cursor: 'pointer',
+                      fontSize: '18px',
+                      fontWeight: 800,
+                      color: '#111111',
+                    }}
+                  >
+                    <span>Collections</span>
+                    <span style={{ fontSize: '20px', fontWeight: 400, color: '#222222' }}>
+                      {mobileExpanded['collections'] ? '−' : '+'}
+                    </span>
+                  </div>
+                  {mobileExpanded['collections'] && (
+                    <div style={{ paddingLeft: '12px', paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px', fontWeight: 600, color: '#555555' }}>
+                      <Link href="/collections/football" onClick={() => setIsMobileMenuOpen(false)}>
+                        Football Club Collection
+                      </Link>
+                      <Link href="/collections/mixtape" onClick={() => setIsMobileMenuOpen(false)}>
+                        Mixtape Collection
+                      </Link>
+                      <Link href="/collections/unisex" onClick={() => setIsMobileMenuOpen(false)}>
+                        Unisex Collection
+                      </Link>
+                      <Link href="/collections/custom-photo-case" onClick={() => setIsMobileMenuOpen(false)}>
+                        Polaroid Photo Case
+                      </Link>
+                      <Link href="/collections/wild-cats" onClick={() => setIsMobileMenuOpen(false)}>
+                        Wildcats Collection
+                      </Link>
+                    </div>
+                  )}
+                </div>
 
                 <Link
                   href="/pages/our-story"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ padding: '10px 0', borderBottom: '1px solid #1a1a1a' }}
+                  style={{ padding: '16px 0', borderBottom: '1px solid #f0f0f0', fontSize: '18px', fontWeight: 800, color: '#111111' }}
                 >
                   Our Story
                 </Link>
@@ -456,7 +511,7 @@ export default function Header() {
                 <Link
                   href="/pages/contact"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ padding: '10px 0', borderBottom: '1px solid #1a1a1a' }}
+                  style={{ padding: '16px 0', borderBottom: '1px solid #f0f0f0', fontSize: '18px', fontWeight: 800, color: '#111111' }}
                 >
                   Contact Us
                 </Link>
@@ -464,15 +519,15 @@ export default function Header() {
                 <Link
                   href="/pages/track-order"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ padding: '10px 0', borderBottom: '1px solid #1a1a1a' }}
+                  style={{ padding: '16px 0', borderBottom: '1px solid #f0f0f0', fontSize: '18px', fontWeight: 800, color: '#111111' }}
                 >
                   Track Order
                 </Link>
               </div>
             </div>
 
-            {/* Mobile Drawer Bottom with Kwikpass Login & Info */}
-            <div style={{ borderTop: '1px solid #222', paddingTop: '20px', marginTop: '24px' }}>
+            {/* Mobile Drawer Bottom with Login matching live_02_menu.png */}
+            <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: '18px', marginTop: '20px' }}>
               <Link
                 href="/pages/account"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -480,31 +535,14 @@ export default function Header() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: '#ffffff',
-                  marginBottom: '14px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#666666',
                 }}
               >
-                <div style={{ position: 'relative' }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 24 24"
-                    fill="#ffb703"
-                    style={{ position: 'absolute', top: '-3px', right: '-4px' }}
-                  >
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                  </svg>
-                </div>
-                <span>Login / My Account</span>
+                <span style={{ fontSize: '16px' }}>⚡</span>
+                <span>Log in</span>
               </Link>
-              <p style={{ fontSize: '11px', color: '#777', margin: '4px 0' }}>Support: hello@rezoni.com</p>
-              <p style={{ fontSize: '11px', color: '#ff6700', fontWeight: 600, margin: 0 }}>Free Express Shipping Across India</p>
             </div>
           </div>
         </div>

@@ -89,28 +89,30 @@ export default function MiniCart() {
           <div>💯 100% refund if you don&apos;t like it!</div>
         </div>
 
-        {/* Free Shipping Progress Meter */}
-        <div style={{ padding: '14px 20px', borderBottom: '1px solid #f0f0f0', backgroundColor: '#fafafa' }}>
-          <div style={{ fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
-            {remainingForFreeShipping > 0 ? (
-              <>
-                Add <span style={{ color: '#ff6700' }}>Rs. {remainingForFreeShipping.toFixed(2)}</span> more to unlock Free Nationwide Shipping!
-              </>
-            ) : (
-              <span style={{ color: '#2d6a4f' }}>🎉 Congratulations! You have unlocked FREE Nationwide Shipping!</span>
-            )}
+        {/* Free Shipping Progress Meter (shown when cart has items, matching live_04_cart.png) */}
+        {cart.length > 0 && (
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid #f0f0f0', backgroundColor: '#fafafa' }}>
+            <div style={{ fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
+              {remainingForFreeShipping > 0 ? (
+                <>
+                  Add <span style={{ color: '#ff6700' }}>Rs. {remainingForFreeShipping.toFixed(2)}</span> more to unlock Free Nationwide Shipping!
+                </>
+              ) : (
+                <span style={{ color: '#2d6a4f' }}>🎉 Congratulations! You have unlocked FREE Nationwide Shipping!</span>
+              )}
+            </div>
+            <div style={{ height: '6px', backgroundColor: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
+              <div
+                style={{
+                  width: `${progress}%`,
+                  height: '100%',
+                  backgroundColor: '#ff6700',
+                  transition: 'width 0.3s ease',
+                }}
+              />
+            </div>
           </div>
-          <div style={{ height: '6px', backgroundColor: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-            <div
-              style={{
-                width: `${progress}%`,
-                height: '100%',
-                backgroundColor: '#ff6700',
-                transition: 'width 0.3s ease',
-              }}
-            />
-          </div>
-        </div>
+        )}
 
         {/* Cart Content: Empty or Items */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>

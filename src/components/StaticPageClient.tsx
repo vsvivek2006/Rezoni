@@ -74,11 +74,8 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
 
           {slug === 'contact' && (
             <div>
-              <p style={{ marginBottom: '24px' }}>
-                Have a question regarding your order, phone model compatibility, or bulk gifting? We are here to help!
-              </p>
               {contactSubmitted ? (
-                <div style={{ padding: '20px', backgroundColor: '#eaf8ed', color: '#1b4332', borderRadius: '4px', fontWeight: 600 }}>
+                <div style={{ padding: '20px', backgroundColor: '#eaf8ed', color: '#1b4332', borderRadius: '4px', fontWeight: 600, textAlign: 'center', marginBottom: '24px' }}>
                   ✓ Message received! Our support team will get back to you within 24 business hours.
                 </div>
               ) : (
@@ -87,32 +84,111 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                     e.preventDefault();
                     setContactSubmitted(true);
                   }}
-                  style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}
                 >
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Your Name:</label>
-                    <input type="text" required style={{ width: '100%', height: '44px', padding: '0 12px', border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'inherit' }} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Email Address:</label>
-                    <input type="email" required style={{ width: '100%', height: '44px', padding: '0 12px', border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'inherit' }} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Order Number (optional):</label>
-                    <input type="text" style={{ width: '100%', height: '44px', padding: '0 12px', border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'inherit' }} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Your Message:</label>
-                    <textarea rows={4} required style={{ width: '100%', padding: '12px', border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'inherit' }} />
-                  </div>
-                  <button type="submit" className="btn-rezoni" style={{ width: '200px' }}>
-                    Send Message
+                  <input
+                    type="text"
+                    required
+                    placeholder="Name"
+                    style={{
+                      width: '100%',
+                      height: '48px',
+                      padding: '0 14px',
+                      border: '1px solid #d5d5d5',
+                      borderRadius: '4px',
+                      fontFamily: 'inherit',
+                      fontSize: '14px',
+                      color: '#222',
+                      outline: 'none',
+                    }}
+                  />
+                  <input
+                    type="email"
+                    required
+                    placeholder="E-mail"
+                    style={{
+                      width: '100%',
+                      height: '48px',
+                      padding: '0 14px',
+                      border: '1px solid #d5d5d5',
+                      borderRadius: '4px',
+                      fontFamily: 'inherit',
+                      fontSize: '14px',
+                      color: '#222',
+                      outline: 'none',
+                    }}
+                  />
+                  <textarea
+                    rows={5}
+                    required
+                    placeholder="Message"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: '1px solid #d5d5d5',
+                      borderRadius: '4px',
+                      fontFamily: 'inherit',
+                      fontSize: '14px',
+                      color: '#222',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    style={{
+                      width: '100%',
+                      height: '48px',
+                      backgroundColor: '#ff6700',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      fontSize: '13px',
+                      fontWeight: 800,
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e65c00')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
+                  >
+                    SUBMIT
                   </button>
                 </form>
               )}
-              <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid #eee' }}>
-                <p><strong>Customer Care:</strong> hello@rezoni.com</p>
-                <p><strong>Operating Hours:</strong> Monday – Saturday | 10:00 AM – 7:00 PM IST</p>
+
+              {/* Exact Card matching live_07_contact.png */}
+              <div
+                style={{
+                  border: '1px solid #e8e8e8',
+                  borderRadius: '6px',
+                  padding: '24px 20px',
+                  backgroundColor: '#ffffff',
+                  fontSize: '13px',
+                  lineHeight: '1.7',
+                  color: '#555555',
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: '15px',
+                    fontWeight: 800,
+                    color: '#222222',
+                    marginBottom: '14px',
+                  }}
+                >
+                  Need Help? We’re just an email away
+                </h3>
+                <p style={{ marginBottom: '14px' }}>
+                  For any queries related to our products or services, please reach out to us at{' '}
+                  <a href="mailto:hello@rezoni.com" style={{ color: '#ff6700', textDecoration: 'underline' }}>
+                    hello@rezoni.com
+                  </a>
+                  . Our customer support team is available Monday to Saturday, from 11:00 AM to 7:00 PM.
+                </p>
+                <p style={{ margin: 0 }}>
+                  Registered Office Address: A-18, Lajpat Nagar III, South Delhi, New Delhi – 110024
+                </p>
               </div>
             </div>
           )}

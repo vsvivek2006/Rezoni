@@ -63,7 +63,7 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(
     product.primary_image || (product.images && product.images[0]) || ''
   );
-  const [selectedDevice, setSelectedDevice] = useState(phoneModels[0]);
+  const [selectedDevice, setSelectedDevice] = useState('');
   const [selectedColor, setSelectedColor] = useState('Black');
   const [pincode, setPincode] = useState('');
   const [pincodeStatus, setPincodeStatus] = useState<string | null>(null);
@@ -82,12 +82,13 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
   }, []);
 
   const handleAddToCart = () => {
+    const device = selectedDevice || phoneModels[0];
     addToCart({
-      id: `${product.id}-${selectedDevice}-${selectedColor}`,
+      id: `${product.id}-${device}-${selectedColor}`,
       title: `${product.title} - ${selectedColor}`,
       price: product.price,
       image: selectedImage || product.primary_image,
-      device: selectedDevice,
+      device: device,
       quantity: 1,
     });
   };
@@ -277,11 +278,12 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
                   backgroundColor: '#ffffff',
                   fontSize: '13px',
                   fontWeight: 500,
-                  color: '#111111',
+                  color: selectedDevice ? '#111111' : '#666666',
                   outline: 'none',
                   cursor: 'pointer',
                 }}
               >
+                <option value="">Please select model</option>
                 {phoneModels.map((model) => (
                   <option key={model} value={model}>
                     {model}
