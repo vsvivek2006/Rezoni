@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { ProductItem } from '@/data/siteData';
 import ProductCard from './ProductCard';
 
@@ -10,17 +10,119 @@ interface ProductGridSectionProps {
 }
 
 export default function ProductGridSection({ title, products }: ProductGridSectionProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -360 : 360;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section style={{ padding: '36px 0 48px', backgroundColor: '#ffffff' }}>
+    <section style={{ padding: '36px 0 48px', backgroundColor: '#ffffff', position: 'relative' }}>
       <div className="container">
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-          <h3 className="section-title">{title}</h3>
+        {/* Section Header */}
+        <div style={{ marginBottom: '28px', textAlign: 'center' }}>
+          <h3
+            style={{
+              fontFamily: 'Montserrat, sans-serif',
+              fontSize: '30px',
+              fontWeight: 800,
+              color: '#282828',
+              letterSpacing: '-0.6px',
+              margin: 0,
+            }}
+          >
+            {title}
+          </h3>
         </div>
 
-        <div className="rezoni-product-grid">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+        <div style={{ position: 'relative' }}>
+          {/* Horizontal Scroller matching Live Rezoni Focal Theme */}
+          <div
+            ref={scrollRef}
+            className="hide-scrollbar"
+            style={{
+              display: 'flex',
+              gap: '16px',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              paddingBottom: '12px',
+            }}
+          >
+            {products.map((p) => (
+              <div key={p.id} className="product-scroller-item">
+                <ProductCard product={p} />
+              </div>
+            ))}
+          </div>
+
+          {/* Focal Theme Stacked Navigation Buttons on Right Edge for Desktop */}
+          <div
+            className="hidden-pocket"
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              zIndex: 10,
+              backgroundColor: '#1c1c1c',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+            }}
+          >
+            <button
+              onClick={() => scroll('left')}
+              aria-label="Previous"
+              style={{
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#1c1c1c',
+                color: '#ffffff',
+                border: 'none',
+                borderBottom: '1px solid #333333',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#000000')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1c1c1c')}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+
+            <button
+              onClick={() => scroll('right')}
+              aria-label="Next"
+              style={{
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: '#1c1c1c',
+                color: '#ffffff',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#000000')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#1c1c1c')}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </section>

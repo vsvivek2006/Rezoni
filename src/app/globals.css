@@ -254,12 +254,39 @@ img {
   }
 }
 
+/* Product Scroller Cards matching Live Rezoni Focal Theme */
+.product-scroller-item {
+  flex: 0 0 calc(25% - 15px);
+  min-width: 220px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 768px) {
+  .product-scroller-item {
+    flex: 0 0 202px !important;
+    min-width: 202px !important;
+  }
+}
+
 @keyframes slideFromLeft {
   from {
     transform: translateX(-100%);
   }
   to {
     transform: translateX(0);
+  }
+}
+
+/* Focal Theme Visibility Utilities */
+@media (max-width: 999px) {
+  .hidden-pocket {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1000px) {
+  .hidden-lap-and-up {
+    display: none !important;
   }
 }
 

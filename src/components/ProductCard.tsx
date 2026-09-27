@@ -31,11 +31,11 @@ export default function ProductCard({ product }: ProductCardProps) {
           style={{
             position: 'relative',
             width: '100%',
-            aspectRatio: '0.85',
+            aspectRatio: '0.95',
             backgroundColor: '#ffffff',
-            borderRadius: '4px',
+            borderRadius: '0px',
             overflow: 'hidden',
-            marginBottom: '12px',
+            marginBottom: '10px',
           }}
         >
           {/* Primary Image */}
@@ -71,44 +71,45 @@ export default function ProductCard({ product }: ProductCardProps) {
               }}
             />
           )}
-
         </div>
 
-        {/* Product Details (Exact Rezoni CSS styles matching 05_perks_and_footer.png) */}
-        <div style={{ padding: '0 4px' }}>
+        {/* Product Details (Exact Live Rezoni CSS styles) */}
+        <div style={{ padding: '0 4px', textAlign: 'center' }}>
           {/* meta__title in orange */}
           <div
             style={{
               color: '#ff6700',
               fontSize: '11px',
               fontWeight: 600,
-              letterSpacing: '0.4px',
+              fontFamily: 'Montserrat, sans-serif',
               lineHeight: 1.4,
-              marginBottom: '3px',
+              marginBottom: '1px',
             }}
           >
             {product.category_tag}
           </div>
 
-          {/* pre_title in black */}
+          {/* pre_title in #282828 */}
           <h4
             style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#111111',
-              margin: '0 0 2px',
+              fontSize: '15px',
+              fontWeight: 500,
+              color: '#282828',
+              fontFamily: 'Montserrat, sans-serif',
+              margin: '2px 0 0',
               lineHeight: 1.3,
             }}
           >
             {product.title}
           </h4>
 
-          {/* pro__title in grey */}
+          {/* pro__title in #282828 */}
           <div
             style={{
-              fontSize: '12px',
-              color: '#888888',
-              marginBottom: '6px',
+              fontSize: '11px',
+              color: '#282828',
+              fontFamily: 'Montserrat, sans-serif',
+              margin: '2px 0 0',
               lineHeight: 1.3,
             }}
           >
@@ -116,17 +117,17 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Price display: sale price in red accent, compare price in strikethrough */}
-          <div style={{ fontSize: '13px', fontWeight: 600, marginBottom: '8px' }}>
-            <span style={{ color: '#e53935', marginRight: '6px', fontWeight: 600 }}>
+          <div style={{ fontSize: '11px', fontFamily: 'Montserrat, sans-serif', margin: '4px 0 6px' }}>
+            <span style={{ color: '#de2a2a', marginRight: '8px', fontWeight: 500 }}>
               Rs. {product.price.toFixed(2)}
             </span>
-            <span style={{ color: '#888888', textDecoration: 'line-through', fontSize: '12px', fontWeight: 400 }}>
+            <span style={{ color: '#282828', textDecoration: 'line-through', fontWeight: 400 }}>
               Rs. {product.compare_at_price.toFixed(2)}
             </span>
           </div>
 
           {/* Color Swatch Circles with concentric outline ring */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '5px', alignItems: 'center' }}>
             {product.swatches.map((color, idx) => (
               <span
                 key={idx}
@@ -136,11 +137,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                   setSelectedSwatch(idx);
                 }}
                 style={{
-                  width: '12px',
-                  height: '12px',
+                  width: '15px',
+                  height: '15px',
                   borderRadius: '50%',
                   backgroundColor: color,
-                  border: color.toLowerCase() === '#ffffff' ? '1px solid #ccc' : 'none',
+                  border: color.toLowerCase() === '#ffffff' ? '1px solid #ddd' : 'none',
                   outline: selectedSwatch === idx ? '1.5px solid #000000' : 'none',
                   outlineOffset: '2px',
                   cursor: 'pointer',
