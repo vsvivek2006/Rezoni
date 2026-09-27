@@ -58,7 +58,7 @@ export default function Newsletter() {
                 padding: '0 16px',
                 borderRadius: '4px',
                 border: '1px solid #dcdcdc',
-                fontSize: '14px',
+                fontSize: '16px',
                 fontFamily: 'inherit',
                 outline: 'none',
               }}

@@ -97,7 +97,7 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                       border: '1px solid #d5d5d5',
                       borderRadius: '4px',
                       fontFamily: 'inherit',
-                      fontSize: '14px',
+                      fontSize: '16px',
                       color: '#222',
                       outline: 'none',
                     }}
@@ -113,7 +113,7 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                       border: '1px solid #d5d5d5',
                       borderRadius: '4px',
                       fontFamily: 'inherit',
-                      fontSize: '14px',
+                      fontSize: '16px',
                       color: '#222',
                       outline: 'none',
                     }}
@@ -128,7 +128,7 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                       border: '1px solid #d5d5d5',
                       borderRadius: '4px',
                       fontFamily: 'inherit',
-                      fontSize: '14px',
+                      fontSize: '16px',
                       color: '#222',
                       outline: 'none',
                     }}
@@ -203,7 +203,7 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                   value={trackNumber}
                   onChange={(e) => setTrackNumber(e.target.value)}
                   required
-                  style={{ flex: 1, height: '48px', padding: '0 14px', border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'inherit' }}
+                  style={{ flex: 1, height: '48px', padding: '0 14px', border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'inherit', fontSize: '16px' }}
                 />
                 <button type="submit" className="btn-rezoni" style={{ padding: '0 24px' }}>
                   Track

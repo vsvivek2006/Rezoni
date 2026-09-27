@@ -407,7 +407,7 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
                   style={{
                     flex: 1,
                     padding: '8px 12px',
-                    fontSize: '12px',
+                    fontSize: '16px',
                     border: '1px solid #ccc',
                     borderRadius: '4px',
                     outline: 'none',

@@ -42,6 +42,9 @@ html, body {
   color: var(--text-color);
   overflow-x: hidden;
   line-height: 1.6;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 a {
@@ -287,6 +290,21 @@ img {
 @media (min-width: 1000px) {
   .hidden-lap-and-up {
     display: none !important;
+  }
+}
+
+/* Prevent iOS Safari & Chrome Auto-Zoom on Input Focus */
+@media screen and (max-width: 768px) {
+  input,
+  input[type="text"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="email"],
+  input[type="number"],
+  input[type="password"],
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }
 
