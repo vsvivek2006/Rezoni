@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import productsData from '@/data/products.json';
 
@@ -20,15 +20,29 @@ const suggestedSearches = [
   'MagSafe',
 ];
 
+const availableCollections = [
+  { title: 'iPhone Cases', href: '/collections/iphone-cases' },
+  { title: 'Anti-Yellow Case', href: '/collections/anti-yellow-case' },
+  { title: 'Football Club Collection', href: '/collections/football' },
+  { title: 'The Weeknd Collection', href: '/collections/the-weeknd' },
+  { title: 'Mixtape Collection', href: '/collections/mixtape' },
+];
+
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<'products' | 'collections'>('products');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     } else {
       document.body.style.overflow = '';
       setQuery('');
+      setActiveTab('products');
     }
     return () => {
       document.body.style.overflow = '';
@@ -37,12 +51,19 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   if (!isOpen) return null;
 
-  const filtered = query.trim()
+  const filteredProducts = query.trim()
     ? productsData.filter((p) =>
         p.title.toLowerCase().includes(query.toLowerCase()) ||
-        p.handle.toLowerCase().includes(query.toLowerCase())
+        p.handle.toLowerCase().includes(query.toLowerCase()) ||
+        p.category_tag.toLowerCase().includes(query.toLowerCase())
       )
     : [];
+
+  const filteredCollections = query.trim()
+    ? availableCollections.filter((c) =>
+        c.title.toLowerCase().includes(query.toLowerCase())
+      )
+    : availableCollections;
 
   return (
     <div
@@ -52,328 +73,343 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.65)',
-        zIndex: 200,
+        backgroundColor: 'rgba(0, 0, 0, 0.55)',
+        zIndex: 9999,
         display: 'flex',
         justifyContent: 'flex-start',
         fontFamily: 'Montserrat, sans-serif',
       }}
       onClick={onClose}
     >
-      {/* Predictive Search Drawer sliding from LEFT matching live Rezoni markup */}
+      {/* Search Drawer matching live Rezoni mobile search */}
       <div
         style={{
           width: '100%',
-          maxWidth: '520px',
+          maxWidth: '460px',
           height: '100%',
           backgroundColor: '#ffffff',
           color: '#000000',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '10px 0 30px rgba(0,0,0,0.25)',
-          animation: 'slideFromLeft 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          boxShadow: '10px 0 30px rgba(0,0,0,0.2)',
+          animation: 'slideInLeft 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Drawer Header matching predictive-search-drawer */}
+        {/* Exact Header matching live_mobile_search_opened.png */}
         <div
           style={{
-            padding: '16px 20px',
+            height: '62px',
+            padding: '0 20px',
             borderBottom: '1px solid #ebebeb',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            gap: '14px',
+            backgroundColor: '#ffffff',
           }}
         >
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              flex: 1,
-              backgroundColor: '#f7f7f7',
-              borderRadius: '4px',
-              padding: '10px 14px',
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#222" strokeWidth="1.9">
-              <path d="M12.336 12.336c2.634-2.635 2.682-6.859.106-9.435-2.576-2.576-6.8-2.528-9.435.106C.373 5.642.325 9.866 2.901 12.442c2.576 2.576 6.8 2.528 9.435-.106zm0 0L17 17"></path>
-            </svg>
-            <input
-              type="text"
-              autoFocus
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="What are you looking for?"
-              style={{
-                flex: 1,
-                border: 'none',
-                background: 'transparent',
-                outline: 'none',
-                marginLeft: '10px',
-                fontSize: '14px',
-                fontWeight: 500,
-                color: '#111111',
-                fontFamily: 'inherit',
-              }}
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={() => setQuery('')}
-                style={{ color: '#888', fontSize: '14px', padding: '2px 4px' }}
-              >
-                ✕
-              </button>
-            )}
-          </form>
+          {/* Thin Search Icon on Left */}
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#222222" strokeWidth="1.8" style={{ flexShrink: 0 }}>
+            <circle cx="8.5" cy="8.5" r="5.5" />
+            <line x1="12.5" y1="12.5" x2="18" y2="18" />
+          </svg>
 
-          {/* Close button on right */}
+          {/* Borderless Input */}
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="What are you looking for?"
+            style={{
+              flex: 1,
+              border: 'none',
+              outline: 'none',
+              background: 'transparent',
+              fontSize: '15px',
+              fontWeight: 400,
+              color: '#111111',
+              fontFamily: 'inherit',
+            }}
+          />
+
+          {/* Thin Close Icon on Right */}
           <button
             onClick={onClose}
             aria-label="Close search"
             style={{
-              width: '36px',
-              height: '36px',
+              background: 'transparent',
+              border: 'none',
+              padding: '6px',
+              cursor: 'pointer',
+              color: '#222222',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#333',
-              fontSize: '18px',
-              cursor: 'pointer',
-              borderRadius: '50%',
             }}
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M13 13L1 1M13 1L1 13"></path>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <line x1="2" y1="2" x2="16" y2="16" />
+              <line x1="16" y1="2" x2="2" y2="16" />
             </svg>
           </button>
         </div>
 
-        {/* Drawer Content */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
-          {query.trim() === '' ? (
-            /* Suggested / Popular Searches */
-            <div>
-              <div
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                  color: '#888888',
-                  marginBottom: '14px',
-                }}
-              >
-                Popular Searches
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
-                {suggestedSearches.map((s, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setQuery(s)}
-                    style={{
-                      padding: '8px 14px',
-                      backgroundColor: '#f2f2f2',
-                      borderRadius: '20px',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      color: '#222222',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e5e5e5')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f2f2f2')}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-
-              {/* Quick Categories */}
-              <div
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                  color: '#888888',
-                  marginBottom: '14px',
-                }}
-              >
-                Collections
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <Link
-                  href="/collections/iphone-cases"
-                  onClick={onClose}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    borderRadius: '6px',
-                    backgroundColor: '#fafafa',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#111',
-                  }}
-                >
-                  <span>iPhone Cases</span>
-                  <span>&rarr;</span>
-                </Link>
-                <Link
-                  href="/collections/anti-yellow-case"
-                  onClick={onClose}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    borderRadius: '6px',
-                    backgroundColor: '#fafafa',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#111',
-                  }}
-                >
-                  <span>Anti-Yellow Case</span>
-                  <span>&rarr;</span>
-                </Link>
-                <Link
-                  href="/collections/football"
-                  onClick={onClose}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    borderRadius: '6px',
-                    backgroundColor: '#fafafa',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#111',
-                  }}
-                >
-                  <span>Football Club Collection</span>
-                  <span>&rarr;</span>
-                </Link>
-              </div>
-            </div>
-          ) : filtered.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 0', color: '#777' }}>
-              <p style={{ fontSize: '15px', fontWeight: 600, color: '#222', marginBottom: '8px' }}>
-                No results found for &quot;{query}&quot;
-              </p>
-              <p style={{ fontSize: '13px' }}>Try checking your spelling or use more general terms.</p>
-            </div>
-          ) : (
-            /* Results matching live predictive search items */
-            <div>
-              <div
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                  color: '#888888',
-                  marginBottom: '14px',
-                }}
-              >
-                Products ({filtered.length})
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {filtered.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/products/${item.handle}`}
-                    onClick={onClose}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '14px',
-                      padding: '8px',
-                      borderRadius: '6px',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f7f7f7')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                  >
-                    <div
-                      style={{
-                        width: '54px',
-                        height: '54px',
-                        borderRadius: '4px',
-                        overflow: 'hidden',
-                        backgroundColor: '#f5f5f5',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <img
-                        src={item.primary_image}
-                        alt={item.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                      />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div
-                        style={{
-                          fontSize: '10px',
-                          fontWeight: 700,
-                          color: '#ff6700',
-                          letterSpacing: '0.5px',
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        {item.category_tag || 'REVERB CASE'}
-                      </div>
-                      <div style={{ fontSize: '13px', fontWeight: 700, color: '#111111', margin: '2px 0' }}>
-                        {item.title}
-                      </div>
-                      <div style={{ fontSize: '12px', fontWeight: 600 }}>
-                        <span style={{ color: '#e53935', marginRight: '6px' }}>Rs. {item.price.toFixed(2)}</span>
-                        {item.compare_at_price > item.price && (
-                          <span style={{ color: '#888888', textDecoration: 'line-through', fontSize: '11px' }}>
-                            Rs. {item.compare_at_price.toFixed(2)}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Drawer Footer matching live site */}
-        {filtered.length > 0 && (
-          <div style={{ padding: '16px 20px', borderTop: '1px solid #ebebeb' }}>
-            <Link
-              href={`/collections/all?q=${encodeURIComponent(query)}`}
-              onClick={onClose}
+        {/* When Query is Present: Show PRODUCTS / COLLECTIONS tabs matching live_mobile_search_results.png */}
+        {query.trim() !== '' ? (
+          <>
+            <div
               style={{
-                display: 'block',
-                width: '100%',
-                backgroundColor: '#ff6700',
-                color: '#ffffff',
-                textAlign: 'center',
-                padding: '12px',
-                borderRadius: '4px',
-                fontSize: '12px',
-                fontWeight: 700,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
+                display: 'flex',
+                gap: '24px',
+                padding: '16px 20px 0',
+                borderBottom: '1px solid #f0f0f0',
               }}
             >
-              View all results ({filtered.length})
-            </Link>
+              <button
+                onClick={() => setActiveTab('products')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  paddingBottom: '10px',
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
+                  color: activeTab === 'products' ? '#000000' : '#888888',
+                  borderBottom: activeTab === 'products' ? '2.5px solid #000000' : '2.5px solid transparent',
+                  cursor: 'pointer',
+                }}
+              >
+                PRODUCTS
+              </button>
+              <button
+                onClick={() => setActiveTab('collections')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  paddingBottom: '10px',
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
+                  color: activeTab === 'collections' ? '#000000' : '#888888',
+                  borderBottom: activeTab === 'collections' ? '2.5px solid #000000' : '2.5px solid transparent',
+                  cursor: 'pointer',
+                }}
+              >
+                COLLECTIONS
+              </button>
+            </div>
+
+            {/* Tab Content */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
+              {activeTab === 'products' ? (
+                filteredProducts.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#777' }}>
+                    <p style={{ fontSize: '14px', fontWeight: 600, color: '#222', marginBottom: '8px' }}>
+                      No products found for &quot;{query}&quot;
+                    </p>
+                    <p style={{ fontSize: '12px' }}>Try checking your spelling or use more general terms.</p>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {filteredProducts.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={`/products/${item.handle}`}
+                        onClick={onClose}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '16px',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: '58px',
+                            height: '70px',
+                            borderRadius: '4px',
+                            overflow: 'hidden',
+                            backgroundColor: '#fafafa',
+                            flexShrink: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <img
+                            src={item.primary_image}
+                            alt={item.title}
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div
+                            style={{
+                              fontSize: '13px',
+                              fontWeight: 500,
+                              color: '#222222',
+                              lineHeight: 1.4,
+                              marginBottom: '4px',
+                            }}
+                          >
+                            {item.title}
+                          </div>
+                          <div style={{ fontSize: '13px', fontWeight: 600 }}>
+                            <span style={{ color: '#e53935', marginRight: '8px' }}>
+                              Rs. {item.price.toFixed(2)}
+                            </span>
+                            {item.compare_at_price > item.price && (
+                              <span style={{ color: '#999999', textDecoration: 'line-through', fontSize: '12px', fontWeight: 400 }}>
+                                Rs. {item.compare_at_price.toFixed(2)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )
+              ) : (
+                /* Collections Tab */
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {filteredCollections.map((col, idx) => (
+                    <Link
+                      key={idx}
+                      href={col.href}
+                      onClick={onClose}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '4px',
+                        backgroundColor: '#f8f8f8',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        color: '#111111',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <span>{col.title}</span>
+                      <span style={{ color: '#888888' }}>&rarr;</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Bottom View All Results Button matching live_mobile_search_results.png */}
+            {filteredProducts.length > 0 && (
+              <div style={{ padding: '16px 20px', borderTop: '1px solid #ebebeb' }}>
+                <Link
+                  href={`/collections/all?q=${encodeURIComponent(query)}`}
+                  onClick={onClose}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    backgroundColor: '#ff6700',
+                    color: '#ffffff',
+                    height: '48px',
+                    borderRadius: '4px',
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    letterSpacing: '1.2px',
+                    textTransform: 'uppercase',
+                    textDecoration: 'none',
+                    transition: 'background-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e65c00')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
+                >
+                  VIEW ALL RESULTS
+                </Link>
+              </div>
+            )}
+          </>
+        ) : (
+          /* Empty state: Clean with Popular Searches & Featured Collections */
+          <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px' }}>
+            <div
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                color: '#888888',
+                marginBottom: '14px',
+              }}
+            >
+              Popular Searches
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
+              {suggestedSearches.map((s, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setQuery(s)}
+                  style={{
+                    padding: '8px 14px',
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    color: '#222222',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e8e8e8')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+
+            <div
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                color: '#888888',
+                marginBottom: '14px',
+              }}
+            >
+              Featured Collections
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {availableCollections.slice(0, 3).map((col, idx) => (
+                <Link
+                  key={idx}
+                  href={col.href}
+                  onClick={onClose}
+                  style={{
+                    padding: '12px 14px',
+                    borderRadius: '4px',
+                    backgroundColor: '#fafafa',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: '#111111',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span>{col.title}</span>
+                  <span style={{ color: '#888888' }}>&rarr;</span>
+                </Link>
+              ))}
+            </div>
           </div>
         )}
       </div>
 
       <style jsx global>{`
-        @keyframes slideFromLeft {
+        @keyframes slideInLeft {
           from {
             transform: translateX(-100%);
           }

@@ -12,20 +12,6 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [selectedSwatch, setSelectedSwatch] = useState(0);
-  const { addToCart } = useCart();
-
-  const handleQuickAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart({
-      id: `${product.id}-${selectedSwatch}`,
-      title: `${product.title} - ${product.category_tag}`,
-      price: product.price,
-      image: product.primary_image,
-      device: 'iPhone 15 Pro Max',
-      quantity: 1,
-    });
-  };
 
   return (
     <div
@@ -86,33 +72,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             />
           )}
 
-          {/* Quick Add Overlay on Hover */}
-          <button
-            onClick={handleQuickAdd}
-            style={{
-              position: 'absolute',
-              bottom: '10px',
-              left: '10px',
-              right: '10px',
-              height: '36px',
-              backgroundColor: '#ff6700',
-              color: '#ffffff',
-              fontSize: '11px',
-              fontWeight: 700,
-              letterSpacing: '1px',
-              textTransform: 'uppercase',
-              borderRadius: '3px',
-              border: 'none',
-              opacity: isHovered ? 1 : 0,
-              transform: isHovered ? 'translateY(0)' : 'translateY(6px)',
-              transition: 'all 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            Quick Add
-          </button>
         </div>
 
         {/* Product Details (Exact Rezoni CSS styles matching 05_perks_and_footer.png) */}

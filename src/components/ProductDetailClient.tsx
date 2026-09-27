@@ -68,10 +68,8 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
   const [pincode, setPincode] = useState('');
   const [pincodeStatus, setPincodeStatus] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'desc' | 'shipping'>('desc');
-  const [showStickyBar, setShowStickyBar] = useState(false);
-
-  // Dynamic estimated delivery date (2 to 4 days from today)
   const [deliveryDateRange, setDeliveryDateRange] = useState('');
+
   useEffect(() => {
     const today = new Date();
     const d1 = new Date(today);
@@ -81,12 +79,6 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
 
     const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
     setDeliveryDateRange(`${d1.toLocaleDateString('en-US', options)} - ${d2.toLocaleDateString('en-US', options)}`);
-
-    const handleScroll = () => {
-      setShowStickyBar(window.scrollY > 600);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleAddToCart = () => {
@@ -243,56 +235,6 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
               </span>
             </div>
 
-            {/* Snapmint EMI Widget matching live_pdp.png */}
-            <div
-              style={{
-                backgroundColor: '#f6f9f7',
-                border: '1px dashed #2bb673',
-                borderRadius: '6px',
-                padding: '10px 14px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '16px',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <span
-                  style={{
-                    backgroundColor: '#2bb673',
-                    color: '#ffffff',
-                    fontSize: '9px',
-                    fontWeight: 800,
-                    padding: '2px 5px',
-                    borderRadius: '2px',
-                  }}
-                >
-                  NEW
-                </span>
-                <span style={{ fontSize: '12px', fontWeight: 600, color: '#111111' }}>
-                  ₹1 now + ₹349/month (2 months)
-                </span>
-                <span style={{ fontSize: '11px', color: '#666666' }}>
-                  0% EMI on UPI | <strong style={{ color: '#ff5722' }}>snapmint</strong>
-                </span>
-              </div>
-              <button
-                style={{
-                  backgroundColor: '#000000',
-                  color: '#ffffff',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  padding: '6px 12px',
-                  borderRadius: '4px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                View Plans
-              </button>
-            </div>
-
             {/* Summer Sale Promo Banner Image */}
             <div style={{ marginBottom: '12px' }}>
               <img
@@ -426,37 +368,6 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
             >
               ADD TO CART
             </button>
-
-            {/* Snapmint Buy on EMI Bar */}
-            <div
-              style={{
-                backgroundColor: '#000000',
-                color: '#ffffff',
-                borderRadius: '5px',
-                padding: '10px 14px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                fontSize: '12px',
-                fontWeight: 600,
-                marginBottom: '14px',
-                cursor: 'pointer',
-              }}
-            >
-              <span>Pay ₹233 Now &bull; +2 EMI (No Interest)</span>
-              <span
-                style={{
-                  backgroundColor: '#ffffff',
-                  color: '#000000',
-                  padding: '4px 10px',
-                  borderRadius: '3px',
-                  fontSize: '10px',
-                  fontWeight: 700,
-                }}
-              >
-                Buy on EMI
-              </span>
-            </div>
 
             {/* Estimated Delivery Note */}
             <div
@@ -728,83 +639,6 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
           )}
         </div>
       </div>
-
-      {/* ================= STICKY BOTTOM ADD TO CART BAR ================= */}
-      {showStickyBar && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: '#ffffff',
-            borderTop: '1px solid #eaeaea',
-            padding: '12px 20px',
-            zIndex: 100,
-            boxShadow: '0 -4px 16px rgba(0,0,0,0.1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '16px',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img
-              src={selectedImage || product.primary_image}
-              alt={product.title}
-              style={{ width: '42px', height: '42px', objectFit: 'contain', borderRadius: '4px' }}
-            />
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#111' }}>{product.title}</div>
-              <div style={{ fontSize: '12px', color: '#e53935', fontWeight: 700 }}>
-                Rs. {product.price.toFixed(2)}{' '}
-                <span style={{ color: '#888', textDecoration: 'line-through', fontWeight: 400 }}>
-                  Rs. {product.compare_at_price.toFixed(2)}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div className="hidden-pocket">
-              <select
-                value={selectedDevice}
-                onChange={(e) => setSelectedDevice(e.target.value)}
-                style={{
-                  padding: '8px 12px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc',
-                  fontSize: '12px',
-                  outline: 'none',
-                }}
-              >
-                {phoneModels.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <button
-              onClick={handleAddToCart}
-              style={{
-                backgroundColor: '#ff6700',
-                color: '#ffffff',
-                border: 'none',
-                padding: '10px 24px',
-                borderRadius: '4px',
-                fontSize: '12px',
-                fontWeight: 700,
-                letterSpacing: '1px',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-              }}
-            >
-              ADD TO CART
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
