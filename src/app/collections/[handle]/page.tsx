@@ -21,14 +21,16 @@ interface PageProps {
 
 export default async function CollectionPage({ params }: PageProps) {
   const { handle } = await params;
-
   let filtered = [...productsData];
+
   if (handle !== 'all' && handle !== 'best-sellers') {
+    const term = handle.replace(/-/g, ' ').toLowerCase();
     filtered = filtered.filter(
       (p) =>
         p.handle.includes(handle) ||
-        p.title.toLowerCase().includes(handle.replace(/-/g, ' ')) ||
-        p.category_tag.toLowerCase().includes(handle.replace(/-/g, ' '))
+        p.title.toLowerCase().includes(term) ||
+        p.category_tag.toLowerCase().includes(term) ||
+        (p.sub_title && p.sub_title.toLowerCase().includes(term))
     );
   }
 
