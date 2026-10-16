@@ -34,7 +34,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     try {
       const stored = localStorage.getItem('rezoni_cart');
       if (stored) {
-        setCart(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          const validItems = parsed.filter(
+            (i): i is CartItem =>
+              Boolean(i) &&
+              typeof i === 'object' &&
+              Boolean(i.id) &&
+              typeof i.price === 'number' &&
+              !isNaN(i.price)
+          );
+          setCart(validItems);
+        }
       }
     } catch {
       // ignore
@@ -51,39 +62,46 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
     setCart((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
+      const currentList = Array.isArray(prev) ? prev : [];
+      const existing = currentList.find((i) => i && i.id === item.id);
       if (existing) {
-        return prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + (item.quantity || 1) } : i
+        return currentList.map((i) =>
+          i.id === item.id ? { ...i, quantity: (i.quantity || 1) + (item.quantity || 1) } : i
         );
       }
-      return [...prev, { ...item, quantity: item.quantity || 1 }];
+      return [...currentList, { ...item, quantity: item.quantity || 1 }];
     });
     setIsCartOpen(true);
   };
 
   const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((i) => i.id !== id));
+    setCart((prev) => (Array.isArray(prev) ? prev.filter((i) => i && i.id !== id) : []));
   };
 
   const updateQuantity = (id: string, delta: number) => {
-    setCart((prev) =>
-      prev
+    setCart((prev) => {
+      if (!Array.isArray(prev)) return [];
+      return prev
         .map((i) => {
+          if (!i) return null;
           if (i.id === id) {
-            const newQty = i.quantity + delta;
+            const newQty = (i.quantity || 1) + delta;
             return newQty > 0 ? { ...i, quantity: newQty } : null;
           }
           return i;
         })
-        .filter(Boolean) as CartItem[]
-    );
+        .filter(Boolean) as CartItem[];
+    });
   };
 
   const clearCart = () => setCart([]);
 
-  const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const safeCart = Array.isArray(cart) ? cart : [];
+  const totalCount = safeCart.reduce((sum, item) => sum + (item?.quantity || 1), 0);
+  const totalPrice = safeCart.reduce(
+    (sum, item) => sum + (Number(item?.price) || 0) * (Number(item?.quantity) || 1),
+    0
+  );
 
   return (
     <CartContext.Provider

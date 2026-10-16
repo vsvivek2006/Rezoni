@@ -723,17 +723,6 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           </div>
         )}
       </div>
-
-      <style jsx global>{`
-        @keyframes slideInLeft {
-          from {
-            transform: translateX(-100%);
-          }
-          to {
-            transform: translateX(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }

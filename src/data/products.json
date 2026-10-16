@@ -1,5 +1,19 @@
 [
   {
+    "id": "live-test-case",
+    "title": "₹1 Live Gateway Test Case",
+    "handle": "live-test-case",
+    "category_tag": "Test",
+    "sub_title": "1-Rupee Production Verification",
+    "price": 1,
+    "compare_at_price": 699,
+    "primary_image": "https://www.rezoni.com/cdn/shop/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3_950x.jpg?v=1725349229",
+    "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_9fac1ea5-71ef-4f31-84c4-20edd3ee57ea_950x.jpg?v=1725349229",
+    "swatches": [
+      "#000000"
+    ]
+  },
+  {
     "id": "the-weeknd",
     "title": "The Weeknd",
     "handle": "the-weeknd",

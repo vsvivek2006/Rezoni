@@ -2,6 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
+import { openRazorpayCheckout } from '@/lib/razorpayClient';
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_FEE } from '@/lib/priceCalculator';
+import CheckoutTrustBadges from './CheckoutTrustBadges';
 
 export interface AddressData {
   email: string;
@@ -127,6 +131,30 @@ export default function CheckoutAddressForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
+  const { clearCart, setIsCartOpen } = useCart();
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
+
+  // Delivery fee tracking logic
+  const safeCart = Array.isArray(cart) ? cart.filter(Boolean) : [];
+  const safeTotalPrice = typeof totalPrice === 'number' && !isNaN(totalPrice) ? totalPrice : 0;
+  const isTestItem = safeCart.some((i) => i && (i.id === 'live-test-case' || i.price === 1));
+  const isFreeShipping = safeTotalPrice >= FREE_SHIPPING_THRESHOLD || isTestItem;
+  const deliveryFee = isFreeShipping ? 0 : STANDARD_SHIPPING_FEE;
+  const finalPayable = safeTotalPrice + deliveryFee;
+  const remainingForFreeShipping = isTestItem ? 0 : Math.max(0, FREE_SHIPPING_THRESHOLD - safeTotalPrice);
+
+  const handleAutofillTestDetails = () => {
+    setFullName('Test Customer');
+    setPhone('9876543210');
+    setEmail('test@rezoni.com');
+    setAddressLine1('Flat 101, Test Residency, MG Road');
+    setPincode('110001');
+    setCity('New Delhi');
+    setState('Delhi');
+    setErrors({});
+  };
 
   // Load saved address from localStorage if available
   useEffect(() => {
@@ -243,14 +271,124 @@ export default function CheckoutAddressForm({
     setIsConfirmed(true);
   };
 
-  // Common input style with 16px font-size to permanently prevent auto-zoom on mobile
+  const handlePayWithRazorpay = async () => {
+    setIsProcessingPayment(true);
+    setPaymentError(null);
+    setPaymentNotice(null);
+
+    const addressPayload: AddressData = {
+      email: email.trim(),
+      phone: phone.trim(),
+      fullName: fullName.trim(),
+      pincode: pincode.trim(),
+      addressLine1: addressLine1.trim(),
+      addressLine2: addressLine2.trim(),
+      city: city.trim(),
+      state: state.trim(),
+      saveInfo,
+    };
+
+    try {
+      // 1. Initiate order creation on server with price verification
+      const res = await fetch('/api/razorpay/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart,
+          customer: addressPayload,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        if (data.isConfigError) {
+          setPaymentError(
+            'Razorpay Setup Notice: Please configure NEXT_PUBLIC_RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env.local to activate payments.'
+          );
+        } else {
+          setPaymentError(data.message || 'Failed to initiate checkout order. Please try again.');
+        }
+        setIsProcessingPayment(false);
+        return;
+      }
+
+      // 2. Open official Razorpay Checkout Modal
+      await openRazorpayCheckout({
+        keyId: data.keyId,
+        orderId: data.razorpayOrderId,
+        amount: data.amount,
+        currency: data.currency || 'INR',
+        customerName: addressPayload.fullName,
+        customerEmail: addressPayload.email,
+        customerPhone: addressPayload.phone,
+        onSuccess: async (rzpRes) => {
+          try {
+            // 3. Cryptographically verify signature on server (HMAC-SHA256)
+            const verifyRes = await fetch('/api/razorpay/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                orderId: data.orderId,
+                razorpayOrderId: rzpRes.razorpay_order_id,
+                razorpayPaymentId: rzpRes.razorpay_payment_id,
+                razorpaySignature: rzpRes.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyRes.ok && verifyData.success) {
+              // Clear cart upon confirmed payment
+              clearCart();
+              if (isDrawer) {
+                setIsCartOpen(false);
+              }
+              // Redirect to order confirmation & receipt page
+              window.location.href = `/checkout/success?order_id=${encodeURIComponent(data.orderId)}`;
+            } else {
+              setPaymentError(
+                verifyData.message ||
+                  `Payment received by bank (ID: ${rzpRes.razorpay_payment_id}), but verification check encountered an issue. Our team is auto-confirming it.`
+              );
+              setIsProcessingPayment(false);
+            }
+          } catch (vErr) {
+            console.error('Payment verification error:', vErr);
+            setPaymentError(
+              'Payment succeeded, but server verification connection timed out. If money was debited, your order will automatically be confirmed.'
+            );
+            setIsProcessingPayment(false);
+          }
+        },
+        onDismiss: () => {
+          setIsProcessingPayment(false);
+          setPaymentNotice(
+            'Payment window was closed. Your items are safe in cart. Click "Pay Now" whenever you wish to proceed.'
+          );
+        },
+        onFailure: (failRes) => {
+          setIsProcessingPayment(false);
+          setPaymentError(
+            failRes.error?.description ||
+              'Payment failed or was declined by issuing bank. Please select an alternate payment method or retry.'
+          );
+        },
+      });
+    } catch (err: any) {
+      console.error('Payment initiation error:', err);
+      setPaymentError(err?.message || 'Unable to connect to payment gateway. Please check your connection.');
+      setIsProcessingPayment(false);
+    }
+  };
+
+  // Compact, high-converting input style
   const inputStyle: React.CSSProperties = {
     width: '100%',
-    height: '46px',
-    padding: '0 12px',
+    height: '40px',
+    padding: '0 10px',
     border: '1px solid #d5d5d5',
-    borderRadius: '5px',
-    fontSize: '16px', // 16px strictly prevents auto-zoom on mobile devices
+    borderRadius: '4px',
+    fontSize: '14px',
     fontFamily: 'inherit',
     color: '#111111',
     backgroundColor: '#ffffff',
@@ -261,12 +399,12 @@ export default function CheckoutAddressForm({
 
   const labelStyle: React.CSSProperties = {
     display: 'block',
-    fontSize: '11px',
+    fontSize: '10px',
     fontWeight: 700,
     textTransform: 'uppercase',
-    letterSpacing: '0.6px',
-    color: '#333333',
-    marginBottom: '6px',
+    letterSpacing: '0.5px',
+    color: '#444444',
+    marginBottom: '3px',
   };
 
   return (
@@ -357,19 +495,19 @@ export default function CheckoutAddressForm({
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>🛍️ Order Summary ({cart.length} {cart.length === 1 ? 'item' : 'items'})</span>
+              <span>🛍️ Order Summary ({safeCart.length} {safeCart.length === 1 ? 'item' : 'items'})</span>
               <span style={{ color: '#ff6700' }}>{showOrderSummary ? 'Hide ▲' : 'Show ▼'}</span>
             </div>
             <div style={{ fontSize: '13px', fontWeight: 800, color: '#111' }}>
-              Rs. {totalPrice.toFixed(2)}
+              Rs. {finalPayable.toFixed(2)}
             </div>
           </button>
 
           {showOrderSummary && (
             <div style={{ padding: '12px 16px', borderTop: '1px solid #e9ecef', backgroundColor: '#ffffff' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '12px' }}>
-                {cart.map((item) => (
-                  <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {safeCart.map((item, idx) => (
+                  <div key={item?.id || idx} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div
                       style={{
                         width: '42px',
@@ -384,18 +522,22 @@ export default function CheckoutAddressForm({
                         justifyContent: 'center',
                       }}
                     >
-                      <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      {item?.image ? (
+                        <img src={item.image} alt={item.title || 'Item'} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                      ) : (
+                        <span style={{ fontSize: '10px', color: '#999' }}>📦</span>
+                      )}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: '12px', fontWeight: 600, color: '#222', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {item.title}
+                        {item?.title || 'Rezoni Item'}
                       </div>
                       <div style={{ fontSize: '11px', color: '#666' }}>
-                        Qty: {item.quantity} {item.device ? `• ${item.device}` : ''}
+                        Qty: {item?.quantity || 1} {item?.device ? `• ${item.device}` : ''}
                       </div>
                     </div>
                     <div style={{ fontSize: '12px', fontWeight: 700, color: '#111' }}>
-                      Rs. {(item.price * item.quantity).toFixed(2)}
+                      Rs. {((Number(item?.price) || 0) * (Number(item?.quantity) || 1)).toFixed(2)}
                     </div>
                   </div>
                 ))}
@@ -403,11 +545,15 @@ export default function CheckoutAddressForm({
 
               <div style={{ borderTop: '1px dashed #e0e0e0', paddingTop: '10px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', color: '#666', marginBottom: '4px' }}>
                 <span>Delivery:</span>
-                <span style={{ color: '#2d6a4f', fontWeight: 700 }}>FREE (Express)</span>
+                {isFreeShipping ? (
+                  <span style={{ color: '#059669', fontWeight: 700 }}>FREE (Express)</span>
+                ) : (
+                  <span style={{ color: '#111', fontWeight: 700 }}>Rs. {deliveryFee.toFixed(2)}</span>
+                )}
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 800, color: '#000', paddingTop: '4px' }}>
                 <span>Total Amount:</span>
-                <span style={{ color: '#ff6700' }}>Rs. {totalPrice.toFixed(2)}</span>
+                <span style={{ color: '#ff6700' }}>Rs. {finalPayable.toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -415,154 +561,46 @@ export default function CheckoutAddressForm({
 
         {/* State 1: Fill Address Form */}
         {!isConfirmed ? (
-          <form onSubmit={handleSubmit} noValidate>
-            {/* 1. Contact Information */}
-            <div style={{ marginBottom: '22px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginBottom: '12px',
-                  borderBottom: '1px solid #f0f0f0',
-                  paddingBottom: '6px',
-                }}
-              >
-                <span
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    backgroundColor: '#111',
-                    color: '#fff',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  1
-                </span>
-                <h4 style={{ fontSize: '13px', fontWeight: 800, margin: 0, textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                  Contact Information
-                </h4>
-              </div>
-
-              {/* Email */}
-              <div style={{ marginBottom: '14px' }}>
-                <label style={labelStyle}>
-                  Email Address <span style={{ color: '#e53935' }}>*</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="name@example.com (for order tracking & invoice)"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
-                  }}
-                  style={{
-                    ...inputStyle,
-                    borderColor: errors.email ? '#e53935' : '#d5d5d5',
-                  }}
-                />
-                {errors.email && (
-                  <div style={{ fontSize: '11px', color: '#e53935', marginTop: '4px' }}>
-                    {errors.email}
-                  </div>
-                )}
-              </div>
-
-              {/* Phone */}
-              <div style={{ marginBottom: '14px' }}>
-                <label style={labelStyle}>
-                  Phone Number <span style={{ color: '#e53935' }}>*</span>
-                </label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <div
+          <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {/* Quick Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '6px', borderBottom: '1px solid #f0f0f0' }}>
+              <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#222' }}>
+                Delivery & Contact Details
+              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {isTestItem && (
+                  <button
+                    type="button"
+                    onClick={handleAutofillTestDetails}
                     style={{
-                      height: '46px',
-                      padding: '0 12px',
-                      backgroundColor: '#f5f5f5',
-                      border: '1px solid #d5d5d5',
-                      borderRadius: '5px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      fontSize: '14px',
-                      fontWeight: 700,
-                      color: '#444',
-                      flexShrink: 0,
+                      background: '#ecfdf5',
+                      border: '1px solid #a7f3d0',
+                      borderRadius: '4px',
+                      padding: '2px 8px',
+                      color: '#065f46',
+                      fontSize: '10px',
+                      fontWeight: 800,
+                      cursor: 'pointer',
                     }}
                   >
-                    🇮🇳 +91
-                  </div>
-                  <input
-                    type="tel"
-                    placeholder="10-digit mobile number"
-                    maxLength={10}
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    style={{
-                      ...inputStyle,
-                      flex: 1,
-                      borderColor: errors.phone ? '#e53935' : '#d5d5d5',
-                    }}
-                  />
-                </div>
-                {errors.phone ? (
-                  <div style={{ fontSize: '11px', color: '#e53935', marginTop: '4px' }}>
-                    {errors.phone}
-                  </div>
-                ) : (
-                  <div style={{ fontSize: '10px', color: '#777', marginTop: '4px' }}>
-                    Used by courier delivery partner for OTP and delivery updates.
-                  </div>
+                    ⚡ Auto-Fill Test Info
+                  </button>
                 )}
+                <span style={{ fontSize: '10px', color: '#059669', fontWeight: 700 }}>
+                  ⚡ Fast Express
+                </span>
               </div>
             </div>
 
-            {/* 2. Shipping Address */}
-            <div style={{ marginBottom: '22px' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  marginBottom: '12px',
-                  borderBottom: '1px solid #f0f0f0',
-                  paddingBottom: '6px',
-                }}
-              >
-                <span
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    backgroundColor: '#111',
-                    color: '#fff',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  2
-                </span>
-                <h4 style={{ fontSize: '13px', fontWeight: 800, margin: 0, textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                  Shipping Address
-                </h4>
-              </div>
-
-              {/* Full Name */}
-              <div style={{ marginBottom: '14px' }}>
+            {/* Row 1: Full Name & Mobile Number (2 Columns) */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div>
                 <label style={labelStyle}>
                   Full Name <span style={{ color: '#e53935' }}>*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="First and last name"
+                  placeholder="e.g. Rahul Sharma"
                   value={fullName}
                   onChange={(e) => {
                     setFullName(e.target.value);
@@ -574,25 +612,114 @@ export default function CheckoutAddressForm({
                   }}
                 />
                 {errors.fullName && (
-                  <div style={{ fontSize: '11px', color: '#e53935', marginTop: '4px' }}>
+                  <div style={{ fontSize: '10px', color: '#e53935', marginTop: '2px' }}>
                     {errors.fullName}
                   </div>
                 )}
               </div>
 
-              {/* PIN Code */}
-              <div style={{ marginBottom: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <label style={{ ...labelStyle, margin: 0 }}>
-                    PIN Code <span style={{ color: '#e53935' }}>*</span>
-                  </label>
-                  <span style={{ fontSize: '10px', color: '#ff6700', fontWeight: 600 }}>
-                    ⚡ Auto-detects City & State
-                  </span>
+              <div>
+                <label style={labelStyle}>
+                  Mobile <span style={{ color: '#e53935' }}>*</span>
+                </label>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <div
+                    style={{
+                      height: '40px',
+                      padding: '0 8px',
+                      backgroundColor: '#f5f5f5',
+                      border: '1px solid #d5d5d5',
+                      borderRadius: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      color: '#444',
+                      flexShrink: 0,
+                    }}
+                  >
+                    +91
+                  </div>
+                  <input
+                    type="tel"
+                    placeholder="10-digit number"
+                    maxLength={10}
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    style={{
+                      ...inputStyle,
+                      flex: 1,
+                      borderColor: errors.phone ? '#e53935' : '#d5d5d5',
+                    }}
+                  />
                 </div>
+                {errors.phone && (
+                  <div style={{ fontSize: '10px', color: '#e53935', marginTop: '2px' }}>
+                    {errors.phone}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Row 2: Email Address */}
+            <div>
+              <label style={labelStyle}>
+                Email Address <span style={{ color: '#e53935' }}>*</span>
+              </label>
+              <input
+                type="email"
+                placeholder="name@example.com (for order tracking & receipt)"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
+                }}
+                style={{
+                  ...inputStyle,
+                  borderColor: errors.email ? '#e53935' : '#d5d5d5',
+                }}
+              />
+              {errors.email && (
+                <div style={{ fontSize: '10px', color: '#e53935', marginTop: '2px' }}>
+                  {errors.email}
+                </div>
+              )}
+            </div>
+
+            {/* Row 3: Complete Delivery Address */}
+            <div>
+              <label style={labelStyle}>
+                Complete Delivery Address <span style={{ color: '#e53935' }}>*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="House/Flat No, Building, Street, Area, Landmark"
+                value={addressLine1}
+                onChange={(e) => {
+                  setAddressLine1(e.target.value);
+                  if (errors.addressLine1) setErrors((prev) => ({ ...prev, addressLine1: '' }));
+                }}
+                style={{
+                  ...inputStyle,
+                  borderColor: errors.addressLine1 ? '#e53935' : '#d5d5d5',
+                }}
+              />
+              {errors.addressLine1 && (
+                <div style={{ fontSize: '10px', color: '#e53935', marginTop: '2px' }}>
+                  {errors.addressLine1}
+                </div>
+              )}
+            </div>
+
+            {/* Row 4: PIN Code & City/State (2 Columns) */}
+            <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr', gap: '8px' }}>
+              <div>
+                <label style={labelStyle}>
+                  PIN Code <span style={{ color: '#e53935' }}>*</span>
+                </label>
                 <input
                   type="text"
-                  placeholder="6-digit postal code"
+                  placeholder="6-digit PIN"
                   maxLength={6}
                   value={pincode}
                   onChange={handlePincodeChange}
@@ -602,172 +729,117 @@ export default function CheckoutAddressForm({
                   }}
                 />
                 {errors.pincode && (
-                  <div style={{ fontSize: '11px', color: '#e53935', marginTop: '4px' }}>
+                  <div style={{ fontSize: '10px', color: '#e53935', marginTop: '2px' }}>
                     {errors.pincode}
                   </div>
                 )}
               </div>
 
-              {/* Address Line 1 */}
-              <div style={{ marginBottom: '14px' }}>
+              <div>
                 <label style={labelStyle}>
-                  Flat / House No. / Building / Company <span style={{ color: '#e53935' }}>*</span>
+                  City <span style={{ color: '#e53935' }}>*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Flat 304, Green Heights or House #12"
-                  value={addressLine1}
+                  placeholder="City"
+                  value={city}
                   onChange={(e) => {
-                    setAddressLine1(e.target.value);
-                    if (errors.addressLine1) setErrors((prev) => ({ ...prev, addressLine1: '' }));
+                    setCity(e.target.value);
+                    if (errors.city) setErrors((prev) => ({ ...prev, city: '' }));
                   }}
                   style={{
                     ...inputStyle,
-                    borderColor: errors.addressLine1 ? '#e53935' : '#d5d5d5',
+                    borderColor: errors.city ? '#e53935' : '#d5d5d5',
                   }}
                 />
-                {errors.addressLine1 && (
-                  <div style={{ fontSize: '11px', color: '#e53935', marginTop: '4px' }}>
-                    {errors.addressLine1}
+                {errors.city && (
+                  <div style={{ fontSize: '10px', color: '#e53935', marginTop: '2px' }}>
+                    {errors.city}
                   </div>
                 )}
               </div>
 
-              {/* Address Line 2 */}
-              <div style={{ marginBottom: '14px' }}>
+              <div>
                 <label style={labelStyle}>
-                  Area / Street / Sector / Landmark (Optional)
+                  State <span style={{ color: '#e53935' }}>*</span>
                 </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Near City Mall, MG Road"
-                  value={addressLine2}
-                  onChange={(e) => setAddressLine2(e.target.value)}
-                  style={inputStyle}
-                />
+                <select
+                  value={state}
+                  onChange={(e) => {
+                    setState(e.target.value);
+                    if (errors.state) setErrors((prev) => ({ ...prev, state: '' }));
+                  }}
+                  style={{
+                    ...inputStyle,
+                    borderColor: errors.state ? '#e53935' : '#d5d5d5',
+                    appearance: 'auto',
+                    fontSize: '12px',
+                    padding: '0 6px',
+                  }}
+                >
+                  {INDIAN_STATES.map((st) => (
+                    <option key={st} value={st}>
+                      {st}
+                    </option>
+                  ))}
+                </select>
               </div>
-
-              {/* City & State (2 columns) */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
-                <div>
-                  <label style={labelStyle}>
-                    City / District <span style={{ color: '#e53935' }}>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="City"
-                    value={city}
-                    onChange={(e) => {
-                      setCity(e.target.value);
-                      if (errors.city) setErrors((prev) => ({ ...prev, city: '' }));
-                    }}
-                    style={{
-                      ...inputStyle,
-                      borderColor: errors.city ? '#e53935' : '#d5d5d5',
-                    }}
-                  />
-                  {errors.city && (
-                    <div style={{ fontSize: '11px', color: '#e53935', marginTop: '4px' }}>
-                      {errors.city}
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label style={labelStyle}>
-                    State <span style={{ color: '#e53935' }}>*</span>
-                  </label>
-                  <select
-                    value={state}
-                    onChange={(e) => {
-                      setState(e.target.value);
-                      if (errors.state) setErrors((prev) => ({ ...prev, state: '' }));
-                    }}
-                    style={{
-                      ...inputStyle,
-                      borderColor: errors.state ? '#e53935' : '#d5d5d5',
-                      appearance: 'auto',
-                    }}
-                  >
-                    {INDIAN_STATES.map((st) => (
-                      <option key={st} value={st}>
-                        {st}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Save Address Checkbox */}
-              <label
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  fontSize: '12px',
-                  color: '#444',
-                  cursor: 'pointer',
-                  marginTop: '10px',
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={saveInfo}
-                  onChange={(e) => setSaveInfo(e.target.checked)}
-                  style={{ width: '16px', height: '16px', cursor: 'pointer' }}
-                />
-                <span>Save this address for fast 1-click checkout next time</span>
-              </label>
             </div>
 
+            {/* Save Address Toggle */}
+            <label
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '11px',
+                color: '#555',
+                cursor: 'pointer',
+                marginTop: '4px',
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={saveInfo}
+                onChange={(e) => setSaveInfo(e.target.checked)}
+                style={{ width: '14px', height: '14px', cursor: 'pointer' }}
+              />
+              <span>Remember details for next time</span>
+            </label>
+
             {/* Submit Button */}
-            <div style={{ marginTop: '20px' }}>
+            <div style={{ marginTop: '8px' }}>
               <button
                 type="submit"
                 style={{
                   width: '100%',
-                  height: '52px',
+                  height: '46px',
                   borderRadius: '5px',
                   backgroundColor: '#ff6700',
                   color: '#ffffff',
                   border: 'none',
                   fontWeight: 800,
-                  fontSize: '13px',
-                  letterSpacing: '1px',
+                  fontSize: '12px',
+                  letterSpacing: '0.8px',
                   textTransform: 'uppercase',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '8px',
-                  boxShadow: '0 4px 14px rgba(255, 103, 0, 0.35)',
+                  gap: '6px',
+                  boxShadow: '0 4px 12px rgba(255, 103, 0, 0.3)',
                   transition: 'background-color 0.2s',
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e65c00')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
               >
-                <span>CONTINUE TO PAYMENT (Rs. {totalPrice.toFixed(2)})</span>
+                <span>CONTINUE TO PAYMENT (Rs. {finalPayable.toFixed(2)})</span>
                 <span>&rarr;</span>
               </button>
             </div>
 
-            {/* Trust Footer */}
-            <div
-              style={{
-                marginTop: '16px',
-                textAlign: 'center',
-                fontSize: '11px',
-                color: '#666',
-                display: 'flex',
-                justifyContent: 'center',
-                gap: '12px',
-                flexWrap: 'wrap',
-              }}
-            >
-              <span>🛡️ 100% Secure Checkout</span>
-              <span>🚚 Free Delivery</span>
-              <span>🔄 Easy Replacement</span>
-            </div>
+            {/* 3 Core Trust Badges matching Product Page */}
+            <CheckoutTrustBadges compact={isDrawer} />
           </form>
         ) : (
           /* State 2: Address Confirmed - Ready for Payment */
@@ -866,89 +938,212 @@ export default function CheckoutAddressForm({
               </div>
             </div>
 
-            {/* Payment Flow Prompt & Next Steps */}
-            <div
-              style={{
-                backgroundColor: '#fffbeb',
-                border: '1px solid #fde68a',
-                borderRadius: '8px',
-                padding: '16px',
-                marginBottom: '24px',
-                textAlign: 'left',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                <span style={{ fontSize: '16px' }}>💳</span>
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#92400e' }}>
-                  Ready for Payment Flow
-                </span>
+            {/* Payment Notifications / Error Alerts */}
+            {paymentError && (
+              <div
+                style={{
+                  backgroundColor: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  borderRadius: '8px',
+                  padding: '14px',
+                  marginBottom: '18px',
+                  color: '#991b1b',
+                  fontSize: '12px',
+                  lineHeight: 1.5,
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                }}
+              >
+                <span style={{ fontSize: '16px', lineHeight: 1 }}>⚠️</span>
+                <div>
+                  <strong style={{ display: 'block', marginBottom: '2px', color: '#7f1d1d' }}>
+                    Payment Issue Encountered
+                  </strong>
+                  <span>{paymentError}</span>
+                </div>
               </div>
-              <p style={{ margin: 0, fontSize: '12px', color: '#b45309', lineHeight: 1.5 }}>
-                Address and customer information have been captured successfully. You can now connect your payment gateway (e.g. Razorpay, Cashfree, PhonePe, UPI QR, or COD).
-              </p>
-            </div>
+            )}
+
+            {paymentNotice && !paymentError && (
+              <div
+                style={{
+                  backgroundColor: '#fffbeb',
+                  border: '1px solid #fde68a',
+                  borderRadius: '8px',
+                  padding: '12px 14px',
+                  marginBottom: '18px',
+                  color: '#92400e',
+                  fontSize: '12px',
+                  lineHeight: 1.4,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <span>ℹ️</span>
+                <span>{paymentNotice}</span>
+              </div>
+            )}
+
 
             {/* Payment Summary Box */}
             <div
               style={{
-                padding: '14px 16px',
+                padding: '16px',
                 backgroundColor: '#f9fafb',
-                borderRadius: '6px',
+                borderRadius: '8px',
                 border: '1px solid #e5e7eb',
                 marginBottom: '20px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
               }}
             >
-              <div>
-                <div style={{ fontSize: '11px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 700 }}>
-                  Total Payable
-                </div>
-                <div style={{ fontSize: '18px', fontWeight: 800, color: '#111' }}>
-                  Rs. {totalPrice.toFixed(2)}
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '6px' }}>
+                <span>Cart Subtotal</span>
+                <span>Rs. {totalPrice.toFixed(2)}</span>
               </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '10px' }}>
+                <span>Nationwide Express Shipping</span>
+                {isFreeShipping ? (
+                  <span style={{ color: '#059669', fontWeight: 700 }}>FREE (Orders ₹999+)</span>
+                ) : (
+                  <span style={{ color: '#111827', fontWeight: 700 }}>Rs. {deliveryFee.toFixed(2)}</span>
+                )}
+              </div>
+
+              {!isFreeShipping && remainingForFreeShipping > 0 && (
+                <div
+                  style={{
+                    backgroundColor: '#fffbeb',
+                    border: '1px solid #fde68a',
+                    borderRadius: '5px',
+                    padding: '8px 10px',
+                    fontSize: '11px',
+                    color: '#92400e',
+                    marginBottom: '10px',
+                    lineHeight: 1.4,
+                  }}
+                >
+                  ⚡ Add <strong style={{ color: '#b45309' }}>Rs. {remainingForFreeShipping.toFixed(2)}</strong> more to unlock <strong>FREE Shipping</strong>!
+                </div>
+              )}
+
               <div
                 style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  backgroundColor: '#d1fae5',
-                  color: '#065f46',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderTop: '1px dashed #e5e7eb',
+                  paddingTop: '10px',
                 }}
               >
-                Free Shipping Applied
+                <div>
+                  <div style={{ fontSize: '10px', color: '#6b7280', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.5px' }}>
+                    Final Payable Amount
+                  </div>
+                  <div style={{ fontSize: '20px', fontWeight: 900, color: '#111827' }}>
+                    Rs. {finalPayable.toFixed(2)}
+                  </div>
+                </div>
+                <div
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    backgroundColor: '#d1fae5',
+                    color: '#065f46',
+                    padding: '4px 10px',
+                    borderRadius: '20px',
+                  }}
+                >
+                  🔒 Safe & Encrypted
+                </div>
               </div>
             </div>
 
             {/* Action Buttons */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {/* PRIMARY PAY NOW WITH RAZORPAY BUTTON */}
+              <button
+                type="button"
+                onClick={handlePayWithRazorpay}
+                disabled={isProcessingPayment}
+                style={{
+                  width: '100%',
+                  height: '54px',
+                  borderRadius: '6px',
+                  backgroundColor: isProcessingPayment ? '#9ca3af' : '#ff6700',
+                  color: '#ffffff',
+                  border: 'none',
+                  fontWeight: 800,
+                  fontSize: '13px',
+                  letterSpacing: '1px',
+                  textTransform: 'uppercase',
+                  cursor: isProcessingPayment ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: isProcessingPayment ? 'none' : '0 4px 16px rgba(255, 103, 0, 0.4)',
+                  transition: 'background-color 0.2s, transform 0.1s',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isProcessingPayment) e.currentTarget.style.backgroundColor = '#e65c00';
+                }}
+                onMouseLeave={(e) => {
+                  if (!isProcessingPayment) e.currentTarget.style.backgroundColor = '#ff6700';
+                }}
+              >
+                {isProcessingPayment ? (
+                  <>
+                    <span
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        border: '2px solid #ffffff',
+                        borderTopColor: 'transparent',
+                        borderRadius: '50%',
+                        animation: 'spin 0.8s linear infinite',
+                        display: 'inline-block',
+                      }}
+                    />
+                    <span>CONNECTING TO RAZORPAY...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>🔒 PAY NOW WITH RAZORPAY</span>
+                    <span>(Rs. {finalPayable.toFixed(2)})</span>
+                    <span>&rarr;</span>
+                  </>
+                )}
+              </button>
+
               <button
                 type="button"
                 onClick={() => setIsConfirmed(false)}
+                disabled={isProcessingPayment}
                 style={{
                   width: '100%',
-                  height: '46px',
+                  height: '44px',
                   border: '1px solid #d1d5db',
                   borderRadius: '5px',
                   backgroundColor: '#ffffff',
                   color: '#374151',
                   fontSize: '12px',
                   fontWeight: 700,
-                  cursor: 'pointer',
+                  cursor: isProcessingPayment ? 'not-allowed' : 'pointer',
+                  opacity: isProcessingPayment ? 0.6 : 1,
                 }}
               >
                 EDIT SHIPPING DETAILS
               </button>
+
               {onBackToCart && (
                 <button
                   type="button"
                   onClick={onBackToCart}
+                  disabled={isProcessingPayment}
                   style={{
                     width: '100%',
-                    height: '46px',
+                    height: '44px',
                     border: 'none',
                     borderRadius: '5px',
                     backgroundColor: '#000000',
@@ -956,29 +1151,20 @@ export default function CheckoutAddressForm({
                     fontSize: '12px',
                     fontWeight: 700,
                     letterSpacing: '0.8px',
-                    cursor: 'pointer',
+                    cursor: isProcessingPayment ? 'not-allowed' : 'pointer',
+                    opacity: isProcessingPayment ? 0.6 : 1,
                   }}
                 >
                   RETURN TO CART
                 </button>
               )}
             </div>
+
+            {/* 3 Core Trust Badges matching Product Page */}
+            <CheckoutTrustBadges compact={isDrawer} />
           </div>
         )}
       </div>
-
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(6px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }
