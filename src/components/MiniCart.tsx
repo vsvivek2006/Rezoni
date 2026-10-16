@@ -6,21 +6,10 @@ import { useCart } from '@/context/CartContext';
 import CheckoutAddressForm from './CheckoutAddressForm';
 
 export default function MiniCart() {
-  const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice, addToCart, clearCart } = useCart();
+  const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice } = useCart();
   const [orderNote, setOrderNote] = useState('');
   const [isNoteOpen, setIsNoteOpen] = useState(false);
   const [drawerStep, setDrawerStep] = useState<'cart' | 'checkout'>('cart');
-
-  const handleAddOneRupeeTestItem = () => {
-    clearCart();
-    addToCart({
-      id: 'live-test-case',
-      title: '₹1 Live Gateway Verification Case',
-      price: 1,
-      image: 'https://www.rezoni.com/cdn/shop/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3_950x.jpg?v=1725349229',
-      quantity: 1,
-    });
-  };
 
   useEffect(() => {
     if (isCartOpen) {
@@ -187,34 +176,14 @@ export default function MiniCart() {
                   </svg>
                   <p style={{ fontSize: '15px', fontWeight: 600, color: '#444', marginBottom: '8px' }}>Your cart is empty</p>
                   <p style={{ fontSize: '13px', marginBottom: '20px' }}>Looks like you haven&apos;t added any cases yet.</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
-                    <button
-                      onClick={handleAddOneRupeeTestItem}
-                      type="button"
-                      style={{
-                        padding: '10px 20px',
-                        backgroundColor: '#059669',
-                        color: '#ffffff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        fontSize: '11px',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        letterSpacing: '0.5px',
-                        boxShadow: '0 2px 8px rgba(5,150,105,0.3)',
-                      }}
-                    >
-                      ⚡ TEST ₹1 LIVE ORDER NOW
-                    </button>
-                    <Link
-                      href="/collections/all"
-                      onClick={() => setIsCartOpen(false)}
-                      className="btn-rezoni"
-                      style={{ padding: '10px 24px', fontSize: '12px', display: 'inline-block' }}
-                    >
-                      CONTINUE SHOPPING
-                    </Link>
-                  </div>
+                  <Link
+                    href="/collections/all"
+                    onClick={() => setIsCartOpen(false)}
+                    className="btn-rezoni"
+                    style={{ padding: '10px 24px', fontSize: '12px', display: 'inline-block' }}
+                  >
+                    CONTINUE SHOPPING
+                  </Link>
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

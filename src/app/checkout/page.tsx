@@ -6,19 +6,7 @@ import { useCart } from '@/context/CartContext';
 import CheckoutAddressForm from '@/components/CheckoutAddressForm';
 
 export default function CheckoutPage() {
-  const { cart, totalPrice, addToCart, clearCart, setIsCartOpen } = useCart();
-
-  const handleAddOneRupeeTestItem = () => {
-    clearCart();
-    addToCart({
-      id: 'live-test-case',
-      title: '₹1 Live Gateway Verification Case',
-      price: 1,
-      image: 'https://www.rezoni.com/cdn/shop/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3_950x.jpg?v=1725349229',
-      quantity: 1,
-    });
-    setIsCartOpen(false);
-  };
+  const { cart, totalPrice } = useCart();
 
   return (
     <div
@@ -51,23 +39,6 @@ export default function CheckoutPage() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <button
-              onClick={handleAddOneRupeeTestItem}
-              type="button"
-              style={{
-                backgroundColor: '#ecfdf5',
-                border: '1px solid #a7f3d0',
-                color: '#065f46',
-                fontSize: '11px',
-                fontWeight: 800,
-                padding: '6px 12px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              ⚡ Test ₹1 Live Order
-            </button>
-
             <Link
               href="/collections/all"
               style={{
@@ -100,38 +71,18 @@ export default function CheckoutPage() {
             <p style={{ fontSize: '13px', color: '#666', marginBottom: '24px' }}>
               Add a stylish case or accessory before proceeding to checkout.
             </p>
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button
-                onClick={handleAddOneRupeeTestItem}
-                type="button"
-                style={{
-                  padding: '12px 24px',
-                  backgroundColor: '#059669',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '5px',
-                  fontSize: '12px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  letterSpacing: '0.5px',
-                  boxShadow: '0 4px 12px rgba(5, 150, 105, 0.3)',
-                }}
-              >
-                ⚡ TEST ₹1 LIVE ORDER NOW
-              </button>
-              <Link
-                href="/collections/all"
-                className="btn-rezoni"
-                style={{
-                  display: 'inline-block',
-                  padding: '12px 28px',
-                  fontSize: '12px',
-                  textDecoration: 'none',
-                }}
-              >
-                BROWSE BEST SELLERS
-              </Link>
-            </div>
+            <Link
+              href="/collections/all"
+              className="btn-rezoni"
+              style={{
+                display: 'inline-block',
+                padding: '12px 28px',
+                fontSize: '12px',
+                textDecoration: 'none',
+              }}
+            >
+              BROWSE BEST SELLERS
+            </Link>
           </div>
         ) : (
           <div

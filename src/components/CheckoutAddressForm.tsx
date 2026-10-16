@@ -139,22 +139,10 @@ export default function CheckoutAddressForm({
   // Delivery fee tracking logic
   const safeCart = Array.isArray(cart) ? cart.filter(Boolean) : [];
   const safeTotalPrice = typeof totalPrice === 'number' && !isNaN(totalPrice) ? totalPrice : 0;
-  const isTestItem = safeCart.some((i) => i && (i.id === 'live-test-case' || i.price === 1));
-  const isFreeShipping = safeTotalPrice >= FREE_SHIPPING_THRESHOLD || isTestItem;
+  const isFreeShipping = safeTotalPrice >= FREE_SHIPPING_THRESHOLD;
   const deliveryFee = isFreeShipping ? 0 : STANDARD_SHIPPING_FEE;
   const finalPayable = safeTotalPrice + deliveryFee;
-  const remainingForFreeShipping = isTestItem ? 0 : Math.max(0, FREE_SHIPPING_THRESHOLD - safeTotalPrice);
-
-  const handleAutofillTestDetails = () => {
-    setFullName('Test Customer');
-    setPhone('9876543210');
-    setEmail('test@rezoni.com');
-    setAddressLine1('Flat 101, Test Residency, MG Road');
-    setPincode('110001');
-    setCity('New Delhi');
-    setState('Delhi');
-    setErrors({});
-  };
+  const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - safeTotalPrice);
 
   // Load saved address from localStorage if available
   useEffect(() => {
@@ -567,29 +555,9 @@ export default function CheckoutAddressForm({
               <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#222' }}>
                 Delivery & Contact Details
               </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {isTestItem && (
-                  <button
-                    type="button"
-                    onClick={handleAutofillTestDetails}
-                    style={{
-                      background: '#ecfdf5',
-                      border: '1px solid #a7f3d0',
-                      borderRadius: '4px',
-                      padding: '2px 8px',
-                      color: '#065f46',
-                      fontSize: '10px',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    ⚡ Auto-Fill Test Info
-                  </button>
-                )}
-                <span style={{ fontSize: '10px', color: '#059669', fontWeight: 700 }}>
-                  ⚡ Fast Express
-                </span>
-              </div>
+              <span style={{ fontSize: '10px', color: '#059669', fontWeight: 700 }}>
+                ⚡ Fast Express Delivery
+              </span>
             </div>
 
             {/* Row 1: Full Name & Mobile Number (2 Columns) */}

@@ -83,9 +83,8 @@ export function validateAndCalculateCart(incomingItems: any[]): ValidatedCartRes
     });
   }
 
-  // Delivery Fee calculation: Free for orders >= 999 or test checkouts, otherwise standard fee (Rs. 49)
-  const isTestCheckout = verifiedItems.some((i) => i.id === 'live-test-case' || i.price === 1);
-  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || isTestCheckout ? 0 : STANDARD_SHIPPING_FEE;
+  // Delivery Fee calculation: Free for orders >= 999, otherwise standard fee (Rs. 49)
+  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_FEE;
   const totalAmount = subtotal + shippingFee;
 
   // Razorpay requires amount in Paise (integer)
