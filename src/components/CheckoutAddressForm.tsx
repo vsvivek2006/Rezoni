@@ -521,7 +521,7 @@ export default function CheckoutAddressForm({
                         {item?.title || 'Rezoni Item'}
                       </div>
                       <div style={{ fontSize: '11px', color: '#666' }}>
-                        Qty: {item?.quantity || 1} {item?.device ? `• ${item.device}` : ''}
+                        Qty: {item?.quantity || 1} {item?.device ? `• ${item.device}` : ''} {item?.color ? `• ${item.color}` : ''}
                       </div>
                     </div>
                     <div style={{ fontSize: '12px', fontWeight: 700, color: '#111' }}>

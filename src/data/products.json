@@ -7,14 +7,164 @@
     "sub_title": "Mixtape",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3_950x.jpg?v=1725349229",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_9fac1ea5-71ef-4f31-84c4-20edd3ee57ea_950x.jpg?v=1725349229",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3.jpg?v=1725349229",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9fac1ea5-71ef-4f31-84c4-20edd3ee57ea.jpg?v=1725349229",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3.jpg?v=1725349229",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9fac1ea5-71ef-4f31-84c4-20edd3ee57ea.jpg?v=1725349229",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_ba36acb4-626a-41b1-8298-8a6f37da0380.jpg?v=1725349229",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_2ffeba4f-3d1f-4bfc-b9ed-f3650dde8eb7.jpg?v=1725349229",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_08ad005c-1fe5-47f0-9b81-dd2c5fe1c883.jpg?v=1725349398",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_27567c06-a66e-445c-bc41-41d29a8f54e9.jpg?v=1725349398",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_3ac6d6f9-afa1-49ad-8600-06f833948664.jpg?v=1725349398",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_54646c67-2c8a-45fc-a62c-a94a942523c3.jpg?v=1725349398",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_7a08e04e-920f-445c-a87d-79eb6e34701c.jpg?v=1725349405",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/a_5.jpg?v=1725349405",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/n_6.jpg?v=1725349404",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/8_dab90969-4b52-4a66-90c7-901591473470.jpg?v=1725349410",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/a_9.jpg?v=1725349410",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/n_9.jpg?v=1725349409",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_165059a8-780d-45a7-a50a-319222c01756.jpg?v=1725349414",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/a_8.jpg?v=1725349414",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/n_7.jpg?v=1725349413"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3.jpg?v=1725349229",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3.jpg?v=1725349229",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9fac1ea5-71ef-4f31-84c4-20edd3ee57ea.jpg?v=1725349229",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_ba36acb4-626a-41b1-8298-8a6f37da0380.jpg?v=1725349229",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_2ffeba4f-3d1f-4bfc-b9ed-f3650dde8eb7.jpg?v=1725349229"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_08ad005c-1fe5-47f0-9b81-dd2c5fe1c883.jpg?v=1725349398",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_08ad005c-1fe5-47f0-9b81-dd2c5fe1c883.jpg?v=1725349398",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_27567c06-a66e-445c-bc41-41d29a8f54e9.jpg?v=1725349398",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_3ac6d6f9-afa1-49ad-8600-06f833948664.jpg?v=1725349398",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_54646c67-2c8a-45fc-a62c-a94a942523c3.jpg?v=1725349398"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/8_dab90969-4b52-4a66-90c7-901591473470.jpg?v=1725349410",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/8_dab90969-4b52-4a66-90c7-901591473470.jpg?v=1725349410",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/a_9.jpg?v=1725349410",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/n_9.jpg?v=1725349409"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_7a08e04e-920f-445c-a87d-79eb6e34701c.jpg?v=1725349405",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_7a08e04e-920f-445c-a87d-79eb6e34701c.jpg?v=1725349405",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/a_5.jpg?v=1725349405",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/n_6.jpg?v=1725349404"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_165059a8-780d-45a7-a50a-319222c01756.jpg?v=1725349414",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_165059a8-780d-45a7-a50a-319222c01756.jpg?v=1725349414",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/a_8.jpg?v=1725349414",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/n_7.jpg?v=1725349413"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -25,14 +175,164 @@
     "sub_title": "Y2K",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/1_198ca594-5830-42ba-aff0-ebe2306194a6_950x.jpg?v=1712562796",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_7b832b00-9063-4c5a-8d3f-2f850f4eea01_950x.jpg?v=1712562796",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_198ca594-5830-42ba-aff0-ebe2306194a6.jpg?v=1712562796",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_7b832b00-9063-4c5a-8d3f-2f850f4eea01.jpg?v=1712562796",
     "swatches": [
       "#FFFFFF",
       "#000000",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_198ca594-5830-42ba-aff0-ebe2306194a6.jpg?v=1712562796",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_7b832b00-9063-4c5a-8d3f-2f850f4eea01.jpg?v=1712562796",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_ecc3835a-c47f-48bc-85f6-e785cc2a5da2.jpg?v=1712562797",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_b46cd15c-d82c-4138-9d6a-58685a5e55cc.jpg?v=1712562796",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_01455270-88ab-46d5-a8a1-865c89185074.jpg?v=1712562810",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/24_7866fdca-e24e-4448-a883-6673ba7d8735.jpg?v=1712562809",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/42.jpg?v=1712562809",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/16_8db46679-1188-4336-807c-c852086a3edb.jpg?v=1712562821",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/31_0acc0aa9-166c-4b7f-a33b-0359d54a328a.jpg?v=1712562820",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/35.jpg?v=1712562820",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/50.jpg?v=1712562821",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/13_a853df1e-3851-4c7d-8e2d-77ff824f4ff8.jpg?v=1712562834",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/29_adc51afa-159e-428d-a6b8-6acec6c1f04a.jpg?v=1712562834",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/46_582b952e-aa2f-47f5-8079-5ccc43493929.jpg?v=1712562835",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/11_202e22a8-3864-4af8-8b2e-e110c8f2ab7a.jpg?v=1712562846",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/27_f28963a7-1d1b-4a19-9e03-fd4b5f6842ca.jpg?v=1712562845",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/44_1062af5f-707e-4ec8-a555-6af976ac2b7c.jpg?v=1712562845"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "White",
+          "Black",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_198ca594-5830-42ba-aff0-ebe2306194a6.jpg?v=1712562796",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_198ca594-5830-42ba-aff0-ebe2306194a6.jpg?v=1712562796",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_7b832b00-9063-4c5a-8d3f-2f850f4eea01.jpg?v=1712562796",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_ecc3835a-c47f-48bc-85f6-e785cc2a5da2.jpg?v=1712562797",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_b46cd15c-d82c-4138-9d6a-58685a5e55cc.jpg?v=1712562796"
+        ]
+      },
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/16_8db46679-1188-4336-807c-c852086a3edb.jpg?v=1712562821",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/16_8db46679-1188-4336-807c-c852086a3edb.jpg?v=1712562821",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/31_0acc0aa9-166c-4b7f-a33b-0359d54a328a.jpg?v=1712562820",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/35.jpg?v=1712562820",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/50.jpg?v=1712562821"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/13_a853df1e-3851-4c7d-8e2d-77ff824f4ff8.jpg?v=1712562834",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/13_a853df1e-3851-4c7d-8e2d-77ff824f4ff8.jpg?v=1712562834",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/29_adc51afa-159e-428d-a6b8-6acec6c1f04a.jpg?v=1712562834",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/46_582b952e-aa2f-47f5-8079-5ccc43493929.jpg?v=1712562835"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_01455270-88ab-46d5-a8a1-865c89185074.jpg?v=1712562810",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_01455270-88ab-46d5-a8a1-865c89185074.jpg?v=1712562810",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/24_7866fdca-e24e-4448-a883-6673ba7d8735.jpg?v=1712562809",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/42.jpg?v=1712562809"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/11_202e22a8-3864-4af8-8b2e-e110c8f2ab7a.jpg?v=1712562846",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/11_202e22a8-3864-4af8-8b2e-e110c8f2ab7a.jpg?v=1712562846",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/27_f28963a7-1d1b-4a19-9e03-fd4b5f6842ca.jpg?v=1712562845",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/44_1062af5f-707e-4ec8-a555-6af976ac2b7c.jpg?v=1712562845"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -43,14 +343,164 @@
     "sub_title": "Stickers",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/1_d1dd6cde-4f21-448b-b467-3190b372131e_950x.jpg?v=1712571168",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_ec123fdd-59fa-4232-bd2f-e2e5b30d1514_950x.jpg?v=1712571168",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d1dd6cde-4f21-448b-b467-3190b372131e.jpg?v=1712571168",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ec123fdd-59fa-4232-bd2f-e2e5b30d1514.jpg?v=1712571168",
     "swatches": [
       "#FFFFFF",
       "#000000",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d1dd6cde-4f21-448b-b467-3190b372131e.jpg?v=1712571168",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ec123fdd-59fa-4232-bd2f-e2e5b30d1514.jpg?v=1712571168",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_2_a100aa37-e130-4ff7-a239-e5eb0e583f14.jpg?v=1712571167",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_41567cad-cb99-4ea3-9685-560f921e1a14.jpg?v=1712571167",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2b2bb63e-1067-4a1c-9c04-4142e5141471.jpg?v=1712571179",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_8d900320-88b1-42ce-9a59-900d107b0ab1.jpg?v=1712571179",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3.1_eb8fd2d6-1bb1-48ed-9c49-2a13d7cd75da.jpg?v=1712571179",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_311687fd-c671-486b-8a35-81af08886aea.jpg?v=1712571179",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bc143c2b-e42f-4ca6-9fbd-dee7b4139c2e.jpg?v=1712571188",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_920cb966-48a4-45e2-b520-aa78e5eb1e33.jpg?v=1712571188",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_6591ddfb-8be7-4f5b-bea1-34870e608ec7.jpg?v=1712571188",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1.1_cd42e113-d9fa-4a26-8f0b-fb5d5811521a.jpg?v=1712571201",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_30012ad0-9a3c-4837-b487-8c8349605c03.jpg?v=1712571202",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ebbfb481-1484-45a3-97c0-abf2620a8007.jpg?v=1712571202",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2_727c8879-74d4-4336-aad9-5553ec81560e.jpg?v=1712571209",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_f3f4cea7-a844-4116-af82-39ac21f28d38.jpg?v=1712571209",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_39358c11-ca93-4525-b971-13a0b03e3017.jpg?v=1712571209"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "White",
+          "Black",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d1dd6cde-4f21-448b-b467-3190b372131e.jpg?v=1712571168",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d1dd6cde-4f21-448b-b467-3190b372131e.jpg?v=1712571168",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ec123fdd-59fa-4232-bd2f-e2e5b30d1514.jpg?v=1712571168",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_2_a100aa37-e130-4ff7-a239-e5eb0e583f14.jpg?v=1712571167",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_41567cad-cb99-4ea3-9685-560f921e1a14.jpg?v=1712571167"
+        ]
+      },
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2b2bb63e-1067-4a1c-9c04-4142e5141471.jpg?v=1712571179",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2b2bb63e-1067-4a1c-9c04-4142e5141471.jpg?v=1712571179",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_8d900320-88b1-42ce-9a59-900d107b0ab1.jpg?v=1712571179",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3.1_eb8fd2d6-1bb1-48ed-9c49-2a13d7cd75da.jpg?v=1712571179",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_311687fd-c671-486b-8a35-81af08886aea.jpg?v=1712571179"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1.1_cd42e113-d9fa-4a26-8f0b-fb5d5811521a.jpg?v=1712571201",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1.1_cd42e113-d9fa-4a26-8f0b-fb5d5811521a.jpg?v=1712571201",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_30012ad0-9a3c-4837-b487-8c8349605c03.jpg?v=1712571202",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ebbfb481-1484-45a3-97c0-abf2620a8007.jpg?v=1712571202"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bc143c2b-e42f-4ca6-9fbd-dee7b4139c2e.jpg?v=1712571188",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bc143c2b-e42f-4ca6-9fbd-dee7b4139c2e.jpg?v=1712571188",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_920cb966-48a4-45e2-b520-aa78e5eb1e33.jpg?v=1712571188",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_6591ddfb-8be7-4f5b-bea1-34870e608ec7.jpg?v=1712571188"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2_727c8879-74d4-4336-aad9-5553ec81560e.jpg?v=1712571209",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2_727c8879-74d4-4336-aad9-5553ec81560e.jpg?v=1712571209",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_f3f4cea7-a844-4116-af82-39ac21f28d38.jpg?v=1712571209",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_39358c11-ca93-4525-b971-13a0b03e3017.jpg?v=1712571209"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -61,14 +511,164 @@
     "sub_title": "Mixtape",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/1_3848db44-611c-4ab4-8365-7ff2abc550af_950x.jpg?v=1725346268",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_472f6945-f3be-4c5d-9692-148aa938eeef_950x.jpg?v=1725346267",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3848db44-611c-4ab4-8365-7ff2abc550af.jpg?v=1725346268",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_472f6945-f3be-4c5d-9692-148aa938eeef.jpg?v=1725346267",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3848db44-611c-4ab4-8365-7ff2abc550af.jpg?v=1725346268",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_472f6945-f3be-4c5d-9692-148aa938eeef.jpg?v=1725346267",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_c45db8e9-3a56-402d-943d-144db58754d3.jpg?v=1725346267",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_19a97122-4e7c-41df-9671-3187b3cbaaea.jpg?v=1725346267",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_04c81f7e-d00a-4164-ba09-dc42cbf1d999.jpg?v=1725346281",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_90324c1b-3c01-4529-a7a7-2345c3392c13.jpg?v=1725346281",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_50013e1a-0ee8-4438-b6cd-22b80dbf66b8.jpg?v=1725346281",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_59728acf-7966-4994-8040-451c542af81e.jpg?v=1725346281",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3bb78847-5fae-49bd-81c7-f81a29057b8d.jpg?v=1725346286",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_c837e1a8-74d2-4f49-aa5a-a2a6dd905f49.jpg?v=1725346287",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_13a1f706-a3aa-413a-b9cd-5e17a1fead8b.jpg?v=1725346286",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_73054a0d-8206-4c42-9635-b1350f8abe29.jpg?v=1725346291",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_56da2179-171a-4194-8cbe-a026b877d5cc.jpg?v=1725346291",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_d5d4e69a-d062-476f-8ed0-a36554d24d35.jpg?v=1725346291",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e65f3ed1-e777-49dd-b8b9-3a49ff331354.jpg?v=1725346296",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_5aebddc0-472a-476f-bf22-1185f57488ba.jpg?v=1725346296",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_0a427f84-f8ce-4173-b6ec-2309660fa39e.jpg?v=1725346296"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3848db44-611c-4ab4-8365-7ff2abc550af.jpg?v=1725346268",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3848db44-611c-4ab4-8365-7ff2abc550af.jpg?v=1725346268",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_472f6945-f3be-4c5d-9692-148aa938eeef.jpg?v=1725346267",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_c45db8e9-3a56-402d-943d-144db58754d3.jpg?v=1725346267",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_19a97122-4e7c-41df-9671-3187b3cbaaea.jpg?v=1725346267"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_04c81f7e-d00a-4164-ba09-dc42cbf1d999.jpg?v=1725346281",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_04c81f7e-d00a-4164-ba09-dc42cbf1d999.jpg?v=1725346281",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_90324c1b-3c01-4529-a7a7-2345c3392c13.jpg?v=1725346281",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_50013e1a-0ee8-4438-b6cd-22b80dbf66b8.jpg?v=1725346281",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_59728acf-7966-4994-8040-451c542af81e.jpg?v=1725346281"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_73054a0d-8206-4c42-9635-b1350f8abe29.jpg?v=1725346291",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_73054a0d-8206-4c42-9635-b1350f8abe29.jpg?v=1725346291",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_56da2179-171a-4194-8cbe-a026b877d5cc.jpg?v=1725346291",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_d5d4e69a-d062-476f-8ed0-a36554d24d35.jpg?v=1725346291"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3bb78847-5fae-49bd-81c7-f81a29057b8d.jpg?v=1725346286",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3bb78847-5fae-49bd-81c7-f81a29057b8d.jpg?v=1725346286",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_c837e1a8-74d2-4f49-aa5a-a2a6dd905f49.jpg?v=1725346287",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_13a1f706-a3aa-413a-b9cd-5e17a1fead8b.jpg?v=1725346286"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e65f3ed1-e777-49dd-b8b9-3a49ff331354.jpg?v=1725346296",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e65f3ed1-e777-49dd-b8b9-3a49ff331354.jpg?v=1725346296",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_5aebddc0-472a-476f-bf22-1185f57488ba.jpg?v=1725346296",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_0a427f84-f8ce-4173-b6ec-2309660fa39e.jpg?v=1725346296"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -79,14 +679,164 @@
     "sub_title": "Mixtape",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/1_032ddca2-4a2e-47fb-bb14-bdabe84b1af8_950x.jpg?v=1725343737",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_5f940516-42c5-4ba0-a92c-06e61198ce94_950x.jpg?v=1725343737",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_032ddca2-4a2e-47fb-bb14-bdabe84b1af8.jpg?v=1725343737",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_5f940516-42c5-4ba0-a92c-06e61198ce94.jpg?v=1725343737",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_032ddca2-4a2e-47fb-bb14-bdabe84b1af8.jpg?v=1725343737",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_5f940516-42c5-4ba0-a92c-06e61198ce94.jpg?v=1725343737",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_945ca741-53c8-466d-9629-97637032a8ca.jpg?v=1725343737",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_30e0a63e-689b-4ed0-ad1c-c2783ec47268.jpg?v=1725343737",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_f1964338-c646-4710-af36-479506e7e92b.jpg?v=1725343749",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_6d8e1bbe-8fb4-4ec3-8da6-ef7408eb6608.jpg?v=1725343749",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_67d5f908-c701-4eef-a4d4-6d6a9e1d7650.jpg?v=1725343749",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_86162f3e-0e5d-40a1-9d2f-7d51d49ad696.jpg?v=1725343749",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3613874b-441a-423e-8dfb-ca1506edd6c4.jpg?v=1725343764",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ff884ccc-8108-47a7-b1ef-73b02ec57bb1.jpg?v=1725343764",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_6.jpg?v=1725343764",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2543e949-e10b-4f6c-bf96-c7f795b0da72.jpg?v=1725343769",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_36014b31-cc81-42b6-9375-fdd6568ff0fe.jpg?v=1725343770",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_9.jpg?v=1725343769",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6782336a-fdf1-49ba-8bd2-ba574bb57740.jpg?v=1725343775",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_427ffe39-3cb1-4fb2-a10e-bbe46ea60fb3.jpg?v=1725343775",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_7.jpg?v=1725343775"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_032ddca2-4a2e-47fb-bb14-bdabe84b1af8.jpg?v=1725343737",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_032ddca2-4a2e-47fb-bb14-bdabe84b1af8.jpg?v=1725343737",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_5f940516-42c5-4ba0-a92c-06e61198ce94.jpg?v=1725343737",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_945ca741-53c8-466d-9629-97637032a8ca.jpg?v=1725343737",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_30e0a63e-689b-4ed0-ad1c-c2783ec47268.jpg?v=1725343737"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_f1964338-c646-4710-af36-479506e7e92b.jpg?v=1725343749",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_f1964338-c646-4710-af36-479506e7e92b.jpg?v=1725343749",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_6d8e1bbe-8fb4-4ec3-8da6-ef7408eb6608.jpg?v=1725343749",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_67d5f908-c701-4eef-a4d4-6d6a9e1d7650.jpg?v=1725343749",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_86162f3e-0e5d-40a1-9d2f-7d51d49ad696.jpg?v=1725343749"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2543e949-e10b-4f6c-bf96-c7f795b0da72.jpg?v=1725343769",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2543e949-e10b-4f6c-bf96-c7f795b0da72.jpg?v=1725343769",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_36014b31-cc81-42b6-9375-fdd6568ff0fe.jpg?v=1725343770",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_9.jpg?v=1725343769"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3613874b-441a-423e-8dfb-ca1506edd6c4.jpg?v=1725343764",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_3613874b-441a-423e-8dfb-ca1506edd6c4.jpg?v=1725343764",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ff884ccc-8108-47a7-b1ef-73b02ec57bb1.jpg?v=1725343764",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_6.jpg?v=1725343764"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6782336a-fdf1-49ba-8bd2-ba574bb57740.jpg?v=1725343775",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6782336a-fdf1-49ba-8bd2-ba574bb57740.jpg?v=1725343775",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_427ffe39-3cb1-4fb2-a10e-bbe46ea60fb3.jpg?v=1725343775",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_7.jpg?v=1725343775"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -97,14 +847,164 @@
     "sub_title": "Mixtape",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/1_bd08b697-700f-4aca-a774-c06d2c42011a_950x.jpg?v=1725346469",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_1bc53bee-606f-4a06-ad1d-443de1a6a2de_950x.jpg?v=1725346469",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bd08b697-700f-4aca-a774-c06d2c42011a.jpg?v=1725346469",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1bc53bee-606f-4a06-ad1d-443de1a6a2de.jpg?v=1725346469",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bd08b697-700f-4aca-a774-c06d2c42011a.jpg?v=1725346469",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1bc53bee-606f-4a06-ad1d-443de1a6a2de.jpg?v=1725346469",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_8e38bf1d-29b6-49ea-9fb6-1c58bc3384d1.jpg?v=1725346469",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_df10999f-acae-4bf3-b5e9-da0ea37bcd47.jpg?v=1725346469",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_78f5a92b-2d54-4159-8899-11a678ec36f7.jpg?v=1725346483",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9d5ed530-bb8d-43d1-ae0c-c18336b365cc.jpg?v=1725346483",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_fe56e2d8-127a-4fb8-b6e5-21242ca9e126.jpg?v=1725346483",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_d26d65b1-899f-448d-be13-6878d935017c.jpg?v=1725346483",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_9ff3a93d-5a6d-43ec-9e03-37d30f788cb7.jpg?v=1725346489",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_48e2c5fd-96e5-429e-b528-c57dbdf79dcb.jpg?v=1725346489",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_dd6a4622-8001-41c7-a70d-e7110cb8a6d4.jpg?v=1725346489",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_9b7a6a59-596c-40ea-94d7-56f5e0a904a8.jpg?v=1725346495",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e900ae93-a100-4db2-824a-d957ca4b222f.jpg?v=1725346495",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_83bd1ce9-f3e4-4fde-a3ed-1fb55fd7786d.jpg?v=1725346495",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_fe41be3d-855b-4239-8f52-f65eb86503ce.jpg?v=1725346501",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_a7969844-1a08-4904-82f1-471b853d51f0.jpg?v=1725346501",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_fc859b64-cc4b-423c-8b20-3514a224e1e7.jpg?v=1725346501"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bd08b697-700f-4aca-a774-c06d2c42011a.jpg?v=1725346469",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bd08b697-700f-4aca-a774-c06d2c42011a.jpg?v=1725346469",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1bc53bee-606f-4a06-ad1d-443de1a6a2de.jpg?v=1725346469",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_8e38bf1d-29b6-49ea-9fb6-1c58bc3384d1.jpg?v=1725346469",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_df10999f-acae-4bf3-b5e9-da0ea37bcd47.jpg?v=1725346469"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_78f5a92b-2d54-4159-8899-11a678ec36f7.jpg?v=1725346483",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_78f5a92b-2d54-4159-8899-11a678ec36f7.jpg?v=1725346483",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9d5ed530-bb8d-43d1-ae0c-c18336b365cc.jpg?v=1725346483",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_fe56e2d8-127a-4fb8-b6e5-21242ca9e126.jpg?v=1725346483",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_d26d65b1-899f-448d-be13-6878d935017c.jpg?v=1725346483"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_9b7a6a59-596c-40ea-94d7-56f5e0a904a8.jpg?v=1725346495",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_9b7a6a59-596c-40ea-94d7-56f5e0a904a8.jpg?v=1725346495",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e900ae93-a100-4db2-824a-d957ca4b222f.jpg?v=1725346495",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_83bd1ce9-f3e4-4fde-a3ed-1fb55fd7786d.jpg?v=1725346495"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_9ff3a93d-5a6d-43ec-9e03-37d30f788cb7.jpg?v=1725346489",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_9ff3a93d-5a6d-43ec-9e03-37d30f788cb7.jpg?v=1725346489",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_48e2c5fd-96e5-429e-b528-c57dbdf79dcb.jpg?v=1725346489",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_dd6a4622-8001-41c7-a70d-e7110cb8a6d4.jpg?v=1725346489"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_fe41be3d-855b-4239-8f52-f65eb86503ce.jpg?v=1725346501",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_fe41be3d-855b-4239-8f52-f65eb86503ce.jpg?v=1725346501",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_a7969844-1a08-4904-82f1-471b853d51f0.jpg?v=1725346501",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_fc859b64-cc4b-423c-8b20-3514a224e1e7.jpg?v=1725346501"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -115,14 +1015,164 @@
     "sub_title": "Mixtape",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/1_595832ef-93a8-49ff-b356-3f766dd4fca7_950x.jpg?v=1725343963",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_9b4b15ca-b010-4289-a8ae-96b1aa0f3a6b_950x.jpg?v=1725343963",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_595832ef-93a8-49ff-b356-3f766dd4fca7.jpg?v=1725343963",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9b4b15ca-b010-4289-a8ae-96b1aa0f3a6b.jpg?v=1725343963",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_595832ef-93a8-49ff-b356-3f766dd4fca7.jpg?v=1725343963",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9b4b15ca-b010-4289-a8ae-96b1aa0f3a6b.jpg?v=1725343963",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_31ac1ac3-2023-409e-8220-0453b0b933e4.jpg?v=1725343963",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_b9127044-78b7-44b3-9982-960103770015.jpg?v=1725343963",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_de7e7b0f-d4df-4738-acaa-f7d8a9d53a6f.jpg?v=1725343981",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_13537c50-a976-4f60-a400-a0cde179870a.jpg?v=1725343981",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_d219fb02-212d-40de-a6c6-39d65ce01ae1.jpg?v=1725343981",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_40f81c10-9cb7-40eb-8620-7dd3ce3f9f49.jpg?v=1725343981",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_37becb03-d6be-4173-b8a4-81ae6324b0cf.jpg?v=1725343988",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1f0e0478-34f1-4554-a7ec-9272840f737b.jpg?v=1725343988",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_7292f70d-3ec5-40c4-8e1a-9e3324053bcb.jpg?v=1725343988",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_56f90d97-b950-456a-a2fe-63c580ef0712.jpg?v=1725343997",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d7201fd5-a7f3-482d-82ca-32e8de4a2aa6.jpg?v=1725343996",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_7a32a7c6-60ca-46f1-9950-8aea8b24b18f.jpg?v=1725343996",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/7_af4b5a76-81fd-4734-bd94-cc09f4de016a.jpg?v=1725344001",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/a2_7.jpg?v=1725344001",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_7.jpg?v=1725344001"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_595832ef-93a8-49ff-b356-3f766dd4fca7.jpg?v=1725343963",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_595832ef-93a8-49ff-b356-3f766dd4fca7.jpg?v=1725343963",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9b4b15ca-b010-4289-a8ae-96b1aa0f3a6b.jpg?v=1725343963",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_31ac1ac3-2023-409e-8220-0453b0b933e4.jpg?v=1725343963",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_b9127044-78b7-44b3-9982-960103770015.jpg?v=1725343963"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_de7e7b0f-d4df-4738-acaa-f7d8a9d53a6f.jpg?v=1725343981",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_de7e7b0f-d4df-4738-acaa-f7d8a9d53a6f.jpg?v=1725343981",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_13537c50-a976-4f60-a400-a0cde179870a.jpg?v=1725343981",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_d219fb02-212d-40de-a6c6-39d65ce01ae1.jpg?v=1725343981",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_40f81c10-9cb7-40eb-8620-7dd3ce3f9f49.jpg?v=1725343981"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_56f90d97-b950-456a-a2fe-63c580ef0712.jpg?v=1725343997",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_56f90d97-b950-456a-a2fe-63c580ef0712.jpg?v=1725343997",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d7201fd5-a7f3-482d-82ca-32e8de4a2aa6.jpg?v=1725343996",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_7a32a7c6-60ca-46f1-9950-8aea8b24b18f.jpg?v=1725343996"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_37becb03-d6be-4173-b8a4-81ae6324b0cf.jpg?v=1725343988",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_37becb03-d6be-4173-b8a4-81ae6324b0cf.jpg?v=1725343988",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1f0e0478-34f1-4554-a7ec-9272840f737b.jpg?v=1725343988",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_7292f70d-3ec5-40c4-8e1a-9e3324053bcb.jpg?v=1725343988"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/7_af4b5a76-81fd-4734-bd94-cc09f4de016a.jpg?v=1725344001",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/7_af4b5a76-81fd-4734-bd94-cc09f4de016a.jpg?v=1725344001",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/a2_7.jpg?v=1725344001",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_7.jpg?v=1725344001"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -133,14 +1183,160 @@
     "sub_title": "Football",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/3_dc46c3ae-5044-4389-999b-126576050332_950x.jpg?v=1733204519",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_8d5465a5-c2cb-403f-9ad9-8c5fa00e1022_950x.jpg?v=1733204519",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_dc46c3ae-5044-4389-999b-126576050332.jpg?v=1733204519",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_8d5465a5-c2cb-403f-9ad9-8c5fa00e1022.jpg?v=1733204519",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_dc46c3ae-5044-4389-999b-126576050332.jpg?v=1733204519",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_8d5465a5-c2cb-403f-9ad9-8c5fa00e1022.jpg?v=1733204519",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9290266f-cac5-41ff-8697-c1b6f03b089b.jpg?v=1733204519",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e3685f48-42fc-45ae-8315-1fd6e8b1d190.jpg?v=1733204532",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_79c9be39-9f76-45c0-a296-9f96ac04a314.jpg?v=1733204532",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_8d223dca-26da-4f13-81bf-83edca04c1d5.jpg?v=1733204532",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1d95b2d2-f03b-4883-a1a6-90ba407697fb.jpg?v=1733204540",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e521f991-fa80-402c-b499-f29873f446c4.jpg?v=1733204540",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_3a726305-29cc-4932-a0c9-e64a29618c83.jpg?v=1733204541",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_c5dc2bf7-58af-4823-9267-e5b77222aada.jpg?v=1733204549",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_528e38d9-43ea-4be5-9fd4-2515a1dabb63.jpg?v=1733204549",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_75352cd0-92af-4c9e-bee3-4ce530483053.jpg?v=1733204549",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e4c41618-d42b-49be-a206-2ba7f76c91ac.jpg?v=1733204571",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_4abc4a6d-5493-4fa8-ae33-f2049cbae101.jpg?v=1733204572",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_b8292686-e5b7-4b9d-a3bf-b8795cde3c38.jpg?v=1733204572"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_dc46c3ae-5044-4389-999b-126576050332.jpg?v=1733204519",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_dc46c3ae-5044-4389-999b-126576050332.jpg?v=1733204519",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_8d5465a5-c2cb-403f-9ad9-8c5fa00e1022.jpg?v=1733204519",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9290266f-cac5-41ff-8697-c1b6f03b089b.jpg?v=1733204519"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e3685f48-42fc-45ae-8315-1fd6e8b1d190.jpg?v=1733204532",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e3685f48-42fc-45ae-8315-1fd6e8b1d190.jpg?v=1733204532",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_79c9be39-9f76-45c0-a296-9f96ac04a314.jpg?v=1733204532",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_8d223dca-26da-4f13-81bf-83edca04c1d5.jpg?v=1733204532"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_c5dc2bf7-58af-4823-9267-e5b77222aada.jpg?v=1733204549",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_c5dc2bf7-58af-4823-9267-e5b77222aada.jpg?v=1733204549",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_528e38d9-43ea-4be5-9fd4-2515a1dabb63.jpg?v=1733204549",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_75352cd0-92af-4c9e-bee3-4ce530483053.jpg?v=1733204549"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1d95b2d2-f03b-4883-a1a6-90ba407697fb.jpg?v=1733204540",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1d95b2d2-f03b-4883-a1a6-90ba407697fb.jpg?v=1733204540",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e521f991-fa80-402c-b499-f29873f446c4.jpg?v=1733204540",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_3a726305-29cc-4932-a0c9-e64a29618c83.jpg?v=1733204541"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e4c41618-d42b-49be-a206-2ba7f76c91ac.jpg?v=1733204571",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e4c41618-d42b-49be-a206-2ba7f76c91ac.jpg?v=1733204571",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_4abc4a6d-5493-4fa8-ae33-f2049cbae101.jpg?v=1733204572",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_b8292686-e5b7-4b9d-a3bf-b8795cde3c38.jpg?v=1733204572"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -151,14 +1347,160 @@
     "sub_title": "Football",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/3_b70ce69f-f4f0-4a29-81b1-5f3f9786086e_950x.jpg?v=1733203978",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_e4cd7207-76dc-4ac7-9091-50e51d1c19a9_950x.jpg?v=1733203978",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_b70ce69f-f4f0-4a29-81b1-5f3f9786086e.jpg?v=1733203978",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e4cd7207-76dc-4ac7-9091-50e51d1c19a9.jpg?v=1733203978",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_b70ce69f-f4f0-4a29-81b1-5f3f9786086e.jpg?v=1733203978",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e4cd7207-76dc-4ac7-9091-50e51d1c19a9.jpg?v=1733203978",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_f5deb995-7043-4b35-88ed-eddcd29df540.jpg?v=1733203978",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_4eab2142-cd94-484b-88f9-7adfa789dfc1.jpg?v=1733203988",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_21810076-ba7f-43e9-a38f-5b96513d3683.jpg?v=1733203988",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_90c0a42f-868a-45eb-ad47-6298741f0d27.jpg?v=1733203988",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_4c4409e8-be11-4424-8a5f-a42f8eca2491.jpg?v=1733203994",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_ec444220-f9a3-422d-95c9-2e644493eeed.jpg?v=1733203994",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_84cf4eea-db43-4077-b162-32afaf6bbe83.jpg?v=1733203996",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_aa32693c-9c79-4f1c-bbe7-f85a448acc65.jpg?v=1733204001",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bf0fba2e-c72f-4bdb-9086-5a462a5f4f0d.jpg?v=1733204001",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_5afff682-a68d-4d1f-bdbe-3306abc53b9a.jpg?v=1733204001",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6d9130ae-ae32-4dc1-b159-3cb60f00b64f.jpg?v=1733204006",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_601f4830-4b17-4c9e-8f6f-32da7150641e.jpg?v=1733204006",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_5f234d36-737f-41d5-83c7-ebb5f016e4a7.jpg?v=1733204006"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_b70ce69f-f4f0-4a29-81b1-5f3f9786086e.jpg?v=1733203978",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_b70ce69f-f4f0-4a29-81b1-5f3f9786086e.jpg?v=1733203978",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e4cd7207-76dc-4ac7-9091-50e51d1c19a9.jpg?v=1733203978",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_f5deb995-7043-4b35-88ed-eddcd29df540.jpg?v=1733203978"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_4eab2142-cd94-484b-88f9-7adfa789dfc1.jpg?v=1733203988",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_4eab2142-cd94-484b-88f9-7adfa789dfc1.jpg?v=1733203988",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_21810076-ba7f-43e9-a38f-5b96513d3683.jpg?v=1733203988",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_90c0a42f-868a-45eb-ad47-6298741f0d27.jpg?v=1733203988"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_aa32693c-9c79-4f1c-bbe7-f85a448acc65.jpg?v=1733204001",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_aa32693c-9c79-4f1c-bbe7-f85a448acc65.jpg?v=1733204001",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bf0fba2e-c72f-4bdb-9086-5a462a5f4f0d.jpg?v=1733204001",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_5afff682-a68d-4d1f-bdbe-3306abc53b9a.jpg?v=1733204001"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_4c4409e8-be11-4424-8a5f-a42f8eca2491.jpg?v=1733203994",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_4c4409e8-be11-4424-8a5f-a42f8eca2491.jpg?v=1733203994",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_ec444220-f9a3-422d-95c9-2e644493eeed.jpg?v=1733203994",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_84cf4eea-db43-4077-b162-32afaf6bbe83.jpg?v=1733203996"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6d9130ae-ae32-4dc1-b159-3cb60f00b64f.jpg?v=1733204006",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6d9130ae-ae32-4dc1-b159-3cb60f00b64f.jpg?v=1733204006",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_601f4830-4b17-4c9e-8f6f-32da7150641e.jpg?v=1733204006",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_5f234d36-737f-41d5-83c7-ebb5f016e4a7.jpg?v=1733204006"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -169,14 +1511,160 @@
     "sub_title": "Football",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/3_5045f5e9-01c5-45c3-811c-04724b225c2d_950x.jpg?v=1733203667",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_2e85e2e6-ed6f-413b-a2a4-66bab51046a7_950x.jpg?v=1733203666",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_5045f5e9-01c5-45c3-811c-04724b225c2d.jpg?v=1733203667",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2e85e2e6-ed6f-413b-a2a4-66bab51046a7.jpg?v=1733203666",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_5045f5e9-01c5-45c3-811c-04724b225c2d.jpg?v=1733203667",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2e85e2e6-ed6f-413b-a2a4-66bab51046a7.jpg?v=1733203666",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_22120b8f-77cf-4f1e-8f28-35d0fa76658a.jpg?v=1733203667",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_3b96c1c4-1ed3-4b10-ac35-6491da84ec46.jpg?v=1733203678",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_d46dc01f-8ca4-49e7-bcf4-2df6ec0cce92.jpg?v=1733203678",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_edd66920-f854-4cde-bb4c-1936fde7d171.jpg?v=1733203679",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9e1283e6-3dec-4598-b46f-387d344b3fd1.jpg?v=1733203684",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6af93c58-e277-4dee-89ff-f91bd706a5ca.jpg?v=1733203684",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_67cbafbb-246f-4385-a059-dc91a4029dac.jpg?v=1733203684",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_bf7ea886-c429-46f3-b81a-36c70b6c2ca7.jpg?v=1733203690",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_37ccbf95-d2ad-4a10-8965-8a93c421659f.jpg?v=1733203690",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_1930604c-679a-4d58-b991-a267c2c0f1be.jpg?v=1733203690",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4ee8dd3d-d8a3-4d22-b409-214441680761.jpg?v=1733203695",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_7f67cede-3f5f-4ade-94bc-af67c955220f.jpg?v=1733203695",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ab36b316-2e61-4b36-adb2-804461dd5c90.jpg?v=1733203695"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_5045f5e9-01c5-45c3-811c-04724b225c2d.jpg?v=1733203667",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_5045f5e9-01c5-45c3-811c-04724b225c2d.jpg?v=1733203667",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2e85e2e6-ed6f-413b-a2a4-66bab51046a7.jpg?v=1733203666",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_22120b8f-77cf-4f1e-8f28-35d0fa76658a.jpg?v=1733203667"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_3b96c1c4-1ed3-4b10-ac35-6491da84ec46.jpg?v=1733203678",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_3b96c1c4-1ed3-4b10-ac35-6491da84ec46.jpg?v=1733203678",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_d46dc01f-8ca4-49e7-bcf4-2df6ec0cce92.jpg?v=1733203678",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_edd66920-f854-4cde-bb4c-1936fde7d171.jpg?v=1733203679"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_bf7ea886-c429-46f3-b81a-36c70b6c2ca7.jpg?v=1733203690",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_bf7ea886-c429-46f3-b81a-36c70b6c2ca7.jpg?v=1733203690",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_37ccbf95-d2ad-4a10-8965-8a93c421659f.jpg?v=1733203690",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_1930604c-679a-4d58-b991-a267c2c0f1be.jpg?v=1733203690"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9e1283e6-3dec-4598-b46f-387d344b3fd1.jpg?v=1733203684",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9e1283e6-3dec-4598-b46f-387d344b3fd1.jpg?v=1733203684",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6af93c58-e277-4dee-89ff-f91bd706a5ca.jpg?v=1733203684",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_67cbafbb-246f-4385-a059-dc91a4029dac.jpg?v=1733203684"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4ee8dd3d-d8a3-4d22-b409-214441680761.jpg?v=1733203695",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4ee8dd3d-d8a3-4d22-b409-214441680761.jpg?v=1733203695",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_7f67cede-3f5f-4ade-94bc-af67c955220f.jpg?v=1733203695",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ab36b316-2e61-4b36-adb2-804461dd5c90.jpg?v=1733203695"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -187,14 +1675,160 @@
     "sub_title": "Football",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/6_2195dfd1-8886-4c36-afd7-02ecd9630ea6_950x.jpg?v=1733203339",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/4_feb18307-0220-46ba-acf3-c86c743e9097_950x.jpg?v=1733203339",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_2195dfd1-8886-4c36-afd7-02ecd9630ea6.jpg?v=1733203339",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_feb18307-0220-46ba-acf3-c86c743e9097.jpg?v=1733203339",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_2195dfd1-8886-4c36-afd7-02ecd9630ea6.jpg?v=1733203339",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_feb18307-0220-46ba-acf3-c86c743e9097.jpg?v=1733203339",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_a8a53d5c-6c22-4175-86f9-bef4cb3b9deb.jpg?v=1733203338",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_b8125dce-6c8a-4399-bc81-d7f3b1cf8190.jpg?v=1733203353",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_69be56c8-4411-4f4f-a12d-7822c3508473.jpg?v=1733203353",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_720605ee-e0f6-4f8d-a737-35baab8b04c6.jpg?v=1733203353",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_b89831b3-9d85-4e71-a702-0a7ad8558ea1.jpg?v=1733203360",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_78b513a7-f1c4-457c-96e0-4fb933732ab4.jpg?v=1733203360",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_784c5a13-854a-4bb0-bee7-dfe41d381023.jpg?v=1733203360",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_c52a121e-10f4-4a5d-b4e2-219cfca774ee.jpg?v=1733203366",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_0df68ac5-57a9-40bc-b2b8-81e6a479f43d.jpg?v=1733203366",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_4b541c8e-cb7d-4e0d-8c99-339da790ba7f.jpg?v=1733203366",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_5ea318cf-1975-4210-a05e-5389b51f58eb.jpg?v=1733203370",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_a4b8830e-aefc-48e4-bd49-2e2bbdb8d2a0.jpg?v=1733203369",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_f7f820b0-6823-4f37-8c82-ec36d993cdd1.jpg?v=1733203370"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_2195dfd1-8886-4c36-afd7-02ecd9630ea6.jpg?v=1733203339",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_2195dfd1-8886-4c36-afd7-02ecd9630ea6.jpg?v=1733203339",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_feb18307-0220-46ba-acf3-c86c743e9097.jpg?v=1733203339",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_a8a53d5c-6c22-4175-86f9-bef4cb3b9deb.jpg?v=1733203338"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_b8125dce-6c8a-4399-bc81-d7f3b1cf8190.jpg?v=1733203353",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_b8125dce-6c8a-4399-bc81-d7f3b1cf8190.jpg?v=1733203353",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_69be56c8-4411-4f4f-a12d-7822c3508473.jpg?v=1733203353",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_720605ee-e0f6-4f8d-a737-35baab8b04c6.jpg?v=1733203353"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_c52a121e-10f4-4a5d-b4e2-219cfca774ee.jpg?v=1733203366",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_c52a121e-10f4-4a5d-b4e2-219cfca774ee.jpg?v=1733203366",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_0df68ac5-57a9-40bc-b2b8-81e6a479f43d.jpg?v=1733203366",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_4b541c8e-cb7d-4e0d-8c99-339da790ba7f.jpg?v=1733203366"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_b89831b3-9d85-4e71-a702-0a7ad8558ea1.jpg?v=1733203360",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_b89831b3-9d85-4e71-a702-0a7ad8558ea1.jpg?v=1733203360",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_78b513a7-f1c4-457c-96e0-4fb933732ab4.jpg?v=1733203360",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_784c5a13-854a-4bb0-bee7-dfe41d381023.jpg?v=1733203360"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_5ea318cf-1975-4210-a05e-5389b51f58eb.jpg?v=1733203370",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_5ea318cf-1975-4210-a05e-5389b51f58eb.jpg?v=1733203370",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_a4b8830e-aefc-48e4-bd49-2e2bbdb8d2a0.jpg?v=1733203369",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_f7f820b0-6823-4f37-8c82-ec36d993cdd1.jpg?v=1733203370"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -205,14 +1839,160 @@
     "sub_title": "Football",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/6_fc5981f0-970b-438e-b24f-8c8bf6336c0f_950x.jpg?v=1733203020",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/4_19160534-0b6c-4a76-bb44-c3f073f95f63_950x.jpg?v=1733203020",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_fc5981f0-970b-438e-b24f-8c8bf6336c0f.jpg?v=1733203020",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_19160534-0b6c-4a76-bb44-c3f073f95f63.jpg?v=1733203020",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_fc5981f0-970b-438e-b24f-8c8bf6336c0f.jpg?v=1733203020",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_19160534-0b6c-4a76-bb44-c3f073f95f63.jpg?v=1733203020",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_69ed6456-98d9-40bc-8a66-06ee6a7fde52.jpg?v=1733203019",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_3c43cd8d-1caa-4f64-ba26-8a25263df5f3.jpg?v=1733203030",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_3e5e182f-d52e-4ad5-aca4-1973557c6789.jpg?v=1733203030",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_818dd0a8-1bd7-4809-a4a2-1126a1bab285.jpg?v=1733203030",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_3fb9588a-6826-47da-8d0e-4ffa1ec9f721.jpg?v=1733203037",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_b66f08b9-98e0-4d5e-8f08-e97d1bd79d13.jpg?v=1733203037",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_c994f4ac-6537-4f92-99bd-891cfdd2b39f.jpg?v=1733203037",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_85fd1b98-9030-465d-8ec8-68b1514ebb71.jpg?v=1733203043",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_287be00e-fe0f-48ba-b5b8-6abdbfe03e37.jpg?v=1733203043",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_02ffcbfd-509a-489c-a584-2e35dbf4e549.jpg?v=1733203043",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_c11c633c-58f7-4f60-910b-32f2a3910062.jpg?v=1733203049",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_5d7b2083-e5db-49a1-8d3d-47a4111c900e.jpg?v=1733203049",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d2046840-421e-4ed4-8b06-2c70b7a5a4cc.jpg?v=1733203049"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_fc5981f0-970b-438e-b24f-8c8bf6336c0f.jpg?v=1733203020",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_fc5981f0-970b-438e-b24f-8c8bf6336c0f.jpg?v=1733203020",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_19160534-0b6c-4a76-bb44-c3f073f95f63.jpg?v=1733203020",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_69ed6456-98d9-40bc-8a66-06ee6a7fde52.jpg?v=1733203019"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_3c43cd8d-1caa-4f64-ba26-8a25263df5f3.jpg?v=1733203030",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_3c43cd8d-1caa-4f64-ba26-8a25263df5f3.jpg?v=1733203030",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_3e5e182f-d52e-4ad5-aca4-1973557c6789.jpg?v=1733203030",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_818dd0a8-1bd7-4809-a4a2-1126a1bab285.jpg?v=1733203030"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_85fd1b98-9030-465d-8ec8-68b1514ebb71.jpg?v=1733203043",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_85fd1b98-9030-465d-8ec8-68b1514ebb71.jpg?v=1733203043",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_287be00e-fe0f-48ba-b5b8-6abdbfe03e37.jpg?v=1733203043",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_02ffcbfd-509a-489c-a584-2e35dbf4e549.jpg?v=1733203043"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_3fb9588a-6826-47da-8d0e-4ffa1ec9f721.jpg?v=1733203037",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_3fb9588a-6826-47da-8d0e-4ffa1ec9f721.jpg?v=1733203037",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_b66f08b9-98e0-4d5e-8f08-e97d1bd79d13.jpg?v=1733203037",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_c994f4ac-6537-4f92-99bd-891cfdd2b39f.jpg?v=1733203037"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_c11c633c-58f7-4f60-910b-32f2a3910062.jpg?v=1733203049",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_c11c633c-58f7-4f60-910b-32f2a3910062.jpg?v=1733203049",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_5d7b2083-e5db-49a1-8d3d-47a4111c900e.jpg?v=1733203049",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d2046840-421e-4ed4-8b06-2c70b7a5a4cc.jpg?v=1733203049"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -223,14 +2003,160 @@
     "sub_title": "Football",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/3_44c90687-aecb-43f8-9d79-ef6591d19f99_950x.jpg?v=1733202693",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_22b157eb-2aca-4bc4-9c8d-d16edbab73c5_950x.jpg?v=1733202693",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_44c90687-aecb-43f8-9d79-ef6591d19f99.jpg?v=1733202693",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_22b157eb-2aca-4bc4-9c8d-d16edbab73c5.jpg?v=1733202693",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_44c90687-aecb-43f8-9d79-ef6591d19f99.jpg?v=1733202693",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_22b157eb-2aca-4bc4-9c8d-d16edbab73c5.jpg?v=1733202693",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9bbc81dc-74ce-4418-beec-02baf9d8852a.jpg?v=1733202693",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_bd76f8dc-d703-4987-802f-1d5ac87a9f2f.jpg?v=1733202706",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_4968d7fa-f174-449e-9f83-3f2e9842983a.jpg?v=1733202706",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_4530814a-465b-4501-bfb1-876d36bef249.jpg?v=1733202706",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_4217d43f-e555-426b-b432-1cacbc50c7cc.jpg?v=1733202715",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d3ac592b-0c40-4c29-af3b-a650eb20d9bb.jpg?v=1733202716",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_ddcf12a1-5104-43e3-8ddf-140f9d3d2ee4.jpg?v=1733202716",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e61537bb-e9da-484c-9d15-018db5737911.jpg?v=1733202722",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_1a041112-a468-4d69-963d-63c72ce18897.jpg?v=1733202722",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_9f9459af-13ab-4f16-b931-32eab8b0afc9.jpg?v=1733202722",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d53c4969-7d19-48cf-a42b-d954b8c237fe.jpg?v=1733202730",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_ed75a82f-2841-435b-876e-c63e8494ed66.jpg?v=1733202730",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d438715b-e465-4bf8-aef6-db2b76b6f0a5.jpg?v=1733202730"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_44c90687-aecb-43f8-9d79-ef6591d19f99.jpg?v=1733202693",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_44c90687-aecb-43f8-9d79-ef6591d19f99.jpg?v=1733202693",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_22b157eb-2aca-4bc4-9c8d-d16edbab73c5.jpg?v=1733202693",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9bbc81dc-74ce-4418-beec-02baf9d8852a.jpg?v=1733202693"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_bd76f8dc-d703-4987-802f-1d5ac87a9f2f.jpg?v=1733202706",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_bd76f8dc-d703-4987-802f-1d5ac87a9f2f.jpg?v=1733202706",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_4968d7fa-f174-449e-9f83-3f2e9842983a.jpg?v=1733202706",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_4530814a-465b-4501-bfb1-876d36bef249.jpg?v=1733202706"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e61537bb-e9da-484c-9d15-018db5737911.jpg?v=1733202722",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e61537bb-e9da-484c-9d15-018db5737911.jpg?v=1733202722",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_1a041112-a468-4d69-963d-63c72ce18897.jpg?v=1733202722",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_9f9459af-13ab-4f16-b931-32eab8b0afc9.jpg?v=1733202722"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_4217d43f-e555-426b-b432-1cacbc50c7cc.jpg?v=1733202715",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_4217d43f-e555-426b-b432-1cacbc50c7cc.jpg?v=1733202715",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d3ac592b-0c40-4c29-af3b-a650eb20d9bb.jpg?v=1733202716",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_ddcf12a1-5104-43e3-8ddf-140f9d3d2ee4.jpg?v=1733202716"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d53c4969-7d19-48cf-a42b-d954b8c237fe.jpg?v=1733202730",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d53c4969-7d19-48cf-a42b-d954b8c237fe.jpg?v=1733202730",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_ed75a82f-2841-435b-876e-c63e8494ed66.jpg?v=1733202730",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d438715b-e465-4bf8-aef6-db2b76b6f0a5.jpg?v=1733202730"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -241,14 +2167,160 @@
     "sub_title": "Football",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/3_013734d9-c1c7-4659-bcb1-467fdbd07fd0_950x.jpg?v=1733202401",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_48b73e72-6845-4ff9-8ad3-d93208a7a4cd_950x.jpg?v=1733202400",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_013734d9-c1c7-4659-bcb1-467fdbd07fd0.jpg?v=1733202401",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_48b73e72-6845-4ff9-8ad3-d93208a7a4cd.jpg?v=1733202400",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_013734d9-c1c7-4659-bcb1-467fdbd07fd0.jpg?v=1733202401",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_48b73e72-6845-4ff9-8ad3-d93208a7a4cd.jpg?v=1733202400",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ec192f86-7026-496d-9727-f871445ea4b6.jpg?v=1733202401",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_c1806ef5-7a60-4ddf-949f-7a6933f3dc77.jpg?v=1733202411",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_78ba89f4-1003-478b-9176-ff3920a91d45.jpg?v=1733202411",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_90a244bd-fa63-4dc3-ad8b-2cb1468b611c.jpg?v=1733202411",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_a17e8fb4-5799-418e-9734-a739bde2cdcb.jpg?v=1733202417",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_7648d3f5-1a49-4092-82c2-d59f3d59d105.jpg?v=1733202417",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_a8019045-8c01-4048-a514-b198bafa7caf.jpg?v=1733202417",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9a8592d3-1a2f-4879-a323-e4e084f40b33.jpg?v=1733202422",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2b4c3425-8639-4c9a-9cc4-d188db6ab4d9.jpg?v=1733202423",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_bf5451a3-bde4-4c8d-8459-e4f5ce7d4f61.jpg?v=1733202423",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_f13220a1-27dd-4629-93ba-bdff174d9ae9.jpg?v=1733202428",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_1a142560-6fa8-4ae1-8249-8ddc7d0b1cd8.jpg?v=1733202428",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_96d6c188-ab5e-48cb-95fd-2eeeb3c1bf20.jpg?v=1733202428"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_013734d9-c1c7-4659-bcb1-467fdbd07fd0.jpg?v=1733202401",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_013734d9-c1c7-4659-bcb1-467fdbd07fd0.jpg?v=1733202401",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_48b73e72-6845-4ff9-8ad3-d93208a7a4cd.jpg?v=1733202400",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ec192f86-7026-496d-9727-f871445ea4b6.jpg?v=1733202401"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_c1806ef5-7a60-4ddf-949f-7a6933f3dc77.jpg?v=1733202411",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_c1806ef5-7a60-4ddf-949f-7a6933f3dc77.jpg?v=1733202411",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_78ba89f4-1003-478b-9176-ff3920a91d45.jpg?v=1733202411",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_90a244bd-fa63-4dc3-ad8b-2cb1468b611c.jpg?v=1733202411"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9a8592d3-1a2f-4879-a323-e4e084f40b33.jpg?v=1733202422",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9a8592d3-1a2f-4879-a323-e4e084f40b33.jpg?v=1733202422",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2b4c3425-8639-4c9a-9cc4-d188db6ab4d9.jpg?v=1733202423",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_bf5451a3-bde4-4c8d-8459-e4f5ce7d4f61.jpg?v=1733202423"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_a17e8fb4-5799-418e-9734-a739bde2cdcb.jpg?v=1733202417",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_a17e8fb4-5799-418e-9734-a739bde2cdcb.jpg?v=1733202417",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_7648d3f5-1a49-4092-82c2-d59f3d59d105.jpg?v=1733202417",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_a8019045-8c01-4048-a514-b198bafa7caf.jpg?v=1733202417"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_f13220a1-27dd-4629-93ba-bdff174d9ae9.jpg?v=1733202428",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_f13220a1-27dd-4629-93ba-bdff174d9ae9.jpg?v=1733202428",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_1a142560-6fa8-4ae1-8249-8ddc7d0b1cd8.jpg?v=1733202428",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_96d6c188-ab5e-48cb-95fd-2eeeb3c1bf20.jpg?v=1733202428"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -259,14 +2331,160 @@
     "sub_title": "Football",
     "price": 699,
     "compare_at_price": 999,
-    "primary_image": "https://www.rezoni.com/cdn/shop/files/6_618f485b-2c50-48e4-bb9c-58bed54605d8_950x.jpg?v=1733202082",
-    "secondary_image": "https://www.rezoni.com/cdn/shop/files/4_7adfa8eb-5a19-4971-af4c-f0fedc76ed37_950x.jpg?v=1733202082",
+    "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_618f485b-2c50-48e4-bb9c-58bed54605d8.jpg?v=1733202082",
+    "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_7adfa8eb-5a19-4971-af4c-f0fedc76ed37.jpg?v=1733202082",
     "swatches": [
       "#000000",
       "#FFFFFF",
       "#E7FA2F",
       "#FCD7EB",
       "#FFABA4"
+    ],
+    "images": [
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_618f485b-2c50-48e4-bb9c-58bed54605d8.jpg?v=1733202082",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_7adfa8eb-5a19-4971-af4c-f0fedc76ed37.jpg?v=1733202082",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_e11b860d-b684-4e3b-bc29-1c33d384d5e8.jpg?v=1733202082",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_28cdd17b-d571-491f-a6ae-d06907a3612a.jpg?v=1733202093",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_4138a966-a0de-4798-ac50-bb93ac372186.jpg?v=1733202092",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_85286561-7c22-416a-9236-d31d70300e48.jpg?v=1733202092",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_789a3756-df77-4c06-8039-00dad69fdb9c.jpg?v=1733202099",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6d926181-9aed-43b9-b921-4b863c49386d.jpg?v=1733202099",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_6c185f7c-75e3-44ad-928f-a95b2e7dcef3.jpg?v=1733202099",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_79746d06-fe77-455c-b070-fe870dd38678.jpg?v=1733202105",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_64b15171-e329-462b-abff-e2974c655b52.jpg?v=1733202105",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_77384b4b-a2c8-4b20-a346-b04d7c102f24.jpg?v=1733202105",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_91c24618-947d-4f99-a51e-3bcd40f8ee40.jpg?v=1733202111",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_57107c50-66a7-4018-bedc-88c768eedfb9.jpg?v=1733202112",
+      "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_eeaa8388-e7dc-4941-a4ff-d217ffb86dba.jpg?v=1733202111"
+    ],
+    "options": [
+      {
+        "name": "Model",
+        "position": 1,
+        "values": [
+          "iPhone 17 pro max",
+          "iPhone 17 pro",
+          "iPhone 17 air",
+          "iPhone 17",
+          "iPhone 16 Pro Max",
+          "iPhone 16 Pro",
+          "iPhone 16 Plus",
+          "iPhone 16",
+          "iPhone 15 Pro Max",
+          "iPhone 15 Pro",
+          "iPhone 15 Plus",
+          "iPhone 15",
+          "iPhone 14 Pro Max",
+          "iPhone 14 Pro",
+          "iPhone 14 Plus",
+          "iPhone 14",
+          "iPhone 13 Pro Max",
+          "iPhone 13 Pro",
+          "iPhone 13",
+          "iPhone 13 Mini",
+          "iPhone 12 Pro Max",
+          "iPhone 12/12 Pro",
+          "iPhone 12 Mini",
+          "iPhone 11 Pro Max",
+          "iPhone 11 Pro",
+          "iPhone 11",
+          "iPhone X/XS",
+          "iPhone XR"
+        ]
+      },
+      {
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "Black",
+          "White",
+          "Neon Green",
+          "Pink",
+          "Neon Pink"
+        ]
+      }
+    ],
+    "color_variants": [
+      {
+        "name": "Black",
+        "hex": "#000000",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_618f485b-2c50-48e4-bb9c-58bed54605d8.jpg?v=1733202082",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_618f485b-2c50-48e4-bb9c-58bed54605d8.jpg?v=1733202082",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_7adfa8eb-5a19-4971-af4c-f0fedc76ed37.jpg?v=1733202082",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_e11b860d-b684-4e3b-bc29-1c33d384d5e8.jpg?v=1733202082"
+        ]
+      },
+      {
+        "name": "White",
+        "hex": "#FFFFFF",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_28cdd17b-d571-491f-a6ae-d06907a3612a.jpg?v=1733202093",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/5_28cdd17b-d571-491f-a6ae-d06907a3612a.jpg?v=1733202093",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/4_4138a966-a0de-4798-ac50-bb93ac372186.jpg?v=1733202092",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/6_85286561-7c22-416a-9236-d31d70300e48.jpg?v=1733202092"
+        ]
+      },
+      {
+        "name": "Neon Green",
+        "hex": "#E7FA2F",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_79746d06-fe77-455c-b070-fe870dd38678.jpg?v=1733202105",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_79746d06-fe77-455c-b070-fe870dd38678.jpg?v=1733202105",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_64b15171-e329-462b-abff-e2974c655b52.jpg?v=1733202105",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_77384b4b-a2c8-4b20-a346-b04d7c102f24.jpg?v=1733202105"
+        ]
+      },
+      {
+        "name": "Pink",
+        "hex": "#FCD7EB",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_789a3756-df77-4c06-8039-00dad69fdb9c.jpg?v=1733202099",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_789a3756-df77-4c06-8039-00dad69fdb9c.jpg?v=1733202099",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6d926181-9aed-43b9-b921-4b863c49386d.jpg?v=1733202099",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_6c185f7c-75e3-44ad-928f-a95b2e7dcef3.jpg?v=1733202099"
+        ]
+      },
+      {
+        "name": "Neon Pink",
+        "hex": "#FFABA4",
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_91c24618-947d-4f99-a51e-3bcd40f8ee40.jpg?v=1733202111",
+        "gallery": [
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_91c24618-947d-4f99-a51e-3bcd40f8ee40.jpg?v=1733202111",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/3_57107c50-66a7-4018-bedc-88c768eedfb9.jpg?v=1733202112",
+          "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_eeaa8388-e7dc-4941-a4ff-d217ffb86dba.jpg?v=1733202111"
+        ]
+      }
+    ],
+    "models": [
+      "iPhone 17 pro max",
+      "iPhone 17 pro",
+      "iPhone 17 air",
+      "iPhone 17",
+      "iPhone 16 Pro Max",
+      "iPhone 16 Pro",
+      "iPhone 16 Plus",
+      "iPhone 16",
+      "iPhone 15 Pro Max",
+      "iPhone 15 Pro",
+      "iPhone 15 Plus",
+      "iPhone 15",
+      "iPhone 14 Pro Max",
+      "iPhone 14 Pro",
+      "iPhone 14 Plus",
+      "iPhone 14",
+      "iPhone 13 Pro Max",
+      "iPhone 13 Pro",
+      "iPhone 13",
+      "iPhone 13 Mini",
+      "iPhone 12 Pro Max",
+      "iPhone 12/12 Pro",
+      "iPhone 12 Mini",
+      "iPhone 11 Pro Max",
+      "iPhone 11 Pro",
+      "iPhone 11",
+      "iPhone X/XS",
+      "iPhone XR"
     ]
   },
   {
@@ -276,8 +2494,8 @@
     "product_type": "Motorola Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_fb294164-45e4-413f-827a-78df0cd71a65.jpg?v=1788849394",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ef149713-0fdb-4270-a13a-a3893f9ed0c9.jpg?v=1788849394",
     "images": [
@@ -298,7 +2516,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9632977748200,
@@ -307,8 +2536,8 @@
     "product_type": "Motorola Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_72dabc94-7657-4098-9a61-4c1787ce0c3f.jpg?v=1788849301",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_7fec2f37-c929-4513-8efd-1bb99c333301.jpg?v=1788849301",
     "images": [
@@ -328,7 +2557,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594638467304,
@@ -337,8 +2577,8 @@
     "product_type": "Redmi Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_e2736efa-39ba-4a31-a085-7e7a867a0087.jpg?v=1786465345",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1b8d3365-dcf5-44c5-be3f-5f415d23d571.jpg?v=1786465345",
     "images": [
@@ -358,7 +2598,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594637287656,
@@ -367,8 +2618,8 @@
     "product_type": "Redmi Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d5edc59e-77b0-4e02-887d-5a8a63a7c553.jpg?v=1786465051",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1e2868c0-a8cd-4e23-87b5-3a1a250d7ffa.jpg?v=1786465050",
     "images": [
@@ -389,7 +2640,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594636665064,
@@ -398,8 +2660,8 @@
     "product_type": "Realme Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_62b9ad93-01c5-44b0-b103-54928e51b362.jpg?v=1786464846",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_eaeeac36-29e4-4efb-9985-e5f93c5688a5.jpg?v=1786464846",
     "images": [
@@ -419,7 +2681,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594636501224,
@@ -428,8 +2701,8 @@
     "product_type": "Realme Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_f52a3371-dd86-4dd6-be02-71ea54f0a92d.jpg?v=1786464773",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1e36b30c-79b2-41cb-9a79-d34be167b258.jpg?v=1786464773",
     "images": [
@@ -449,7 +2722,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594635485416,
@@ -458,8 +2742,8 @@
     "product_type": "Realme Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_a6e29e59-9250-4b5e-adaf-9e8c65f71242.jpg?v=1786464676",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_b402b4ee-68e8-4622-b5df-0b8844fe187a.jpg?v=1786464676",
     "images": [
@@ -479,7 +2763,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594635157736,
@@ -488,8 +2783,8 @@
     "product_type": "Realme Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bacc1dcf-3546-403b-b19c-21c9c19cf77d.jpg?v=1786464566",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_7f019585-bb72-4e50-97b4-cacfe89eb45d.jpg?v=1786464566",
     "images": [
@@ -509,7 +2804,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594634764520,
@@ -518,8 +2824,8 @@
     "product_type": "Realme Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_afe3d4cd-18a9-460f-a75d-a275797a31b7.jpg?v=1786464384",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_2cf887b6-82ae-4215-aa88-a4e93c5c1e38.jpg?v=1786464384",
     "images": [
@@ -539,7 +2845,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594634436840,
@@ -548,8 +2865,8 @@
     "product_type": "Realme Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_aed88877-344b-4737-aa3f-821977995498.jpg?v=1786464231",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_6a7b2b4e-7a40-4b6c-a69e-11421c2b6a07.jpg?v=1786464230",
     "images": [
@@ -570,7 +2887,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594634141928,
@@ -579,8 +2907,8 @@
     "product_type": "Realme Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_80c37ef8-5007-46e6-bdb0-9c80766c357a.jpg?v=1786464116",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_48f8fcce-5569-445e-8f9a-3bb3c9c23f38.jpg?v=1786464116",
     "images": [
@@ -601,7 +2929,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594633847016,
@@ -610,8 +2949,8 @@
     "product_type": "Realme Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_da3911f4-8290-405f-8540-e58dc0f6acad.jpg?v=1786463983",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_adeae6a4-274f-424e-824b-a22525e93552.jpg?v=1786463983",
     "images": [
@@ -632,7 +2971,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594632929512,
@@ -641,8 +2991,8 @@
     "product_type": "Realme Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_a573de4b-b807-4b5c-b5c9-7c16fd270e7d.jpg?v=1786463654",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_6fbc4ad7-4f0a-431f-8256-c8fcb9fd7d4b.jpg?v=1786463654",
     "images": [
@@ -663,7 +3013,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594632667368,
@@ -672,8 +3033,8 @@
     "product_type": "Realme Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_90351f48-07d2-4c1d-9c23-df68796480f4.jpg?v=1786463572",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_df761bf3-bfc1-483c-87cf-4fa5a1e90246.jpg?v=1786463572",
     "images": [
@@ -694,7 +3055,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594617168104,
@@ -703,8 +3075,8 @@
     "product_type": "oneplus Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6f5fbaab-28ed-4f28-80c3-1021c2dd754b.jpg?v=1786460491",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e6274349-4e25-4190-9df1-4b1b030a6005.jpg?v=1786460490",
     "images": [
@@ -724,7 +3096,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594616512744,
@@ -733,8 +3116,8 @@
     "product_type": "oneplus Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_87f5e93e-20b1-46d5-862a-15dcfd24b116.jpg?v=1786460347",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_ca420c23-574f-4c28-a0e5-981a740cd54c.jpg?v=1786460347",
     "images": [
@@ -755,7 +3138,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594611957992,
@@ -764,8 +3158,8 @@
     "product_type": "Motorola Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_f11ba705-a1a5-4bef-939b-bebd1fe1e58b.jpg?v=1786459004",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d0eab803-137e-4048-ae2f-673d59b42e43.jpg?v=1786459003",
     "images": [
@@ -785,7 +3179,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594611826920,
@@ -794,8 +3199,8 @@
     "product_type": "Motorola Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_b132805a-4d65-47bf-bbb9-e459c35e191b.jpg?v=1786458896",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d82f8ac7-a626-4148-bc07-6e8d5cd7675e.jpg?v=1786458896",
     "images": [
@@ -815,7 +3220,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594611695848,
@@ -824,8 +3240,8 @@
     "product_type": "Motorola Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d18d08ab-344e-44a9-b778-8f7e78e7781d.jpg?v=1786458838",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_afdbd449-0c40-45b2-aa1e-74bdae168a30.jpg?v=1786458837",
     "images": [
@@ -845,7 +3261,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594611466472,
@@ -854,8 +3281,8 @@
     "product_type": "Motorola Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4d45df8b-1881-4de9-9641-079f30bf50c6.jpg?v=1786458790",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9ada2909-3a36-4fa7-b336-e1add2094922.jpg?v=1786458791",
     "images": [
@@ -875,7 +3302,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594611138792,
@@ -884,8 +3322,8 @@
     "product_type": "Motorola Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6410d23e-b172-455c-8aa3-7b5bbf996964.jpg?v=1786458705",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_0de16d8a-3241-4aea-a7c8-1e8ae288cad7.jpg?v=1786458705",
     "images": [
@@ -905,7 +3343,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594611073256,
@@ -914,8 +3363,8 @@
     "product_type": "Motorola Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_51d478cc-cf97-4931-9a5b-a7998eb3a9db.jpg?v=1786458517",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_fcb1b667-43af-4bf5-8dcf-cfa27ff0a8d1.jpg?v=1786458517",
     "images": [
@@ -936,7 +3385,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594610909416,
@@ -945,8 +3405,8 @@
     "product_type": "Motorola Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_185fa4dc-6e5a-48a5-b0c7-2aa740b6c0ab.jpg?v=1786458464",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_42918cc0-7aae-4af6-8cbd-724942fc020e.jpg?v=1786458464",
     "images": [
@@ -967,7 +3427,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594610843880,
@@ -976,8 +3447,8 @@
     "product_type": "Motorola Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_d8225a5f-1af4-4c06-8c76-3a8ee7bf264b.jpg?v=1786458405",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_54323761-63ac-4deb-b710-ba721e96e680.jpg?v=1786458405",
     "images": [
@@ -998,7 +3469,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594610745576,
@@ -1007,8 +3489,8 @@
     "product_type": "Motorola Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_88f63ee5-d57c-4252-b98a-676501ae286a.jpg?v=1786458354",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_f057e03f-6e63-4595-8b2d-18e6b22d2c92.jpg?v=1786458354",
     "images": [
@@ -1029,7 +3511,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9594610188520,
@@ -1038,8 +3531,8 @@
     "product_type": "Motorola Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_1ae0f6a5-4c0a-4176-bf83-86db77b727d0.jpg?v=1786458281",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_dcc9892b-7d40-46b0-90dc-e5e0c34241e0.jpg?v=1786458281",
     "images": [
@@ -1060,7 +3553,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9544972206312,
@@ -1069,8 +3573,8 @@
     "product_type": "oneplus Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_34182b76-423a-4574-aec6-0df4ed0c1e04.jpg?v=1783664464",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e74e9f27-fe27-4129-a7bb-8c1dc8b07cdb.jpg?v=1783664463",
     "images": [
@@ -1090,7 +3594,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9544965161192,
@@ -1099,8 +3614,8 @@
     "product_type": "oneplus Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_41915488-fb22-4972-91a6-8d3a01e1f022.jpg?v=1783663584",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_bd30d37b-6b26-4cbc-a3a8-f7e7d856e058.jpg?v=1783663585",
     "images": [
@@ -1121,7 +3636,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520054141160,
@@ -1130,8 +3656,8 @@
     "product_type": "Redmi Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_ecf4634f-d698-40e5-9794-e56a80cf4dcc.jpg?v=1781013680",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_9f3e6a01-9d68-414c-a045-85f7e8917559.jpg?v=1781013680",
     "images": [
@@ -1152,7 +3678,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520051880168,
@@ -1161,8 +3698,8 @@
     "product_type": "Redmi Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_97162f96-a495-4950-ab22-e9245267e300.jpg?v=1781013543",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_6be302cc-3c5b-4e26-8515-c26b4ebf061e.jpg?v=1781013543",
     "images": [
@@ -1183,7 +3720,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520051814632,
@@ -1192,8 +3740,8 @@
     "product_type": "Redmi Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_52647a3f-dc8b-4864-8c9f-c46dba45a813.jpg?v=1781013411",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_63152d09-64d1-457c-bb70-6e2969a5f41f.jpg?v=1781013411",
     "images": [
@@ -1214,7 +3762,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520051519720,
@@ -1223,8 +3782,8 @@
     "product_type": "Redmi Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_60886a72-1f30-4b3c-854f-941cbf07ee90.jpg?v=1781013286",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_af6424bd-8991-4625-beff-d28c550f8999.jpg?v=1781013286",
     "images": [
@@ -1245,7 +3804,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520049160424,
@@ -1254,8 +3824,8 @@
     "product_type": "Redmi Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_6cf67e5d-4684-4c6f-9dfb-8600ec578225.jpg?v=1781012199",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_8073e15e-496c-4230-8874-0d195445e050.jpg?v=1781012199",
     "images": [
@@ -1275,7 +3845,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520048898280,
@@ -1284,8 +3865,8 @@
     "product_type": "Redmi Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_0cd1c7e7-07c5-42e4-804a-6cb624f9bf86.jpg?v=1781012042",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_b48a4298-0297-40f3-a1a7-21fc75ca0948.jpg?v=1781012042",
     "images": [
@@ -1305,7 +3886,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520048767208,
@@ -1314,8 +3906,8 @@
     "product_type": "Redmi Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_0a4dd950-6f1a-459b-a681-467bf3f0517e.jpg?v=1781011950",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_32330c00-995e-40ff-86d9-eba0493d1535.jpg?v=1781011950",
     "images": [
@@ -1335,7 +3927,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520048668904,
@@ -1344,8 +3947,8 @@
     "product_type": "Redmi Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4c2256e1-e76f-4655-bcc4-3f3cb0cb65f2.jpg?v=1781011878",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_fedf1ffd-17d9-4b75-babe-fc4dc1457920.jpg?v=1781011877",
     "images": [
@@ -1365,7 +3968,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520048505064,
@@ -1374,8 +3988,8 @@
     "product_type": "oneplus Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2265f15c-a502-41ba-8bd0-696f7a57f653.jpg?v=1781011708",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_6030dcc4-344c-4e58-830c-d882946da177.jpg?v=1781011708",
     "images": [
@@ -1396,7 +4010,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520048111848,
@@ -1405,8 +4030,8 @@
     "product_type": "oneplus Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_0a6b36f7-ccf4-4045-830f-e2aa57657091.jpg?v=1781011579",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1a0ca781-3f47-4b24-8bf7-e9f5ab8b228f.jpg?v=1781011580",
     "images": [
@@ -1426,7 +4051,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520046440680,
@@ -1435,8 +4071,8 @@
     "product_type": "Motorola Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_fe6e77f0-aaf5-412b-89a2-9b3f4a9cef05.jpg?v=1781010415",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_faf34504-25d9-48ca-a479-cfe0ab9bfff4.jpg?v=1781010416",
     "images": [
@@ -1457,7 +4093,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520046342376,
@@ -1466,8 +4113,8 @@
     "product_type": "Motorola Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_a1c3687d-39ed-4f5e-872f-a512f7f2bfff.jpg?v=1781010239",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_4129528d-f110-4f96-b40d-532b1418472a.jpg?v=1781010240",
     "images": [
@@ -1487,7 +4134,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520046145768,
@@ -1496,8 +4154,8 @@
     "product_type": "Realme Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_0e766026-80c8-44db-a1c9-80a3a612fa88.jpg?v=1781010038",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_d5e41770-6df9-49b6-8936-0340af40d47b.jpg?v=1781010038",
     "images": [
@@ -1518,7 +4176,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520046047464,
@@ -1527,8 +4196,8 @@
     "product_type": "Realme Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_bd5a6e59-2955-4723-a0f5-0375e4fcaff5.jpg?v=1781009884",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_e8b4ca78-4dfd-4312-ada6-3ec8f10ccf78.jpg?v=1781009884",
     "images": [
@@ -1549,7 +4218,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520045949160,
@@ -1558,8 +4238,8 @@
     "product_type": "Realme Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_cac96838-ea61-4d37-853c-768b92b8d239.jpg?v=1781009790",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_1e241354-c73d-4538-b742-1a776b8c78ed.jpg?v=1781009791",
     "images": [
@@ -1579,7 +4259,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520045916392,
@@ -1588,8 +4279,8 @@
     "product_type": "Realme Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_2225543d-5916-4138-8554-245b896fd8b9.jpg?v=1781009696",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_7e6d6220-8745-45a9-aadc-7ed42748f6c3.jpg?v=1781009696",
     "images": [
@@ -1609,7 +4300,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520045031656,
@@ -1618,8 +4320,8 @@
     "product_type": "vivo Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_383288c4-167f-4f60-88bc-56871013b78b.jpg?v=1781009376",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_5f488f57-c666-4e4b-a5b6-ee062c315530.jpg?v=1781009376",
     "images": [
@@ -1640,7 +4342,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520044966120,
@@ -1649,8 +4362,8 @@
     "product_type": "vivo Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_8454e1b8-de7d-45ee-a39d-661a9eb5c6f2.jpg?v=1781009327",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_addb261c-bf25-4265-a135-51a25a09d9ef.jpg?v=1781009328",
     "images": [
@@ -1671,7 +4384,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520044474600,
@@ -1680,8 +4404,8 @@
     "product_type": "vivo Anti-Yellow Magsafe Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_5d7303b5-0693-44cd-a7bf-a4178f4f0429.jpg?v=1781009213",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_50cc1e19-91ca-4819-a7ab-e55dcd313ab5.jpg?v=1781009213",
     "images": [
@@ -1702,7 +4426,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520042934504,
@@ -1711,8 +4446,8 @@
     "product_type": "vivo Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_1b8d1f0d-53eb-4da1-b3b7-b1e93824432d.jpg?v=1781008964",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_662cd44d-e05c-4289-8889-7dcb36bd5a54.jpg?v=1781008964",
     "images": [
@@ -1732,7 +4467,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520042705128,
@@ -1741,8 +4487,8 @@
     "product_type": "vivo Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_5fe5d72b-0f43-4e2a-9ecf-5615b611cb66.jpg?v=1781009055",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_7f3ef179-4c38-419c-9881-627c9877babd.jpg?v=1781009055",
     "images": [
@@ -1762,7 +4508,18 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   },
   {
     "id": 9520042574056,
@@ -1771,8 +4528,8 @@
     "product_type": "vivo Anti-Yellow Clear Case",
     "category_tag": "Anti-Yellow Case",
     "sub_title": "Impact Case",
-    "price": 699.0,
-    "compare_at_price": 999.0,
+    "price": 699,
+    "compare_at_price": 999,
     "primary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_5f7e3966-1619-4e6c-9be4-48130724dc6e.jpg?v=1781009126",
     "secondary_image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/2_57632b39-8fa3-4404-b101-07a4dc975e0c.jpg?v=1781009126",
     "images": [
@@ -1792,6 +4549,17 @@
       "#d1c4e9",
       "#f8bbd0"
     ],
-    "description": ""
+    "description": "",
+    "options": [
+      {
+        "name": "Title",
+        "position": 1,
+        "values": [
+          "Default Title"
+        ]
+      }
+    ],
+    "color_variants": [],
+    "models": []
   }
 ]

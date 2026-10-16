@@ -46,17 +46,25 @@ export function validateAndCalculateCart(incomingItems: any[]): ValidatedCartRes
   for (const item of incomingItems) {
     const qty = Math.max(1, parseInt(item.quantity, 10) || 1);
     const productId = String(item.id || '');
-    const canonicalProduct = productMap.get(productId);
+    let canonicalProduct = productMap.get(productId);
+
+    if (!canonicalProduct) {
+      // Lookup by prefix for compound variant IDs (e.g. the-weeknd-iPhone 16 Pro-White)
+      for (const [id, prod] of productMap.entries()) {
+        if (productId === id || productId.startsWith(id + '-')) {
+          canonicalProduct = prod;
+          break;
+        }
+      }
+    }
 
     // Canonical price from server data, fallback to item.price if strictly positive number
     let unitPrice = 0;
-    let title = item.title || 'Rezoni Designer Phone Case';
-    let image = item.image || '';
+    let title = item.title || (canonicalProduct ? canonicalProduct.title : 'Rezoni Designer Phone Case');
+    let image = item.image || (canonicalProduct ? canonicalProduct.primary_image : '');
 
     if (canonicalProduct) {
       unitPrice = canonicalProduct.price;
-      title = canonicalProduct.title;
-      image = canonicalProduct.primary_image || image;
     } else if (typeof item.price === 'number' && item.price > 0) {
       unitPrice = Math.round(item.price);
     } else {

@@ -44,16 +44,29 @@ const asSeenOnCards = [
   'https://www.rezoni.com/cdn/shop/files/8_15b11f00-520c-4938-b3ae-26aeeb055c55.jpg?v=1722677672',
 ];
 
+export interface ColorVariant {
+  name: string;
+  hex: string;
+  image: string;
+  gallery: string[];
+}
+
 export interface ProductDetailProps {
   product: {
     id: number | string;
     title: string;
     handle: string;
     category_tag: string;
+    sub_title?: string;
     price: number;
     compare_at_price: number;
     primary_image: string;
+    secondary_image?: string;
     images?: string[];
+    models?: string[];
+    color_variants?: ColorVariant[];
+    swatches?: string[];
+    options?: Array<{ name: string; position: number; values: string[] }>;
   };
 }
 
@@ -89,29 +102,86 @@ function getEstimatedDeliveryDates(minOffsetDays = 2, maxOffsetDays = 3) {
 export default function ProductDetailClient({ product }: ProductDetailProps) {
   const { addToCart } = useCart();
 
-  const [selectedImage, setSelectedImage] = useState(
-    product.primary_image || (product.images && product.images[0]) || ''
+  const colorVariants =
+    product.color_variants && product.color_variants.length > 0
+      ? product.color_variants
+      : [];
+
+  const availableModels =
+    product.models && product.models.length > 0 ? product.models : phoneModels;
+
+  const [selectedColor, setSelectedColor] = useState<string>(
+    colorVariants.length > 0 ? colorVariants[0].name : 'Default'
   );
-  const [selectedDevice, setSelectedDevice] = useState('');
-  const [selectedColor, setSelectedColor] = useState('Black');
+
+  const activeColorVariant =
+    colorVariants.find(
+      (c) => c.name.toLowerCase() === selectedColor.toLowerCase()
+    ) || (colorVariants.length > 0 ? colorVariants[0] : null);
+
+  const activeGallery =
+    activeColorVariant &&
+    activeColorVariant.gallery &&
+    activeColorVariant.gallery.length > 0
+      ? activeColorVariant.gallery
+      : product.images && product.images.length > 0
+      ? product.images
+      : [product.primary_image];
+
+  const [selectedImage, setSelectedImage] = useState<string>(
+    activeColorVariant
+      ? activeColorVariant.image
+      : product.primary_image || (product.images && product.images[0]) || ''
+  );
+
+  const [selectedDevice, setSelectedDevice] = useState<string>(
+    availableModels.length > 0 ? availableModels[0] : ''
+  );
+
   const [pincode, setPincode] = useState('');
   const [pincodeStatus, setPincodeStatus] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'desc' | 'shipping'>('desc');
   const [deliveryDateRange, setDeliveryDateRange] = useState('');
+
+  // Keep state synced if handle changes
+  useEffect(() => {
+    if (colorVariants.length > 0) {
+      setSelectedColor(colorVariants[0].name);
+      setSelectedImage(colorVariants[0].image);
+    } else {
+      setSelectedColor('Default');
+      setSelectedImage(
+        product.primary_image || (product.images && product.images[0]) || ''
+      );
+    }
+    if (availableModels.length > 0) {
+      setSelectedDevice(availableModels[0]);
+    }
+  }, [product.handle]);
 
   useEffect(() => {
     const { range } = getEstimatedDeliveryDates(2, 3);
     setDeliveryDateRange(range);
   }, []);
 
+  const handleColorChange = (variant: ColorVariant) => {
+    setSelectedColor(variant.name);
+    setSelectedImage(variant.image);
+  };
+
   const handleAddToCart = () => {
-    const device = selectedDevice || phoneModels[0];
+    const device =
+      selectedDevice || (availableModels.length > 0 ? availableModels[0] : 'Standard');
+    const hasColors = colorVariants.length > 0;
     addToCart({
       id: `${product.id}-${device}-${selectedColor}`,
-      title: `${product.title} - ${selectedColor}`,
+      title: hasColors ? `${product.title} - ${selectedColor}` : product.title,
       price: product.price,
-      image: selectedImage || product.primary_image,
+      image:
+        selectedImage ||
+        (activeColorVariant ? activeColorVariant.image : product.primary_image),
       device: device,
+      color: hasColors ? selectedColor : undefined,
       quantity: 1,
     });
   };
@@ -126,8 +196,6 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
       setPincodeStatus('Please enter a valid 6-digit postal code.');
     }
   };
-
-  const allImages = product.images && product.images.length > 0 ? product.images : [product.primary_image];
 
   return (
     <div style={{ backgroundColor: '#ffffff', minHeight: '80vh', padding: '16px 0 80px', fontFamily: 'Montserrat, sans-serif' }}>
@@ -165,7 +233,7 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
             >
               <img
                 src={selectedImage || product.primary_image}
-                alt={product.title}
+                alt={`${product.title} - ${selectedColor}`}
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
 
@@ -195,30 +263,35 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
             </div>
 
             {/* Thumbnail Row */}
-            {allImages.length > 1 && (
+            {activeGallery.length > 1 && (
               <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '6px' }}>
-                {allImages.slice(0, 7).map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedImage(img)}
-                    style={{
-                      width: '68px',
-                      height: '68px',
-                      borderRadius: '4px',
-                      border: selectedImage === img ? '2px solid #000000' : '1px solid #e0e0e0',
-                      padding: '2px',
-                      backgroundColor: '#ffffff',
-                      cursor: 'pointer',
-                      flexShrink: 0,
-                    }}
-                  >
-                    <img
-                      src={img}
-                      alt={`Thumbnail ${idx + 1}`}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </button>
-                ))}
+                {activeGallery.map((img, idx) => {
+                  const isCurrent = selectedImage === img;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedImage(img)}
+                      style={{
+                        width: '68px',
+                        height: '68px',
+                        borderRadius: '4px',
+                        border: isCurrent ? '2px solid #000000' : '1px solid #e0e0e0',
+                        padding: '2px',
+                        backgroundColor: '#ffffff',
+                        cursor: 'pointer',
+                        flexShrink: 0,
+                        transition: 'border-color 0.2s ease',
+                      }}
+                    >
+                      <img
+                        src={img}
+                        alt={`${product.title} - view ${idx + 1}`}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -262,80 +335,84 @@ export default function ProductDetailClient({ product }: ProductDetailProps) {
             </div>
 
             {/* Model Dropdown Selection */}
-            <div style={{ marginBottom: '16px' }}>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: '#333333',
-                  marginBottom: '6px',
-                }}
-              >
-                Model:
-              </label>
-              <select
-                value={selectedDevice}
-                onChange={(e) => setSelectedDevice(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  borderRadius: '4px',
-                  border: '1px solid #cccccc',
-                  backgroundColor: '#ffffff',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  color: selectedDevice ? '#111111' : '#666666',
-                  outline: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                <option value="">Please select model</option>
-                {phoneModels.map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {availableModels.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: '#333333',
+                    marginBottom: '6px',
+                  }}
+                >
+                  Model:
+                </label>
+                <select
+                  value={selectedDevice}
+                  onChange={(e) => setSelectedDevice(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 14px',
+                    borderRadius: '4px',
+                    border: '1px solid #cccccc',
+                    backgroundColor: '#ffffff',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    color: selectedDevice ? '#111111' : '#666666',
+                    outline: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {availableModels.map((model) => (
+                    <option key={model} value={model}>
+                      {model}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* Color Swatches */}
-            <div style={{ marginBottom: '22px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: '#333333', marginBottom: '8px' }}>
-                Color: <span style={{ fontWeight: 400, color: '#666' }}>{selectedColor}</span>
+            {colorVariants.length > 0 && (
+              <div style={{ marginBottom: '22px' }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#333333', marginBottom: '8px' }}>
+                  Color: <span style={{ fontWeight: 400, color: '#666' }}>{selectedColor}</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  {colorVariants.map((variant) => {
+                    const isSelected =
+                      selectedColor.toLowerCase() === variant.name.toLowerCase();
+                    return (
+                      <button
+                        key={variant.name}
+                        type="button"
+                        onClick={() => handleColorChange(variant)}
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          backgroundColor: variant.hex,
+                          border:
+                            variant.hex.toLowerCase() === '#ffffff'
+                              ? '1px solid #cccccc'
+                              : 'none',
+                          outline: isSelected ? '2px solid #000000' : 'none',
+                          outlineOffset: '2px',
+                          cursor: 'pointer',
+                          display: 'inline-block',
+                          padding: 0,
+                          transition: 'transform 0.15s ease',
+                          transform: isSelected ? 'scale(1.15)' : 'scale(1)',
+                        }}
+                        title={variant.name}
+                        aria-label={`Select color ${variant.name}`}
+                      />
+                    );
+                  })}
+                </div>
               </div>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <span
-                  onClick={() => setSelectedColor('Black')}
-                  style={{
-                    width: '26px',
-                    height: '26px',
-                    borderRadius: '50%',
-                    backgroundColor: '#000000',
-                    outline: selectedColor === 'Black' ? '2px solid #000000' : 'none',
-                    outlineOffset: '2px',
-                    cursor: 'pointer',
-                    display: 'inline-block',
-                  }}
-                  title="Black"
-                />
-                <span
-                  onClick={() => setSelectedColor('Clear')}
-                  style={{
-                    width: '26px',
-                    height: '26px',
-                    borderRadius: '50%',
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #cccccc',
-                    outline: selectedColor === 'Clear' ? '2px solid #000000' : 'none',
-                    outlineOffset: '2px',
-                    cursor: 'pointer',
-                    display: 'inline-block',
-                  }}
-                  title="Clear"
-                />
-              </div>
-            </div>
+            )}
 
             {/* Limited Time Sale Ribbon Bar above ADD TO CART */}
             <div

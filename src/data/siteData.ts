@@ -21,6 +21,13 @@ export interface CollectionCard {
   link: string;
 }
 
+export interface ColorVariant {
+  name: string;
+  hex: string;
+  image: string;
+  gallery: string[];
+}
+
 export interface ProductItem {
   id: string;
   title: string;
@@ -32,6 +39,10 @@ export interface ProductItem {
   primary_image: string;
   secondary_image: string;
   swatches: string[];
+  images?: string[];
+  models?: string[];
+  color_variants?: ColorVariant[];
+  options?: Array<{ name: string; position: number; values: string[] }>;
 }
 
 export interface InstagramPhoto {

@@ -13,6 +13,16 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [selectedSwatch, setSelectedSwatch] = useState(0);
 
+  const activeVariant =
+    product.color_variants && product.color_variants[selectedSwatch]
+      ? product.color_variants[selectedSwatch]
+      : null;
+
+  const displayPrimary = activeVariant?.image || product.primary_image;
+  const displaySecondary =
+    (activeVariant?.gallery && activeVariant.gallery.length > 1 ? activeVariant.gallery[1] : null) ||
+    product.secondary_image;
+
   return (
     <div
       style={{
@@ -40,7 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         >
           {/* Primary Image */}
           <img
-            src={product.primary_image}
+            src={displayPrimary}
             alt={product.title}
             style={{
               position: 'absolute',
@@ -49,15 +59,15 @@ export default function ProductCard({ product }: ProductCardProps) {
               width: '100%',
               height: '100%',
               objectFit: 'contain',
-              opacity: isHovered && product.secondary_image ? 0 : 1,
+              opacity: isHovered && displaySecondary ? 0 : 1,
               transition: 'opacity 0.25s ease-in-out',
             }}
           />
 
           {/* Secondary Image (Hover transition) */}
-          {product.secondary_image && (
+          {displaySecondary && (
             <img
-              src={product.secondary_image}
+              src={displaySecondary}
               alt={`${product.title} alternate`}
               style={{
                 position: 'absolute',
@@ -131,6 +141,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.swatches.map((color, idx) => (
               <span
                 key={idx}
+                onMouseEnter={() => setSelectedSwatch(idx)}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

@@ -233,8 +233,13 @@ export default function MiniCart() {
                             </button>
                           </div>
                           {item.device && (
-                            <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>
+                            <div style={{ fontSize: '11px', color: '#666', marginBottom: '2px' }}>
                               Model: <span style={{ fontWeight: 600, color: '#333' }}>{item.device}</span>
+                            </div>
+                          )}
+                          {item.color && (
+                            <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>
+                              Color: <span style={{ fontWeight: 600, color: '#333' }}>{item.color}</span>
                             </div>
                           )}
                           <div style={{ fontSize: '13px', fontWeight: 700, color: '#000000' }}>
