@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import CheckoutAddressForm from './CheckoutAddressForm';
-import { FREE_GIFTS, TOTAL_FREE_GIFTS_VALUE } from '@/data/freeGifts';
+import { FREE_GIFTS } from '@/data/freeGifts';
 
 export default function MiniCart() {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice } = useCart();
@@ -140,28 +140,13 @@ export default function MiniCart() {
               <div>💯 100% refund if you don&apos;t like it!</div>
             </div>
 
-            {/* Free Shipping Progress Meter */}
+            {/* Free Shipping Progress Meter - Clean sleek style matching screenshot */}
             {cart.length > 0 && (
-              <div style={{ padding: '14px 20px', borderBottom: '1px solid #f0f0f0', backgroundColor: '#fafafa' }}>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: '#333', marginBottom: '8px' }}>
-                  {remainingForFreeShipping > 0 ? (
-                    <>
-                      Add <span style={{ color: '#ff6700' }}>Rs. {remainingForFreeShipping.toFixed(2)}</span> more to unlock Free Nationwide Shipping!
-                    </>
-                  ) : (
-                    <span style={{ color: '#2d6a4f' }}>🎉 Congratulations! You have unlocked FREE Nationwide Shipping!</span>
-                  )}
+              <div style={{ padding: '16px 20px 14px', textAlign: 'center', borderBottom: '1px solid #f0f0f0' }}>
+                <div style={{ fontSize: '14px', fontWeight: 500, color: '#333333', marginBottom: '10px' }}>
+                  You are eligible for free shipping!
                 </div>
-                <div style={{ height: '6px', backgroundColor: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-                  <div
-                    style={{
-                      width: `${progress}%`,
-                      height: '100%',
-                      backgroundColor: '#2d6a4f',
-                      transition: 'width 0.3s ease',
-                    }}
-                  />
-                </div>
+                <div style={{ height: '7px', backgroundColor: '#1a1a1a', borderRadius: '999px', width: '100%' }} />
               </div>
             )}
 
@@ -187,6 +172,7 @@ export default function MiniCart() {
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {/* Paid Cart Items */}
                   {cart.map((item) => (
                     <div
                       key={item.id}
@@ -195,6 +181,7 @@ export default function MiniCart() {
                         gap: '14px',
                         paddingBottom: '16px',
                         borderBottom: '1px solid #f0f0f0',
+                        alignItems: 'center',
                       }}
                     >
                       <div
@@ -218,37 +205,30 @@ export default function MiniCart() {
                         />
                       </div>
 
-                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                        <div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <h4 style={{ fontSize: '13px', fontWeight: 700, margin: '0 0 4px', lineHeight: 1.3 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                          <div>
+                            <h4 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 2px', lineHeight: 1.3, color: '#111' }}>
                               {item.title}
                             </h4>
-                            <button
-                              onClick={() => removeFromCart(item.id)}
-                              aria-label="Remove item"
-                              style={{ color: '#999', fontSize: '14px', background: 'none', border: 'none', cursor: 'pointer', padding: '0 4px' }}
-                            >
-                              ✕
-                            </button>
+                            {item.device && (
+                              <div style={{ fontSize: '12px', color: '#777', marginBottom: '8px' }}>
+                                {item.device}{item.color ? ` / ${item.color}` : ''}
+                              </div>
+                            )}
                           </div>
-                          {item.device && (
-                            <div style={{ fontSize: '11px', color: '#666', marginBottom: '2px' }}>
-                              Model: <span style={{ fontWeight: 600, color: '#333' }}>{item.device}</span>
+                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                            <div style={{ fontSize: '14px', fontWeight: 600, color: '#e53e3e' }}>
+                              Rs. {(Number(item?.price) || 0).toFixed(2)}
                             </div>
-                          )}
-                          {item.color && (
-                            <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>
-                              Color: <span style={{ fontWeight: 600, color: '#333' }}>{item.color}</span>
+                            <div style={{ fontSize: '12px', textDecoration: 'line-through', color: '#888' }}>
+                              Rs. {((Number(item?.price) || 299) * 2.2).toFixed(2)}
                             </div>
-                          )}
-                          <div style={{ fontSize: '13px', fontWeight: 700, color: '#000000' }}>
-                            Rs. {(Number(item?.price) || 0).toFixed(2)}
                           </div>
                         </div>
 
-                        {/* Quantity Selector */}
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+                        {/* Stepper + Remove link */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '4px' }}>
                           <div
                             style={{
                               display: 'inline-flex',
@@ -262,8 +242,8 @@ export default function MiniCart() {
                               onClick={() => updateQuantity(item.id, -1)}
                               aria-label="Decrease quantity"
                               style={{
-                                width: '28px',
-                                height: '28px',
+                                width: '26px',
+                                height: '26px',
                                 border: 'none',
                                 background: '#fff',
                                 cursor: 'pointer',
@@ -273,15 +253,15 @@ export default function MiniCart() {
                             >
                               -
                             </button>
-                            <span style={{ width: '28px', textAlign: 'center', fontSize: '12px', fontWeight: 700 }}>
+                            <span style={{ width: '26px', textAlign: 'center', fontSize: '12px', fontWeight: 700 }}>
                               {item.quantity}
                             </span>
                             <button
                               onClick={() => updateQuantity(item.id, 1)}
                               aria-label="Increase quantity"
                               style={{
-                                width: '28px',
-                                height: '28px',
+                                width: '26px',
+                                height: '26px',
                                 border: 'none',
                                 background: '#fff',
                                 cursor: 'pointer',
@@ -292,69 +272,91 @@ export default function MiniCart() {
                               +
                             </button>
                           </div>
+
+                          <button
+                            onClick={() => removeFromCart(item.id)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#666',
+                              fontSize: '12px',
+                              textDecoration: 'underline',
+                              cursor: 'pointer',
+                              padding: 0,
+                            }}
+                          >
+                            Remove
+                          </button>
                         </div>
                       </div>
                     </div>
                   ))}
 
-                  {/* 3 Free Gifts Unlocked Section */}
-                  <div
-                    style={{
-                      margin: '16px 0 10px',
-                      backgroundColor: '#f0fdf4',
-                      border: '1.5px solid #86efac',
-                      borderRadius: '8px',
-                      padding: '12px 14px',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#166534', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span>🎁</span> 3 FREE GIFTS UNLOCKED!
-                      </span>
-                      <span style={{ backgroundColor: '#22c55e', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>
-                        100% FREE
-                      </span>
-                    </div>
-                    <div style={{ fontSize: '11px', color: '#15803d', marginBottom: '10px' }}>
-                      Worth ₹{TOTAL_FREE_GIFTS_VALUE}.00 — Automatically included with your order at ₹0!
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-                      {FREE_GIFTS.map((gift) => (
-                        <div
-                          key={gift.id}
-                          style={{
-                            textAlign: 'center',
-                            backgroundColor: '#ffffff',
-                            borderRadius: '6px',
-                            padding: '6px 4px',
-                            border: '1px solid #bbf7d0',
-                          }}
-                        >
-                          <img
-                            src={gift.image}
-                            alt={gift.title}
-                            style={{ width: '100%', height: '52px', objectFit: 'contain' }}
-                          />
-                          <div
+                  {/* Free Gift Line Items - 1:1 like user's screenshot */}
+                  {FREE_GIFTS.map((gift) => (
+                    <div
+                      key={gift.id}
+                      style={{
+                        display: 'flex',
+                        gap: '14px',
+                        paddingBottom: '16px',
+                        borderBottom: '1px solid #f0f0f0',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '74px',
+                          height: '74px',
+                          borderRadius: '4px',
+                          overflow: 'hidden',
+                          backgroundColor: '#ffffff',
+                          flexShrink: 0,
+                          border: '1px solid #eee',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: '4px',
+                        }}
+                      >
+                        <img
+                          src={gift.image}
+                          alt={gift.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        />
+                      </div>
+
+                      <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <h4 style={{ fontSize: '14px', fontWeight: 500, margin: '0 0 4px', color: '#222' }}>
+                            {gift.title.split(' (')[0]}
+                          </h4>
+                          <span
                             style={{
                               fontSize: '10px',
                               fontWeight: 700,
-                              color: '#166534',
-                              marginTop: '4px',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
+                              color: '#16a34a',
+                              backgroundColor: '#f0fdf4',
+                              border: '1px solid #bbf7d0',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
                             }}
                           >
-                            {gift.id.includes('sticky') ? 'Sticky Pod' : gift.id.includes('protector') ? 'Protector (4P)' : 'Fast Cable'}
+                            Free Gift Included
+                          </span>
+                        </div>
+
+                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                          <div style={{ fontSize: '14px', fontWeight: 600, color: '#e53e3e' }}>
+                            Free!
                           </div>
-                          <div style={{ fontSize: '9.5px', color: '#16a34a', fontWeight: 800 }}>
-                            FREE
+                          <div style={{ fontSize: '12px', textDecoration: 'line-through', color: '#888' }}>
+                            Rs. {gift.originalPrice}.00
                           </div>
                         </div>
-                      ))}
+                      </div>
                     </div>
-                  </div>
+                  ))}
 
                   {/* Order Note */}
                   <div style={{ marginTop: '10px' }}>

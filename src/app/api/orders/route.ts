@@ -1,5 +1,245 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllOrders, getOrderByIdOrQuery, createNewOrder } from '@/lib/db';
+import { getSupabaseAdminClient } from '@/lib/supabaseServer';
+import { getAllOrders, getOrderByIdOrQuery, createNewOrder, Order } from '@/lib/db';
+import fs from 'fs';
+import path from 'path';
+
+function readOrdersFromOrderStore(): any[] {
+  try {
+    const ordersFilePath = path.join(process.cwd(), 'src', 'data', 'orders.json');
+    if (fs.existsSync(ordersFilePath)) {
+      return JSON.parse(fs.readFileSync(ordersFilePath, 'utf-8'));
+    }
+  } catch (err) {
+    console.error('Error reading orders.json:', err);
+  }
+  return [];
+}
+
+function normalizeToOrder(raw: any): Order {
+  // If it's already a complete Order schema with timeline
+  if (raw.timeline && raw.timeline.length > 0 && raw.carrier && raw.statusLabel) {
+    return raw as Order;
+  }
+
+  const orderId = raw.order_id || raw.id || raw.orderId || 'RZ-10001';
+  const rawStatus = (raw.order_status || raw.status || 'confirmed').toLowerCase();
+
+  let status: Order['status'] = 'confirmed';
+  if (['dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(rawStatus)) {
+    status = rawStatus as Order['status'];
+  } else {
+    status = 'confirmed';
+  }
+
+  const statusLabelMap: Record<Order['status'], string> = {
+    confirmed: 'Order Confirmed - Preparing for Dispatch',
+    dispatched: 'Dispatched - Handed over to Logistics',
+    in_transit: 'In Transit - Moving to Delivery Hub',
+    out_for_delivery: 'Out for Delivery - Arriving Today',
+    delivered: 'Delivered Successfully',
+  };
+
+  const carrier = raw.carrier || 'Delhivery Express';
+  const trackingNumber =
+    raw.tracking_number ||
+    raw.trackingNumber ||
+    `DELHIVERY-${orderId.replace(/[^0-9]/g, '') || '782109'}`;
+
+  const createdDate = raw.created_at
+    ? new Date(raw.created_at)
+    : raw.createdAt
+    ? new Date(raw.createdAt)
+    : new Date();
+  const estDate = new Date(createdDate.getTime());
+  estDate.setDate(estDate.getDate() + 3);
+
+  const formattedDate = createdDate.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  const formattedEst = estDate.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  // Map Items (including products & any free gifts)
+  const items = (raw.items || []).map((it: any) => ({
+    title: it.title || 'Rezoni Designer Case',
+    model: it.model || it.device || 'Standard Fit',
+    variant: it.variant || it.color || 'Clear UV',
+    price: Number(it.price || 0),
+    quantity: Number(it.quantity || 1),
+    image:
+      it.image ||
+      'https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3.jpg?v=1725349229',
+  }));
+
+  const isDispatched = ['dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(status);
+  const isInTransit = ['in_transit', 'out_for_delivery', 'delivered'].includes(status);
+  const isOut = ['out_for_delivery', 'delivered'].includes(status);
+  const isDelivered = status === 'delivered';
+
+  const timeline = [
+    {
+      title: 'Order Confirmed',
+      description: 'Order placed & prepaid payment verified',
+      date: formattedDate,
+      time: '10:00 AM',
+      completed: true,
+      current: status === 'confirmed',
+      location: 'Rezoni Central Hub, Gurugram',
+    },
+    {
+      title: 'Dispatched & Packed',
+      description: 'Undergoing quality check & UV packaging',
+      date: isDispatched ? formattedDate : 'Upcoming',
+      time: isDispatched ? '04:30 PM' : 'Within 24 hours',
+      completed: isDispatched,
+      current: status === 'dispatched',
+      location: 'Delhi Central Logistics Hub',
+    },
+    {
+      title: 'In Transit',
+      description: 'Handoff to express delivery air network',
+      date: isInTransit ? 'Today' : 'Upcoming',
+      time: isInTransit ? '06:00 AM' : 'In 2 days',
+      completed: isInTransit,
+      current: status === 'in_transit',
+      location: 'Express Air Hub',
+    },
+    {
+      title: 'Out for Delivery',
+      description: 'Courier executive assigned for doorstep delivery',
+      date: isOut ? 'Today' : 'Upcoming',
+      time: isOut ? '08:45 AM' : 'Expected',
+      completed: isOut,
+      current: status === 'out_for_delivery',
+      location: raw.shipping_address?.city || raw.customer?.city || 'Local Delivery Van',
+    },
+    {
+      title: 'Delivered',
+      description: 'Direct doorstep contactless delivery with 6-month warranty card',
+      date: isDelivered ? 'Today' : formattedEst,
+      time: isDelivered ? '02:15 PM' : 'By 07:00 PM',
+      completed: isDelivered,
+      current: status === 'delivered',
+      location: 'Shipping Address',
+    },
+  ];
+
+  let shippingAddress = {
+    address: 'Customer Address Provided',
+    city: 'New Delhi',
+    state: 'Delhi',
+    pincode: '110001',
+  };
+
+  if (raw.shipping_address) {
+    shippingAddress = {
+      address:
+        raw.shipping_address.address ||
+        raw.shipping_address.addressLine1 ||
+        'Customer Address',
+      city: raw.shipping_address.city || 'Delhi',
+      state: raw.shipping_address.state || 'Delhi',
+      pincode: raw.shipping_address.pincode || '',
+    };
+  } else if (raw.customer) {
+    shippingAddress = {
+      address:
+        [raw.customer.addressLine1, raw.customer.addressLine2].filter(Boolean).join(', ') ||
+        'Customer Address',
+      city: raw.customer.city || '',
+      state: raw.customer.state || '',
+      pincode: raw.customer.pincode || '',
+    };
+  }
+
+  return {
+    id: orderId,
+    customerEmail: raw.customer_email || raw.customer?.email || raw.customerEmail || '',
+    customerPhone: raw.customer_phone || raw.customer?.phone || raw.customerPhone || '',
+    customerName: raw.customer_name || raw.customer?.fullName || raw.customerName || 'Rezoni Customer',
+    date: formattedDate,
+    total: Number(raw.total_amount || raw.amount || raw.total || 0),
+    status,
+    statusLabel: statusLabelMap[status],
+    carrier,
+    trackingNumber,
+    estimatedDelivery: formattedEst,
+    shippingAddress,
+    items,
+    timeline,
+  };
+}
+
+async function findUnifiedOrder(query: string): Promise<Order | null> {
+  const clean = query.trim();
+  const cleanId = clean.toUpperCase().replace('#', '');
+  const digits = clean.replace(/[^0-9]/g, '');
+  const lowerQuery = clean.toLowerCase();
+
+  // 1. Check Supabase DB orders table
+  const supabase = getSupabaseAdminClient();
+  if (supabase) {
+    try {
+      // By exact or partial Order ID / ID
+      const { data: idMatches } = await supabase
+        .from('orders')
+        .select('*')
+        .or(`order_id.ilike.%${cleanId}%,id.ilike.%${cleanId}%,tracking_number.ilike.%${cleanId}%`)
+        .limit(1);
+
+      if (idMatches && idMatches.length > 0) {
+        return normalizeToOrder(idMatches[0]);
+      }
+
+      // By phone number
+      if (digits.length >= 7) {
+        const { data: phoneMatches } = await supabase
+          .from('orders')
+          .select('*')
+          .ilike('customer_phone', `%${digits}%`)
+          .limit(1);
+
+        if (phoneMatches && phoneMatches.length > 0) {
+          return normalizeToOrder(phoneMatches[0]);
+        }
+      }
+    } catch (sbErr) {
+      console.warn('Supabase order tracking query skipped/failed:', sbErr);
+    }
+  }
+
+  // 2. Check orders.json (Razorpay store)
+  const storeOrders = readOrdersFromOrderStore();
+  const storeMatch = storeOrders.find((o) => {
+    const oId = (o.orderId || '').toUpperCase().replace('#', '');
+    if (oId === cleanId || oId.includes(cleanId)) return true;
+    if (o.receipt && o.receipt.toUpperCase().includes(cleanId)) return true;
+    if (digits.length >= 7 && o.customer?.phone) {
+      const pDigits = o.customer.phone.replace(/[^0-9]/g, '');
+      if (pDigits.includes(digits)) return true;
+    }
+    if (o.customer?.email && o.customer.email.toLowerCase() === lowerQuery) return true;
+    return false;
+  });
+
+  if (storeMatch) {
+    return normalizeToOrder(storeMatch);
+  }
+
+  // 3. Check db.json
+  const dbMatch = getOrderByIdOrQuery(query);
+  if (dbMatch) {
+    return normalizeToOrder(dbMatch);
+  }
+
+  return null;
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -7,10 +247,13 @@ export async function GET(req: NextRequest) {
     const query = searchParams.get('query') || searchParams.get('id') || searchParams.get('trackingNumber');
 
     if (query) {
-      const order = getOrderByIdOrQuery(query);
+      const order = await findUnifiedOrder(query);
       if (!order) {
         return NextResponse.json(
-          { success: false, message: `No shipment found for "${query}". Please check the Order ID or phone number.` },
+          {
+            success: false,
+            message: `No shipment found for "${query}". Please check the Order ID, Phone Number, or Tracking Number.`,
+          },
           { status: 404 }
         );
       }
@@ -54,11 +297,14 @@ export async function POST(req: NextRequest) {
       items,
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Order placed and confirmed successfully!',
-      order,
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Order placed and confirmed successfully!',
+        order,
+      },
+      { status: 201 }
+    );
   } catch (error: any) {
     return NextResponse.json(
       { success: false, message: error.message || 'Internal server error' },
