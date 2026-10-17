@@ -87,19 +87,19 @@ function TrackOrderContent() {
       key: 'confirmed',
       title: 'Order Confirmed',
       subtitle: 'Order received & prepaid payment verified',
-      location: 'Rezoni Central Logistics Hub',
+      location: 'Rezoni Central Logistics Hub, Gurugram',
     },
     {
       key: 'dispatched',
       title: 'Dispatched & Packed',
       subtitle: `Undergoing quality check & handoff to ${order?.carrier || 'BlueDart'}`,
-      location: `${order?.carrier || 'BlueDart'} Dispatch Center`,
+      location: `${order?.carrier || 'BlueDart'} Dispatch Center, Delhi NCR`,
     },
     {
       key: 'in_transit',
       title: 'In Transit',
       subtitle: `Shipment en route via ${order?.carrier || 'BlueDart'} express network`,
-      location: 'Air Cargo Sorting Facility',
+      location: `${order?.carrier || 'BlueDart'} National Air Sorting Facility`,
     },
     {
       key: 'out_for_delivery',
@@ -111,7 +111,9 @@ function TrackOrderContent() {
       key: 'delivered',
       title: 'Delivered',
       subtitle: 'Direct doorstep delivery with 6-month product warranty',
-      location: order?.shippingAddress?.city ? `${order.shippingAddress.city} Destination` : 'Shipping Address',
+      location: order?.shippingAddress?.city
+        ? `${order.shippingAddress.address ? `${order.shippingAddress.address}, ` : ''}${order.shippingAddress.city}${order.shippingAddress.pincode ? ` (${order.shippingAddress.pincode})` : ''}`
+        : 'Customer Doorstep (Verified Delivery)',
     },
   ];
 
@@ -365,8 +367,21 @@ function TrackOrderContent() {
                 const isCompleted = idx <= currentStageIndex;
                 const isCurrent = idx === currentStageIndex;
 
+                const matchingTimeline = order?.timeline?.find((t) =>
+                  t.key === stage.key ||
+                  t.title.toLowerCase().includes(stage.key.replace('_', ' ')) ||
+                  (stage.key === 'confirmed' && t.title.toLowerCase().includes('confirmed')) ||
+                  (stage.key === 'dispatched' && (t.title.toLowerCase().includes('dispatched') || t.title.toLowerCase().includes('packed'))) ||
+                  (stage.key === 'in_transit' && t.title.toLowerCase().includes('transit')) ||
+                  (stage.key === 'out_for_delivery' && t.title.toLowerCase().includes('delivery')) ||
+                  (stage.key === 'delivered' && t.title.toLowerCase().includes('delivered'))
+                );
+
+                const stageDateText = matchingTimeline?.shortDate || matchingTimeline?.date || '';
+                const stageTimeText = matchingTimeline?.shortTime || matchingTimeline?.time || '';
+
                 return (
-                  <div key={idx} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div key={idx} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, minWidth: 0, padding: '0 2px' }}>
                     <div className="track-node-wrapper">
                       {isCurrent && (
                         <>
@@ -409,6 +424,37 @@ function TrackOrderContent() {
                     >
                       {stage.title.split(' & ')[0]}
                     </span>
+                    <span
+                      className="track-stage-date"
+                      style={{
+                        fontSize: '9.5px',
+                        fontWeight: isCurrent ? 700 : 500,
+                        color: isCurrent ? '#15803d' : isCompleted ? '#4b5563' : '#9ca3af',
+                        marginTop: '2px',
+                        textAlign: 'center',
+                        lineHeight: 1.2,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {isCompleted || isCurrent
+                        ? stageDateText
+                        : (stageDateText ? `Est. ${stageDateText}` : 'Upcoming')}
+                    </span>
+                    {stageTimeText && (
+                      <span
+                        className="track-stage-time"
+                        style={{
+                          fontSize: '8.5px',
+                          fontWeight: isCurrent ? 700 : 400,
+                          color: isCurrent ? '#16a34a' : isCompleted ? '#6b7280' : '#9ca3af',
+                          textAlign: 'center',
+                          lineHeight: 1.2,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {stageTimeText}
+                      </span>
+                    )}
                   </div>
                 );
               })}
@@ -477,6 +523,7 @@ function TrackOrderContent() {
 
                       // Check for matching recorded timeline info if available
                       const matchingTimeline = order.timeline?.find((t) =>
+                        t.key === stage.key ||
                         t.title.toLowerCase().includes(stage.key.replace('_', ' ')) ||
                         (stage.key === 'confirmed' && t.title.toLowerCase().includes('confirmed')) ||
                         (stage.key === 'dispatched' && (t.title.toLowerCase().includes('dispatched') || t.title.toLowerCase().includes('packed'))) ||
@@ -486,7 +533,7 @@ function TrackOrderContent() {
                       );
 
                       const timestamp = matchingTimeline
-                        ? `${matchingTimeline.date}${matchingTimeline.time ? ` • ${matchingTimeline.time}` : ''}`
+                        ? `${matchingTimeline.date} • ${matchingTimeline.time}`
                         : isCompleted
                         ? `${order.date} • Verified`
                         : isCurrent
@@ -544,7 +591,7 @@ function TrackOrderContent() {
 
                           {/* Stage Details */}
                           <div style={{ flex: 1, paddingBottom: isLast ? 0 : '26px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '2px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '4px' }}>
                               <span style={{ fontSize: '14px', fontWeight: isCurrent ? 800 : isCompleted ? 700 : 500, color: isCurrent ? '#16a34a' : isCompleted ? '#111111' : '#888888' }}>
                                 {stage.title}
                               </span>
@@ -565,11 +612,16 @@ function TrackOrderContent() {
                                 </span>
                               )}
                             </div>
-                            <div style={{ fontSize: '12px', color: '#555555', lineHeight: 1.5 }}>
-                              {matchingTimeline?.description || stage.subtitle} — {matchingTimeline?.location || stage.location}
+                            <div style={{ fontSize: '12.5px', color: '#374151', lineHeight: 1.5, marginBottom: '4px' }}>
+                              {matchingTimeline?.description || stage.subtitle}
                             </div>
-                            <div style={{ fontSize: '11px', color: isCurrent ? '#16a34a' : '#888888', marginTop: '4px', fontWeight: isCurrent ? 600 : 400 }}>
-                              {timestamp}
+                            <div style={{ fontSize: '11.5px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '4px' }}>
+                              <span>📍</span>
+                              <span>{matchingTimeline?.location || stage.location}</span>
+                            </div>
+                            <div style={{ fontSize: '11px', color: isCurrent ? '#15803d' : '#6b7280', fontWeight: isCurrent ? 700 : 500, display: 'flex', alignItems: 'center', gap: '5px' }}>
+                              <span>🕒</span>
+                              <span>{timestamp}</span>
                             </div>
                           </div>
                         </div>

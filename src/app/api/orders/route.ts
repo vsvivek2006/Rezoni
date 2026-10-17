@@ -16,12 +16,59 @@ function readOrdersFromOrderStore(): any[] {
   return [];
 }
 
-function normalizeToOrder(raw: any): Order {
-  // If it's already a complete Order schema with timeline
-  if (raw.timeline && raw.timeline.length > 0 && raw.carrier && raw.statusLabel) {
-    return raw as Order;
+function formatISTDate(d: Date, opts?: Intl.DateTimeFormatOptions): string {
+  try {
+    return d.toLocaleDateString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      ...opts,
+    });
+  } catch {
+    return d.toLocaleDateString('en-IN', opts);
   }
+}
 
+function formatISTShortDate(d: Date): string {
+  try {
+    return d.toLocaleDateString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      day: 'numeric',
+      month: 'short',
+    });
+  } catch {
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+  }
+}
+
+function formatISTTime(d: Date): string {
+  try {
+    return d.toLocaleTimeString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  } catch {
+    return d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+  }
+}
+
+function formatISTShortTime(d: Date): string {
+  try {
+    return d.toLocaleTimeString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).toLowerCase();
+  } catch {
+    return d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+  }
+}
+
+function normalizeToOrder(raw: any): Order {
   const orderId = raw.order_id || raw.id || raw.orderId || 'RZ-10001';
   const rawStatus = (raw.order_status || raw.status || 'confirmed').toLowerCase();
 
@@ -48,22 +95,24 @@ function normalizeToOrder(raw: any): Order {
     raw.razorpay_order_id ||
     `DELHIVERY-${orderId.replace(/[^0-9]/g, '') || '782109'}`;
 
-  const createdDate = raw.created_at
+  let createdDate = raw.created_at
     ? new Date(raw.created_at)
     : raw.createdAt
     ? new Date(raw.createdAt)
+    : raw.date
+    ? new Date(raw.date)
     : new Date();
+  if (isNaN(createdDate.getTime())) {
+    createdDate = new Date();
+  }
+
   const estDate = new Date(createdDate.getTime());
   estDate.setDate(estDate.getDate() + 3);
 
-  const formattedDate = createdDate.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
+  const formattedDate = `${formatISTDate(createdDate)}, ${formatISTTime(createdDate)}`;
   const formattedEst = estDate.toLocaleDateString('en-US', {
     weekday: 'long',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   });
 
@@ -79,92 +128,159 @@ function normalizeToOrder(raw: any): Order {
       'https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3.jpg?v=1725349229',
   }));
 
+  const rawCustomer = raw.customer || {};
+  const rawShipping = raw.shipping_address || raw.shippingAddress || {};
+  const statusHistory = rawCustomer.statusHistory || raw.statusHistory || raw.status_history || {};
+
+  const addr =
+    rawShipping.address ||
+    rawShipping.addressLine1 ||
+    [rawCustomer.addressLine1, rawCustomer.addressLine2].filter(Boolean).join(', ') ||
+    rawCustomer.address ||
+    rawCustomer.street ||
+    'Customer Address';
+
+  const city = rawShipping.city || rawCustomer.city || 'Delhi NCR';
+  const state = rawShipping.state || rawCustomer.state || 'Delhi';
+  const pincode =
+    rawShipping.pincode ||
+    rawCustomer.pincode ||
+    rawShipping.postalCode ||
+    rawCustomer.postalCode ||
+    '';
+
+  const shippingAddress = {
+    address: addr,
+    city: city,
+    state: state,
+    pincode: pincode,
+  };
+
+  const deliveryLocationText = addr && addr !== 'Customer Address'
+    ? `${addr}, ${city}${pincode ? ` (${pincode})` : ''}`
+    : `${city} - Customer Doorstep${pincode ? ` (${pincode})` : ''}`;
+
   const isDispatched = ['dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(status);
   const isInTransit = ['in_transit', 'out_for_delivery', 'delivered'].includes(status);
   const isOut = ['out_for_delivery', 'delivered'].includes(status);
   const isDelivered = status === 'delivered';
 
+  // Realistic stage timestamps derived from authentic creation time or explicit admin statusHistory
+  const confirmedTime = createdDate;
+
+  let dispatchTime: Date;
+  if (statusHistory.dispatched) {
+    dispatchTime = new Date(statusHistory.dispatched);
+  } else if (isDispatched) {
+    const h = confirmedTime.getHours();
+    dispatchTime = new Date(confirmedTime.getTime() + (h >= 19 ? 14 * 3600 * 1000 : 4.5 * 3600 * 1000));
+  } else {
+    dispatchTime = new Date(confirmedTime.getTime() + 24 * 3600 * 1000);
+  }
+
+  let transitTime: Date;
+  if (statusHistory.in_transit) {
+    transitTime = new Date(statusHistory.in_transit);
+  } else if (isInTransit) {
+    transitTime = new Date(dispatchTime.getTime() + 14 * 3600 * 1000);
+  } else {
+    transitTime = new Date(confirmedTime.getTime() + 48 * 3600 * 1000);
+  }
+
+  let outTime: Date;
+  if (statusHistory.out_for_delivery) {
+    outTime = new Date(statusHistory.out_for_delivery);
+  } else if (isOut) {
+    outTime = new Date(transitTime.getTime() + 18 * 3600 * 1000);
+  } else {
+    outTime = estDate;
+  }
+
+  let deliveredTime: Date;
+  if (statusHistory.delivered) {
+    deliveredTime = new Date(statusHistory.delivered);
+  } else if (isDelivered) {
+    deliveredTime = new Date(outTime.getTime() + 4 * 3600 * 1000);
+  } else {
+    deliveredTime = estDate;
+  }
+
   const timeline = [
     {
+      key: 'confirmed',
       title: 'Order Confirmed',
       description: 'Order placed & prepaid payment verified',
-      date: formattedDate,
-      time: '10:00 AM',
+      date: formatISTDate(confirmedTime),
+      time: formatISTTime(confirmedTime),
+      shortDate: formatISTShortDate(confirmedTime),
+      shortTime: formatISTShortTime(confirmedTime),
       completed: true,
       current: status === 'confirmed',
-      location: 'Rezoni Central Hub, Gurugram',
+      location: 'Rezoni Central Logistics Hub, Gurugram',
     },
     {
+      key: 'dispatched',
       title: 'Dispatched & Packed',
-      description: 'Undergoing quality check & UV packaging',
-      date: isDispatched ? formattedDate : 'Upcoming',
-      time: isDispatched ? '04:30 PM' : 'Within 24 hours',
+      description: isDispatched
+        ? `Quality check passed & handed over to ${carrier}`
+        : 'Undergoing quality check & UV packaging',
+      date: isDispatched ? formatISTDate(dispatchTime) : formatISTDate(dispatchTime),
+      time: isDispatched ? formatISTTime(dispatchTime) : 'Within 24 hours',
+      shortDate: formatISTShortDate(dispatchTime),
+      shortTime: isDispatched ? formatISTShortTime(dispatchTime) : 'Within 24h',
       completed: isDispatched,
       current: status === 'dispatched',
-      location: 'Delhi Central Logistics Hub',
+      location: isDispatched ? `${carrier} Dispatch Center, Delhi NCR` : 'Rezoni Fulfillment Center, Gurugram',
     },
     {
+      key: 'in_transit',
       title: 'In Transit',
-      description: 'Handoff to express delivery air network',
-      date: isInTransit ? 'Today' : 'Upcoming',
-      time: isInTransit ? '06:00 AM' : 'In 2 days',
+      description: isInTransit
+        ? `Shipment en route via ${carrier} express air network`
+        : 'Handoff to express delivery air network',
+      date: isInTransit ? formatISTDate(transitTime) : formatISTDate(transitTime),
+      time: isInTransit ? formatISTTime(transitTime) : 'In 2 days',
+      shortDate: formatISTShortDate(transitTime),
+      shortTime: isInTransit ? formatISTShortTime(transitTime) : 'In 2 days',
       completed: isInTransit,
       current: status === 'in_transit',
-      location: 'Express Air Hub',
+      location: `${carrier} National Air Cargo Hub`,
     },
     {
+      key: 'out_for_delivery',
       title: 'Out for Delivery',
-      description: 'Courier executive assigned for doorstep delivery',
-      date: isOut ? 'Today' : 'Upcoming',
-      time: isOut ? '08:45 AM' : 'Expected',
+      description: isOut
+        ? 'Courier executive assigned for doorstep delivery'
+        : 'Local courier partner assigned for doorstep delivery',
+      date: isOut ? formatISTDate(outTime) : formatISTDate(outTime),
+      time: isOut ? formatISTTime(outTime) : '09:00 AM - 01:00 PM',
+      shortDate: formatISTShortDate(outTime),
+      shortTime: isOut ? formatISTShortTime(outTime) : 'Morning',
       completed: isOut,
       current: status === 'out_for_delivery',
-      location: raw.shipping_address?.city || raw.customer?.city || 'Local Delivery Van',
+      location: `${city} Delivery Hub`,
     },
     {
+      key: 'delivered',
       title: 'Delivered',
-      description: 'Direct doorstep contactless delivery with 6-month warranty card',
-      date: isDelivered ? 'Today' : formattedEst,
-      time: isDelivered ? '02:15 PM' : 'By 07:00 PM',
+      description: isDelivered
+        ? 'Delivered safely to doorstep with 6-month product warranty card'
+        : 'Direct doorstep contactless delivery with 6-month warranty card',
+      date: isDelivered ? formatISTDate(deliveredTime) : formattedEst,
+      time: isDelivered ? formatISTTime(deliveredTime) : 'By 07:00 PM',
+      shortDate: isDelivered ? formatISTShortDate(deliveredTime) : formatISTShortDate(deliveredTime),
+      shortTime: isDelivered ? formatISTShortTime(deliveredTime) : 'By 7 pm',
       completed: isDelivered,
       current: status === 'delivered',
-      location: 'Shipping Address',
+      location: deliveryLocationText,
     },
   ];
 
-  let shippingAddress = {
-    address: 'Customer Address Provided',
-    city: 'New Delhi',
-    state: 'Delhi',
-    pincode: '110001',
-  };
-
-  if (raw.shipping_address) {
-    shippingAddress = {
-      address:
-        raw.shipping_address.address ||
-        raw.shipping_address.addressLine1 ||
-        'Customer Address',
-      city: raw.shipping_address.city || 'Delhi',
-      state: raw.shipping_address.state || 'Delhi',
-      pincode: raw.shipping_address.pincode || '',
-    };
-  } else if (raw.customer) {
-    shippingAddress = {
-      address:
-        [raw.customer.addressLine1, raw.customer.addressLine2].filter(Boolean).join(', ') ||
-        'Customer Address',
-      city: raw.customer.city || '',
-      state: raw.customer.state || '',
-      pincode: raw.customer.pincode || '',
-    };
-  }
-
   return {
     id: orderId,
-    customerEmail: raw.customer_email || raw.customer?.email || raw.customerEmail || '',
-    customerPhone: raw.customer_phone || raw.customer?.phone || raw.customerPhone || '',
-    customerName: raw.customer_name || raw.customer?.fullName || raw.customerName || 'Rezoni Customer',
+    customerEmail: raw.customer_email || rawCustomer.email || raw.customerEmail || '',
+    customerPhone: raw.customer_phone || rawCustomer.phone || raw.customerPhone || '',
+    customerName: raw.customer_name || rawCustomer.fullName || raw.customerName || 'Rezoni Customer',
     date: formattedDate,
     total: Number(raw.total_amount || raw.amount || raw.total || 0),
     status,

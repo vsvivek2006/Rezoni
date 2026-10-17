@@ -103,6 +103,7 @@ export async function PATCH(req: NextRequest) {
     const supabase = getSupabaseAdminClient();
     let supabaseSuccess = false;
     let supabaseError: string | null = null;
+    let currentStatusHistory: Record<string, string> = {};
 
     if (supabase) {
       // 1. Fetch existing order to safely merge customer metadata
@@ -119,10 +120,18 @@ export async function PATCH(req: NextRequest) {
         updatePayload.status = status;
       }
 
+      currentStatusHistory = {
+        ...(existingOrder?.customer?.statusHistory || {}),
+      };
+      if (status) {
+        currentStatusHistory[status] = new Date().toISOString();
+      }
+
       const mergedCustomer = {
         ...(existingOrder?.customer || {}),
         ...(carrier ? { carrier } : {}),
         ...(trackingNumber ? { trackingNumber } : {}),
+        statusHistory: currentStatusHistory,
       };
 
       updatePayload.customer = mergedCustomer;
@@ -153,7 +162,12 @@ export async function PATCH(req: NextRequest) {
         const ords = JSON.parse(fs.readFileSync(ordersJsonPath, 'utf8'));
         const found = ords.find((o: any) => o.orderId === orderId || o.id === orderId);
         if (found) {
-          if (status) found.status = status;
+          if (status) {
+            found.status = status;
+            found.customer = found.customer || {};
+            found.customer.statusHistory = found.customer.statusHistory || {};
+            found.customer.statusHistory[status] = currentStatusHistory[status] || new Date().toISOString();
+          }
           if (carrier) found.carrier = carrier;
           if (trackingNumber) found.trackingNumber = trackingNumber;
           fs.writeFileSync(ordersJsonPath, JSON.stringify(ords, null, 2), 'utf8');
@@ -170,7 +184,12 @@ export async function PATCH(req: NextRequest) {
           const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
           const order = (raw.orders || []).find((o: any) => o.id === orderId || o.orderId === orderId);
           if (order) {
-            if (status) order.status = status;
+            if (status) {
+              order.status = status;
+              order.customer = order.customer || {};
+              order.customer.statusHistory = order.customer.statusHistory || {};
+              order.customer.statusHistory[status] = currentStatusHistory[status] || new Date().toISOString();
+            }
             if (trackingNumber) order.trackingNumber = trackingNumber;
             if (carrier) order.carrier = carrier;
             fs.writeFileSync(p, JSON.stringify(raw, null, 2), 'utf8');

@@ -1552,6 +1552,12 @@ img {
   .track-stage-label {
     font-size: 10px !important;
   }
+  .track-stage-date {
+    font-size: 8.5px !important;
+  }
+  .track-stage-time {
+    font-size: 8px !important;
+  }
 }
 
 /* ================= ACCOUNT / PROFILE PAGE RESPONSIVE ================= */

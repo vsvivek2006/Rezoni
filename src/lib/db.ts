@@ -29,6 +29,9 @@ export interface TimelineStep {
   completed: boolean;
   current?: boolean;
   location: string;
+  key?: string;
+  shortDate?: string;
+  shortTime?: string;
 }
 
 export interface Order {
