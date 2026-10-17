@@ -437,13 +437,13 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
   const displayedReviews = activeReviews.slice(0, visibleReviewCount);
 
   return (
-    <div style={{ backgroundColor: '#ffffff', minHeight: '80vh', fontFamily: 'Montserrat, sans-serif' }}>
+    <div style={{ backgroundColor: '#ffffff', minHeight: '80vh', fontFamily: 'Montserrat, sans-serif', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
       {/* ================= 100% ANTI-YELLOW GUARANTEE TOP BANNER (1:1 with Rezoni live store) ================= */}
       <div className="rezoni-anti-yellow-header">
         100% Anti-Yellow Guarantee - Free Replacement if it ever Yellows.
       </div>
 
-      <div className="container" style={{ paddingTop: '20px', paddingBottom: '80px' }}>
+      <div className="container pdp-container" style={{ paddingTop: '20px', paddingBottom: '80px' }}>
         {/* Breadcrumb matching Rezoni */}
         <div
           style={{
@@ -494,6 +494,10 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
                   gap: '10px',
                   overflowX: 'auto',
                   paddingBottom: '6px',
+                  width: '100%',
+                  maxWidth: '100%',
+                  minWidth: 0,
+                  boxSizing: 'border-box',
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
                   WebkitOverflowScrolling: 'touch',
@@ -568,6 +572,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
 
             {/* 3. Product Title matching Rezoni live store exactly 1:1 */}
             <h1
+              className="pdp-product-title"
               style={{
                 fontSize: '26px',
                 fontWeight: 900,
@@ -575,13 +580,14 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
                 letterSpacing: '-0.5px',
                 margin: '0 0 10px',
                 lineHeight: 1.25,
+                wordBreak: 'break-word',
               }}
             >
               {product.title}
             </h1>
 
             {/* 4. Price Line matching Rezoni live store */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px 12px', marginBottom: '16px' }}>
               <span style={{ fontSize: '24px', fontWeight: 800, color: '#111111' }}>
                 Rs. {effectivePrice.toFixed(2)}
               </span>
@@ -736,7 +742,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
                 <div style={{ fontSize: '13px', fontWeight: 600, color: '#333333', marginBottom: '8px' }}>
                   Color: <span style={{ fontWeight: 400, color: '#666' }}>{selectedColor}</span>
                 </div>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
                   {colorVariants.map((variant) => {
                     const isSelected =
                       selectedColor.toLowerCase() === variant.name.toLowerCase();
@@ -850,46 +856,35 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
             </div>
 
             {/* 13. Benefits Wrapper (#benefits-wrapper matching Rezoni) */}
-            <div
-              id="benefits-wrapper"
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                textAlign: 'center',
-                padding: '16px 0',
-                borderTop: '1px solid #eeeeee',
-                borderBottom: '1px solid #eeeeee',
-                margin: '16px 0',
-              }}
-            >
-              <div style={{ flex: 1, padding: '0 6px' }}>
+            <div id="benefits-wrapper" className="pdp-benefits-wrapper">
+              <div className="pdp-benefit-col">
                 <img
                   src="https://cdn.shopify.com/s/files/1/0621/7829/6040/files/truck.png?v=1711003297"
                   alt="Express Delivery"
-                  style={{ height: '27px', margin: '0 auto 6px', display: 'block' }}
+                  className="pdp-benefit-icon"
                 />
-                <div style={{ fontSize: '13px', fontWeight: 700, color: '#111111' }}>Express Delivery</div>
-                <div style={{ fontSize: '12px', color: '#666666', marginTop: '3px' }}>Estimated 2-5 Days</div>
+                <div className="pdp-benefit-title">Express Delivery</div>
+                <div className="pdp-benefit-subtitle">Estimated 2-5 Days</div>
               </div>
 
-              <div style={{ flex: 1, padding: '0 6px' }}>
+              <div className="pdp-benefit-col">
                 <img
                   src="https://cdn.shopify.com/s/files/1/0621/7829/6040/files/exchange.png?v=1711003297"
                   alt="7 Day Risk Free"
-                  style={{ height: '27px', margin: '0 auto 6px', display: 'block' }}
+                  className="pdp-benefit-icon"
                 />
-                <div style={{ fontSize: '13px', fontWeight: 700, color: '#111111' }}>7 Day Risk Free</div>
-                <div style={{ fontSize: '12px', color: '#666666', marginTop: '3px' }}>Returns and Exchanges</div>
+                <div className="pdp-benefit-title">7 Day Risk Free</div>
+                <div className="pdp-benefit-subtitle">Returns and Exchanges</div>
               </div>
 
-              <div style={{ flex: 1, padding: '0 6px' }}>
+              <div className="pdp-benefit-col">
                 <img
                   src="https://cdn.shopify.com/s/files/1/0621/7829/6040/files/SECURE.png?v=1711010153"
                   alt="Secure Payments"
-                  style={{ height: '27px', margin: '0 auto 6px', display: 'block' }}
+                  className="pdp-benefit-icon"
                 />
-                <div style={{ fontSize: '13px', fontWeight: 700, color: '#111111' }}>Secure Payments</div>
-                <div style={{ fontSize: '12px', color: '#666666', marginTop: '3px' }}>SSL Secured</div>
+                <div className="pdp-benefit-title">Secure Payments</div>
+                <div className="pdp-benefit-subtitle">SSL Secured</div>
               </div>
             </div>
 
@@ -1072,13 +1067,13 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
         </div>
 
         {/* ================= REAL REVIEWS, FROM REAL CUSTOMERS (1:1 with Rezoni) ================= */}
-        <div id="reviews-section" style={{ marginTop: '70px' }}>
+        <div id="reviews-section" style={{ marginTop: '60px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
           <div className="customer-reviews-section">
             <h2 className="customer-reviews-title">Real Reviews, From Real Customers</h2>
           </div>
 
           {/* Loox Widget Container */}
-          <div style={{ marginTop: '40px' }}>
+          <div style={{ marginTop: '30px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
             {/* Loox Header Bar (4.9 Rating, 96,241 Reviews, Write a review) */}
             <div className="pdp-reviews-header-bar">
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -1230,7 +1225,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
         </div>
 
         {/* ================= 4 AUTHENTIC ALTERNATING VIDEO SECTIONS (1:1 with Rezoni) ================= */}
-        <div style={{ marginTop: '70px' }}>
+        <div style={{ marginTop: '60px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
           {/* Section 1: Black Background (Video Left, Text Right) */}
           <section
             className="rezoni-split-section"
@@ -1309,7 +1304,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
         </div>
 
         {/* ================= FREQUENTLY ASKED QUESTIONS (FAQ) ================= */}
-        <div style={{ marginTop: '70px', maxWidth: '900px', margin: '70px auto 0' }}>
+        <div style={{ marginTop: '60px', maxWidth: '900px', margin: '60px auto 0', width: '100%', boxSizing: 'border-box' }}>
           <h2
             style={{
               textAlign: 'center',
@@ -1374,6 +1369,8 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
               overflow: 'hidden',
               boxShadow: '0 25px 50px rgba(0,0,0,0.4)',
               position: 'relative',
+              boxSizing: 'border-box',
+              maxHeight: '90vh',
             }}
           >
             <button
@@ -1446,9 +1443,12 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
               borderRadius: '12px',
               maxWidth: '520px',
               width: '100%',
-              padding: '28px',
+              padding: '24px 20px',
               boxShadow: '0 25px 50px rgba(0,0,0,0.3)',
               position: 'relative',
+              boxSizing: 'border-box',
+              maxHeight: '90vh',
+              overflowY: 'auto',
             }}
           >
             <button

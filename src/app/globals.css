@@ -613,9 +613,24 @@ img {
 }
 
 /* ================= REZONI LIVE PDP STYLES ================= */
+.pdp-container {
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .pdp-container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+}
+
 .pdp-main-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 28px;
   align-items: start;
   width: 100%;
@@ -625,7 +640,7 @@ img {
 
 @media (min-width: 900px) {
   .pdp-main-grid {
-    grid-template-columns: 1.02fr 1fr;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     gap: 48px;
   }
 }
@@ -633,6 +648,8 @@ img {
 .pdp-media-sticky {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @media (min-width: 900px) {
@@ -642,37 +659,65 @@ img {
   }
 }
 
-.pdp-reviews-header-bar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 24px;
+.pdp-product-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #111111;
+  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+@media (max-width: 600px) {
+  .pdp-product-title {
+    font-size: 21px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 8px !important;
+  }
+}
+
+/* Authentic Rezoni PDP Anti-Yellow Top Guarantee Banner */
+.rezoni-anti-yellow-header {
+  background-color: #333333;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 16px;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: normal;
+  letter-spacing: 0.2px;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-  
-  .pdp-main-grid {
-    gap: 22px;
+@media (max-width: 600px) {
+  .rezoni-anti-yellow-header {
+    font-size: 12px;
+    padding: 8px 12px;
+    line-height: 1.35;
   }
 }
 
+/* Product Switcher */
 .product-switcher-container {
   border: 1px solid #d3d3d3;
-  border-radius: 12px 12px 0 0;
+  border-radius: 10px;
   padding: 16px;
   background: #f7f7f7;
   margin-bottom: 16px;
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .product-switcher-container {
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+  }
 }
 
 .case-type-title {
@@ -684,6 +729,8 @@ img {
 
 .product-switcher-dropdown {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 12px 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -706,6 +753,7 @@ img {
   border-color: #000000;
 }
 
+/* Variant Selection */
 #variant-title {
   font-size: 14px;
   margin-bottom: 10px;
@@ -716,15 +764,20 @@ img {
 
 .variant-selection-container {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   align-items: center;
   margin-bottom: 15px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .variant-option {
-  width: 150px;
-  height: 113px;
-  padding: 1px;
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: 100%;
+  height: 108px;
+  padding: 8px 6px;
   border: 2px solid #ddd;
   border-radius: 10px;
   text-align: center;
@@ -737,18 +790,19 @@ img {
   background: #f8f8f8;
   position: relative;
   user-select: none;
+  box-sizing: border-box;
 }
 
 .variant-option img {
-  width: 95px;
+  width: 80px;
   height: auto;
-  max-height: 70px;
+  max-height: 60px;
   object-fit: contain;
 }
 
 .variant-option p {
   margin: 5px 0 0;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: bold;
   color: #333333;
 }
@@ -765,14 +819,18 @@ img {
   border-image: linear-gradient(to right, transparent, #ff6700 50%, transparent) 1;
 }
 
-@media (max-width: 749px) {
-  .variant-selection-container {
-    width: 100%;
-  }
-  
+@media (max-width: 480px) {
   .variant-option {
-    width: 100%;
-    flex: 1;
+    height: 98px;
+    padding: 6px 4px;
+  }
+  .variant-option img {
+    width: 68px;
+    max-height: 52px;
+  }
+  .variant-option p {
+    font-size: 12px;
+    margin-top: 4px;
   }
 }
 
@@ -782,7 +840,7 @@ img {
   align-items: center;
   background-color: #ff6600;
   color: white;
-  padding: 3px 20px;
+  padding: 4px 18px;
   border-radius: 5px;
   font-size: 14px;
   font-weight: bold;
@@ -791,43 +849,101 @@ img {
   cursor: pointer;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 12px;
-}
-
-.guarantee-button img {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 600px) {
   .guarantee-button {
-    font-size: 12px;
-    padding: 5px 15px;
+    font-size: 11.5px;
+    padding: 4px 12px;
     margin-top: 1px;
+    margin-bottom: 8px;
   }
 
   .guarantee-button img {
-    width: 18px;
-    height: 18px;
-    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
   }
 }
 
-/* Guarantee Container */
+/* Benefits Wrapper (#benefits-wrapper) */
+.pdp-benefits-wrapper {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  padding: 16px 0;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
+  margin: 16px 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.pdp-benefit-col {
+  flex: 1 1 0%;
+  min-width: 0;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+.pdp-benefit-icon {
+  height: 27px;
+  margin: 0 auto 6px;
+  display: block;
+}
+
+.pdp-benefit-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111111;
+  word-break: break-word;
+}
+
+.pdp-benefit-subtitle {
+  font-size: 11.5px;
+  color: #666666;
+  margin-top: 3px;
+  word-break: break-word;
+}
+
+@media (max-width: 480px) {
+  .pdp-benefits-wrapper {
+    padding: 12px 0;
+  }
+  .pdp-benefit-icon {
+    height: 22px;
+    margin-bottom: 4px;
+  }
+  .pdp-benefit-title {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+  .pdp-benefit-subtitle {
+    font-size: 9.5px;
+    line-height: 1.2;
+  }
+}
+
+/* Guarantee Section (#guaranteeSection) */
 .guarantee-container {
   max-width: 600px;
+  width: 100%;
   margin: 50px auto 35px;
   background-color: #ffe9d4;
   border: 1px solid #f3a85f;
-  padding: 12px;
+  padding: 12px 16px;
   text-align: center;
   border-radius: 8px;
   position: relative;
+  box-sizing: border-box;
 }
 
 .guarantee-icon {
   position: absolute;
-  top: -70px;
+  top: -60px;
   left: 50%;
   transform: translateX(-50%);
   padding: 5px;
@@ -835,20 +951,20 @@ img {
 }
 
 .guarantee-icon img {
-  width: 120px;
+  width: 90px;
   height: auto;
   display: block;
 }
 
 .guarantee-content {
-  padding-top: 40px;
+  padding-top: 32px;
   color: #333333;
 }
 
 .guarantee-content p {
-  font-size: 15px;
-  line-height: 1.4;
-  margin: 10px 0;
+  font-size: 14.5px;
+  line-height: 1.45;
+  margin: 8px 0;
   font-weight: 550;
   color: #333333;
 }
@@ -867,17 +983,127 @@ img {
   text-decoration: underline;
 }
 
-/* Loox Reviews 1:1 Styling */
+@media (max-width: 600px) {
+  .guarantee-container {
+    margin: 40px auto 25px;
+    padding: 10px 12px;
+  }
+  .guarantee-icon {
+    top: -45px;
+  }
+  .guarantee-icon img {
+    width: 75px !important;
+  }
+  .guarantee-content {
+    padding-top: 28px;
+  }
+  .guarantee-content p {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}
+
+/* Customer Reviews Header Section */
+.customer-reviews-section {
+  position: relative;
+  text-align: center;
+  background: #f3f2f2;
+  padding: 36px 16px;
+  border-radius: 8px;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .customer-reviews-section {
+    padding: 24px 12px;
+    border-radius: 6px;
+  }
+}
+
+.customer-reviews-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #0D0D0D;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.25 !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .customer-reviews-title {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    padding: 0 4px;
+  }
+}
+
+/* Reviews Header Bar */
+.pdp-reviews-header-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .pdp-reviews-header-bar {
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 18px;
+  }
+}
+
+/* Loox Reviews Grid & Cards */
+@keyframes fadeContent {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loox-review-card {
+  animation: fadeContent 0.35s ease-out forwards;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
 .loox-reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   margin: 20px 0;
 }
 
-@media (min-width: 1024px) {
+@media (max-width: 1024px) {
   .loox-reviews-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .loox-reviews-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
   }
 }
 
@@ -891,6 +1117,10 @@ img {
   justify-content: space-between;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .loox-review-card-item:hover {
@@ -942,6 +1172,7 @@ img {
   line-height: 1.5;
   color: #282828;
   white-space: pre-line;
+  word-break: break-word;
 }
 
 .loox-review-card-item .time-meta {
@@ -965,6 +1196,7 @@ img {
   object-fit: contain;
   border-radius: 3px;
   background: #ffffff;
+  flex-shrink: 0;
 }
 
 .loox-review-card-item .product-box-bottom .name {
@@ -976,113 +1208,6 @@ img {
   font-weight: 500;
 }
 
-/* FAQ Box */
-.faq-box {
-  background-color: #222222;
-  color: #ffffff;
-  margin-bottom: 10px;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid #333333;
-}
-
-.faq-toggle {
-  width: 100%;
-  background-color: #222222;
-  color: #ffffff;
-  border: none;
-  padding: 16px 20px;
-  text-align: left;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  outline: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: inherit;
-  transition: background-color 0.2s;
-}
-
-.faq-toggle:hover {
-  background-color: #2a2a2a;
-}
-
-.faq-answer {
-  background-color: #ffffff;
-  color: #333333;
-  font-size: 14px;
-  line-height: 1.7;
-  padding: 16px 20px;
-  border-top: 1px solid #e5e5e5;
-}
-
-/* Slider scrollbar hiding across all browsers (WebKit, Firefox, IE/Edge) */
-.no-scrollbar::-webkit-scrollbar,
-.hide-scrollbar::-webkit-scrollbar,
-.scroller::-webkit-scrollbar,
-[data-scrollable]::-webkit-scrollbar {
-  display: none !important;
-}
-
-.no-scrollbar,
-.hide-scrollbar,
-.scroller,
-[data-scrollable] {
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
-/* Authentic Rezoni PDP Anti-Yellow Top Guarantee Banner */
-.rezoni-anti-yellow-header {
-  background-color: #333333;
-  color: #ffffff;
-  text-align: center;
-  padding: 10px 16px;
-  font-family: Arial, sans-serif;
-  font-size: 16px;
-  font-weight: normal;
-  letter-spacing: 0.2px;
-  width: 100%;
-}
-
-@media (max-width: 600px) {
-  .rezoni-anti-yellow-header {
-    font-size: 12px;
-    font-weight: normal;
-    padding: 8px 12px;
-  }
-}
-
-/* Authentic PDP Customer Reviews Header */
-.customer-reviews-section {
-  position: relative;
-  text-align: center;
-  background: #f3f2f2;
-  padding-top: 46px;
-  padding-bottom: 46px;
-  border-radius: 8px;
-  z-index: 1;
-}
-
-.customer-reviews-title {
-  font-size: 32px;
-  font-weight: 900;
-  color: #0D0D0D;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  max-width: 800px;
-  margin: 0 auto 12px;
-  line-height: 1.2;
-}
-
-@media screen and (max-width: 768px) {
-  .customer-reviews-title {
-    font-size: 22px;
-    padding: 0 16px;
-  }
-}
-
 /* Authentic PDP Video Split Sections (1:1 with Rezoni Sections A, B, C, D) */
 .rezoni-split-section {
   display: flex;
@@ -1092,6 +1217,10 @@ img {
   padding: 36px 40px;
   border-radius: 12px;
   gap: 48px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .rezoni-split-section.reverse {
@@ -1100,7 +1229,10 @@ img {
 
 .rezoni-split-video {
   flex: 1;
+  min-width: 0;
   text-align: center;
+  width: 100%;
+  max-width: 100%;
 }
 
 .rezoni-split-video video {
@@ -1113,6 +1245,9 @@ img {
 
 .rezoni-split-text {
   flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .rezoni-split-text h2 {
@@ -1131,13 +1266,20 @@ img {
   .rezoni-split-section,
   .rezoni-split-section.reverse {
     flex-direction: column !important;
-    padding: 20px 16px;
-    gap: 20px;
-    text-align: left;
+    padding: 24px 16px;
+    gap: 16px;
+    text-align: center;
+    margin-bottom: 18px;
   }
 
   .rezoni-split-video {
     width: 100%;
+    order: 1;
+  }
+
+  .rezoni-split-text {
+    width: 100%;
+    order: 2;
   }
 
   .rezoni-split-video video {
@@ -1146,93 +1288,88 @@ img {
   }
 
   .rezoni-split-text h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 19px;
+    margin-bottom: 8px;
   }
 
   .rezoni-split-text p {
-    font-size: 14px;
+    font-size: 13.5px;
     line-height: 1.5;
   }
 }
 
-/* Authentic Rezoni Customer Reviews Header Section */
-.customer-reviews-section {
-  position: relative;
-  margin-top: 40px;
-  text-align: center;
-  background: #f3f2f2;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  z-index: 1;
+/* FAQ Box & Toggle */
+.faq-box {
+  background-color: #222222;
+  color: #ffffff;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #333333;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-@media screen and (max-width: 500px) {
-  .customer-reviews-section {
-    padding-top: 26px;
-    padding-bottom: 26px;
-  }
+.faq-toggle {
+  width: 100%;
+  background-color: #222222;
+  color: #ffffff;
+  border: none;
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: inherit;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
 }
 
-.customer-reviews-title {
-  font-size: 28px;
-  font-weight: 900;
-  color: #0D0D0D;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  width: 85%;
-  max-width: 800px;
-  margin: 0 auto;
-  line-height: 1.2 !important;
+.faq-toggle:hover {
+  background-color: #2a2a2a;
 }
 
-@media (max-width: 768px) {
-  .customer-reviews-title {
-    font-size: 20px;
-    width: 92%;
-  }
-}
-
-/* Authentic Loox Reviews Grid & Animations (1:1 with Rezoni) */
-@keyframes fadeContent {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.loox-review-card {
-  animation: fadeContent 0.35s ease-out forwards;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-.loox-review-card:hover {
-  background-color: #fafafa !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-}
-
-.loox-reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-@media (max-width: 1024px) {
-  .loox-reviews-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
+.faq-answer {
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.7;
+  padding: 16px 20px;
+  border-top: 1px solid #e5e5e5;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 600px) {
-  .loox-reviews-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .faq-toggle {
+    padding: 12px 14px;
+    font-size: 13.5px;
   }
+  .faq-answer {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+}
+
+/* Slider scrollbar hiding across all browsers (WebKit, Firefox, IE/Edge) */
+.no-scrollbar::-webkit-scrollbar,
+.hide-scrollbar::-webkit-scrollbar,
+.scroller::-webkit-scrollbar,
+[data-scrollable]::-webkit-scrollbar {
+  display: none !important;
+}
+
+.no-scrollbar,
+.hide-scrollbar,
+.scroller,
+[data-scrollable] {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 @keyframes slideInRight {
