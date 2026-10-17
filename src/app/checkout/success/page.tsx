@@ -163,7 +163,7 @@ function SuccessContent() {
 
                   <div>
                     <span style={{ fontSize: '10px', textTransform: 'uppercase', color: '#6b7280', fontWeight: 700, letterSpacing: '0.5px' }}>
-                      Razorpay Payment ID
+                      Payment Reference ID
                     </span>
                     <div style={{ fontSize: '13px', fontWeight: 700, color: '#059669', marginTop: '4px', wordBreak: 'break-all' }}>
                       {order.razorpayPaymentId || 'Verified'}

@@ -131,7 +131,8 @@ export default function CheckoutAddressForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const [showOrderSummary, setShowOrderSummary] = useState(true);
+  const [hasSavedAddress, setHasSavedAddress] = useState(false);
+  const [showOrderSummary, setShowOrderSummary] = useState(false);
   const { clearCart, setIsCartOpen } = useCart();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -169,6 +170,39 @@ export default function CheckoutAddressForm({
         if (data.addressLine2) setAddressLine2(data.addressLine2);
         if (data.city) setCity(data.city);
         if (data.state) setState(data.state);
+
+        // If address is already saved with required fields, directly show address option & pay button!
+        if (
+          data.fullName?.trim() &&
+          data.phone?.trim() &&
+          data.addressLine1?.trim() &&
+          data.city?.trim() &&
+          data.pincode?.trim()
+        ) {
+          setHasSavedAddress(true);
+          setIsConfirmed(true);
+
+          // Silently pre-create order in background for instant checkout
+          if (cart && cart.length > 0) {
+            preOrderPromiseRef.current = fetch('/api/razorpay/create-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                items: cart,
+                customer: data,
+              }),
+            })
+              .then((res) => res.json())
+              .then((orderData) => {
+                if (orderData && orderData.success) {
+                  setCachedOrderData(orderData);
+                  return orderData;
+                }
+                return null;
+              })
+              .catch(() => null);
+          }
+        }
       }
     } catch {
       // ignore JSON errors
@@ -262,6 +296,7 @@ export default function CheckoutAddressForm({
     if (saveInfo) {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(addressPayload));
+        setHasSavedAddress(true);
       } catch {
         // storage quota exceeded or disabled
       }
@@ -269,8 +304,7 @@ export default function CheckoutAddressForm({
 
     setIsConfirmed(true);
 
-    // 2. Production Standard: Silently pre-create Razorpay Order in the background
-    // while user is reviewing the order summary, delivery fee, and free gifts in Step 2.
+    // 2. Production Standard: Silently pre-create Payment Order in the background
     try {
       preOrderPromiseRef.current = fetch('/api/razorpay/create-order', {
         method: 'POST',
@@ -315,7 +349,7 @@ export default function CheckoutAddressForm({
     };
 
     try {
-      // 1. Check if order was already pre-created in background while user was on Step 2
+      // 1. Check if order was already pre-created in background
       let data = cachedOrderData;
 
       if (!data && preOrderPromiseRef.current) {
@@ -342,7 +376,7 @@ export default function CheckoutAddressForm({
       if (!data || !data.success) {
         if (data?.isConfigError) {
           setPaymentError(
-            'Razorpay Setup Notice: Please configure NEXT_PUBLIC_RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env.local to activate payments.'
+            'Payment Gateway Notice: Please configure payment gateway keys in .env.local to activate payments.'
           );
         } else {
           setPaymentError(data?.message || 'Failed to initiate checkout order. Please try again.');
@@ -490,10 +524,10 @@ export default function CheckoutAddressForm({
           )}
           <div>
             <h3 style={{ fontSize: '15px', fontWeight: 800, margin: 0, color: '#111' }}>
-              {isConfirmed ? 'Order Ready for Payment' : 'Checkout Details'}
+              {isConfirmed ? 'Delivery Address' : (hasSavedAddress ? 'Edit Delivery Address' : 'Delivery Address')}
             </h3>
             <span style={{ fontSize: '11px', color: '#666', fontWeight: 500 }}>
-              {isConfirmed ? 'Address Confirmed' : 'Step 1 of 2: Contact & Address'}
+              {isConfirmed ? 'Delivering to saved address' : 'Enter shipping details'}
             </span>
           </div>
         </div>
@@ -511,7 +545,7 @@ export default function CheckoutAddressForm({
             backgroundColor: '#f8f9fa',
             border: '1px solid #e9ecef',
             borderRadius: '6px',
-            marginBottom: '20px',
+            marginBottom: '16px',
             overflow: 'hidden',
           }}
         >
@@ -520,7 +554,7 @@ export default function CheckoutAddressForm({
             onClick={() => setShowOrderSummary(!showOrderSummary)}
             style={{
               width: '100%',
-              padding: '12px 16px',
+              padding: '10px 14px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -534,7 +568,7 @@ export default function CheckoutAddressForm({
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span>🛍️ Order Summary ({safeCart.length} {safeCart.length === 1 ? 'item' : 'items'} + 3 Free Gifts 🎁)</span>
-              <span style={{ color: '#ff6700' }}>{showOrderSummary ? 'Hide ▲' : 'Show ▼'}</span>
+              <span style={{ color: '#ff6700', fontSize: '11px', fontWeight: 600 }}>{showOrderSummary ? 'Hide ▲' : 'Show Details ▼'}</span>
             </div>
             <div style={{ fontSize: '13px', fontWeight: 800, color: '#111' }}>
               Rs. {finalPayable.toFixed(2)}
@@ -936,12 +970,32 @@ export default function CheckoutAddressForm({
               <span>Remember details for next time</span>
             </label>
 
-            {/* Submit Button */}
-            <div style={{ marginTop: '8px' }}>
+            {/* Submit / Cancel Buttons */}
+            <div style={{ marginTop: '8px', display: 'flex', gap: '8px' }}>
+              {hasSavedAddress && (
+                <button
+                  type="button"
+                  onClick={() => setIsConfirmed(true)}
+                  style={{
+                    flex: '0 0 auto',
+                    padding: '0 16px',
+                    height: '46px',
+                    borderRadius: '5px',
+                    backgroundColor: '#ffffff',
+                    color: '#444444',
+                    border: '1px solid #d5d5d5',
+                    fontWeight: 700,
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cancel
+                </button>
+              )}
               <button
                 type="submit"
                 style={{
-                  width: '100%',
+                  flex: 1,
                   height: '46px',
                   borderRadius: '5px',
                   backgroundColor: '#ff6700',
@@ -962,7 +1016,7 @@ export default function CheckoutAddressForm({
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e65c00')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
               >
-                <span>CONTINUE TO PAYMENT (Rs. {finalPayable.toFixed(2)})</span>
+                <span>CONTINUE TO PAYMENT • RS. {finalPayable.toFixed(2)}</span>
                 <span>&rarr;</span>
               </button>
             </div>
@@ -971,99 +1025,112 @@ export default function CheckoutAddressForm({
             <CheckoutTrustBadges compact={isDrawer} />
           </form>
         ) : (
-          /* State 2: Address Confirmed - Ready for Payment */
-          <div style={{ animation: 'fadeIn 0.25s ease' }}>
-            {/* Success Banner */}
+          /* State 2: Address Added / Confirmed - Directly Displayed */
+          <div style={{ animation: 'fadeIn 0.2s ease' }}>
+            {/* Delivery Address Card */}
             <div
               style={{
-                backgroundColor: '#ecfdf5',
-                border: '1px solid #a7f3d0',
+                border: '1.5px solid #e5e7eb',
                 borderRadius: '8px',
                 padding: '16px',
-                marginBottom: '20px',
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '12px',
+                backgroundColor: '#ffffff',
+                marginBottom: '16px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
               }}
             >
               <div
                 style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '50%',
-                  backgroundColor: '#059669',
-                  color: '#fff',
                   display: 'flex',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '16px',
-                  fontWeight: 800,
-                  flexShrink: 0,
+                  marginBottom: '10px',
+                  borderBottom: '1px solid #f3f4f6',
+                  paddingBottom: '10px',
                 }}
               >
-                ✓
-              </div>
-              <div>
-                <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: '#065f46' }}>
-                  Contact & Shipping Address Saved!
-                </h4>
-                <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#047857', lineHeight: 1.4 }}>
-                  All delivery details have been recorded.
-                </p>
-              </div>
-            </div>
-
-            {/* Details Summary Card */}
-            <div
-              style={{
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-                padding: '16px',
-                backgroundColor: '#ffffff',
-                marginBottom: '20px',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.03)',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid #f3f4f6', paddingBottom: '8px' }}>
-                <span style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#374151' }}>
-                  Delivering To:
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '15px' }}>📍</span>
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: 800,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
+                      color: '#111827',
+                    }}
+                  >
+                    Delivering To
+                  </span>
+                  <span
+                    style={{
+                      backgroundColor: '#dcfce7',
+                      color: '#15803d',
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      marginLeft: '4px',
+                    }}
+                  >
+                    ✓ Saved
+                  </span>
+                </div>
                 <button
                   type="button"
-                  onClick={() => setIsConfirmed(false)}
+                  onClick={() => {
+                    setIsConfirmed(false);
+                    setCachedOrderData(null);
+                    preOrderPromiseRef.current = null;
+                  }}
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#ff6700',
+                    background: '#fff7ed',
+                    border: '1px solid #fed7aa',
+                    borderRadius: '4px',
+                    color: '#ea580c',
                     fontSize: '12px',
                     fontWeight: 700,
                     cursor: 'pointer',
-                    textDecoration: 'underline',
+                    padding: '5px 10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
                   }}
                 >
-                  Edit Address
+                  ✏️ Edit Address
                 </button>
               </div>
 
               <div style={{ fontSize: '14px', fontWeight: 800, color: '#111827', marginBottom: '4px' }}>
                 {fullName}
               </div>
-              <div style={{ fontSize: '12px', color: '#4b5563', lineHeight: 1.5, marginBottom: '8px' }}>
+              <div style={{ fontSize: '13px', color: '#4b5563', lineHeight: 1.5, marginBottom: '10px' }}>
                 {addressLine1}
                 {addressLine2 ? `, ${addressLine2}` : ''}
                 <br />
                 {city}, {state} - <strong style={{ color: '#111' }}>{pincode}</strong>
               </div>
 
-              <div style={{ fontSize: '12px', color: '#374151', borderTop: '1px dashed #e5e7eb', paddingTop: '8px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <div
+                style={{
+                  fontSize: '12px',
+                  color: '#374151',
+                  borderTop: '1px dashed #e5e7eb',
+                  paddingTop: '10px',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '14px',
+                }}
+              >
                 <div>
                   <span style={{ color: '#6b7280' }}>Phone: </span>
                   <strong>+91 {phone}</strong>
                 </div>
-                <div>
-                  <span style={{ color: '#6b7280' }}>Email: </span>
-                  <strong>{email}</strong>
-                </div>
+                {email && (
+                  <div>
+                    <span style={{ color: '#6b7280' }}>Email: </span>
+                    <strong>{email}</strong>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1075,7 +1142,7 @@ export default function CheckoutAddressForm({
                   border: '1px solid #fecaca',
                   borderRadius: '8px',
                   padding: '14px',
-                  marginBottom: '18px',
+                  marginBottom: '16px',
                   color: '#991b1b',
                   fontSize: '12px',
                   lineHeight: 1.5,
@@ -1101,7 +1168,7 @@ export default function CheckoutAddressForm({
                   border: '1px solid #fde68a',
                   borderRadius: '8px',
                   padding: '12px 14px',
-                  marginBottom: '18px',
+                  marginBottom: '16px',
                   color: '#92400e',
                   fontSize: '12px',
                   lineHeight: 1.4,
@@ -1115,15 +1182,14 @@ export default function CheckoutAddressForm({
               </div>
             )}
 
-
             {/* Payment Summary Box */}
             <div
               style={{
-                padding: '16px',
+                padding: '14px 16px',
                 backgroundColor: '#f9fafb',
                 borderRadius: '8px',
                 border: '1px solid #e5e7eb',
-                marginBottom: '20px',
+                marginBottom: '16px',
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '6px' }}>
@@ -1132,12 +1198,12 @@ export default function CheckoutAddressForm({
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#15803d', marginBottom: '6px', fontWeight: 600 }}>
                 <span>🎁 3 Free Gifts (Value: Rs. {TOTAL_FREE_GIFTS_VALUE}.00)</span>
-                <span style={{ color: '#16a34a', fontWeight: 700 }}>FREE (-Rs. {TOTAL_FREE_GIFTS_VALUE}.00)</span>
+                <span style={{ color: '#16a34a', fontWeight: 700 }}>FREE</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '10px' }}>
                 <span>Nationwide Express Shipping</span>
                 {isFreeShipping ? (
-                  <span style={{ color: '#059669', fontWeight: 700 }}>FREE (All Orders)</span>
+                  <span style={{ color: '#059669', fontWeight: 700 }}>FREE</span>
                 ) : (
                   <span style={{ color: '#111827', fontWeight: 700 }}>Rs. {deliveryFee.toFixed(2)}</span>
                 )}
@@ -1187,28 +1253,27 @@ export default function CheckoutAddressForm({
                     borderRadius: '20px',
                   }}
                 >
-                  🔒 Safe & Encrypted
+                  🔒 100% Secure
                 </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action Buttons: Direct Pay & Amount, without mentioning Razorpay */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {/* PRIMARY PAY NOW WITH RAZORPAY BUTTON */}
               <button
                 type="button"
                 onClick={handlePayWithRazorpay}
                 disabled={isProcessingPayment}
                 style={{
                   width: '100%',
-                  height: '54px',
+                  height: '52px',
                   borderRadius: '6px',
                   backgroundColor: isProcessingPayment ? '#9ca3af' : '#ff6700',
                   color: '#ffffff',
                   border: 'none',
                   fontWeight: 800,
-                  fontSize: '13px',
-                  letterSpacing: '1px',
+                  fontSize: '14px',
+                  letterSpacing: '0.8px',
                   textTransform: 'uppercase',
                   cursor: isProcessingPayment ? 'not-allowed' : 'pointer',
                   display: 'flex',
@@ -1238,12 +1303,15 @@ export default function CheckoutAddressForm({
                         display: 'inline-block',
                       }}
                     />
-                    <span>CONNECTING TO RAZORPAY...</span>
+                    <span>PROCESSING SECURE PAYMENT...</span>
                   </>
                 ) : (
                   <>
-                    <span>🔒 PAY NOW WITH RAZORPAY</span>
-                    <span>(Rs. {finalPayable.toFixed(2)})</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    <span>PAY • RS. {finalPayable.toFixed(2)}</span>
                     <span>&rarr;</span>
                   </>
                 )}
@@ -1259,7 +1327,7 @@ export default function CheckoutAddressForm({
                 disabled={isProcessingPayment}
                 style={{
                   width: '100%',
-                  height: '44px',
+                  height: '42px',
                   border: '1px solid #d1d5db',
                   borderRadius: '5px',
                   backgroundColor: '#ffffff',
@@ -1270,7 +1338,7 @@ export default function CheckoutAddressForm({
                   opacity: isProcessingPayment ? 0.6 : 1,
                 }}
               >
-                EDIT SHIPPING DETAILS
+                EDIT ADDRESS
               </button>
 
               {onBackToCart && (
@@ -1280,7 +1348,7 @@ export default function CheckoutAddressForm({
                   disabled={isProcessingPayment}
                   style={{
                     width: '100%',
-                    height: '44px',
+                    height: '40px',
                     border: 'none',
                     borderRadius: '5px',
                     backgroundColor: '#000000',

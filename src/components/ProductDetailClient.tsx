@@ -565,6 +565,17 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
                 <img
                   src="https://cdn.shopify.com/s/files/1/0621/7829/6040/files/Asset_53_4x_94d81475-4e57-4186-b939-ebfdad7fadb4.png?v=1741422507"
                   alt="Guarantee Icon"
+                  width={20}
+                  height={20}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    objectFit: 'contain',
+                    marginRight: '8px',
+                    flexShrink: 0,
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                  }}
                 />
                 LIFETIME Anti Yellow Guarantee
               </button>
