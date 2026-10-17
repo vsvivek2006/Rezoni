@@ -3,14 +3,18 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
+import TrackOrderPage from '@/app/track-order/page';
+
 interface StaticPageClientProps {
   slug: string;
 }
 
 export default function StaticPageClient({ slug }: StaticPageClientProps) {
+  if (slug === 'track-order') {
+    return <TrackOrderPage />;
+  }
+
   const [contactSubmitted, setContactSubmitted] = useState(false);
-  const [trackNumber, setTrackNumber] = useState('');
-  const [trackingResult, setTrackingResult] = useState<string | null>(null);
 
   const getPageTitle = (s: string) => {
     switch (s) {
@@ -32,13 +36,6 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
         return 'Track Your Order';
       default:
         return s.replace(/-/g, ' ').toUpperCase();
-    }
-  };
-
-  const handleTrack = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (trackNumber.trim()) {
-      setTrackingResult(`Status for #${trackNumber}: In Transit with Bluedart Express. Estimated delivery in 2 business days.`);
     }
   };
 
@@ -190,30 +187,6 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                   Registered Office Address: A-18, Lajpat Nagar III, South Delhi, New Delhi – 110024
                 </p>
               </div>
-            </div>
-          )}
-
-          {slug === 'track-order' && (
-            <div>
-              <p style={{ marginBottom: '20px' }}>Enter your order ID or tracking AWB number to check real-time courier status.</p>
-              <form onSubmit={handleTrack} style={{ display: 'flex', gap: '10px', marginBottom: '24px' }}>
-                <input
-                  type="text"
-                  placeholder="e.g. RZ-94821 or AWB number"
-                  value={trackNumber}
-                  onChange={(e) => setTrackNumber(e.target.value)}
-                  required
-                  style={{ flex: 1, height: '48px', padding: '0 14px', border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'inherit', fontSize: '16px' }}
-                />
-                <button type="submit" className="btn-rezoni" style={{ padding: '0 24px' }}>
-                  Track
-                </button>
-              </form>
-              {trackingResult && (
-                <div style={{ padding: '16px', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '4px', color: '#166534', fontWeight: 600 }}>
-                  {trackingResult}
-                </div>
-              )}
             </div>
           )}
 

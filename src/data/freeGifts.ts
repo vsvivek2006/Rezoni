@@ -9,24 +9,24 @@ export interface FreeGiftItem {
 export const FREE_GIFTS: FreeGiftItem[] = [
   {
     id: 'free-gift-sticky-pod',
-    title: 'Sticky Pod (Universal Phone Suction Mount)',
+    title: 'Sticky Pod',
     subtitle: 'Strong grip • Stick it anywhere',
     originalPrice: 199,
-    image: '/images/gifts/sticky_pod.jpg',
+    image: '/images/gifts/sticky_pod_thumb.jpg',
   },
   {
     id: 'free-gift-cable-protector',
-    title: 'Cable Protector (4 Pcs Spiral Guards)',
+    title: 'Cable Protector',
     subtitle: 'Protects cables from bending & damage',
-    originalPrice: 149,
-    image: '/images/gifts/cable_protector.jpg',
+    originalPrice: 199,
+    image: '/images/gifts/cable_protector_thumb.jpg',
   },
   {
     id: 'free-gift-usb-cable',
-    title: 'USB Fast Charging Cable',
+    title: 'Fast Charging Cable',
     subtitle: 'Durable, tangle-free & fast sync',
-    originalPrice: 299,
-    image: '/images/gifts/usb_cable.jpg',
+    originalPrice: 249,
+    image: '/images/gifts/usb_cable_thumb.jpg',
   },
 ];
 

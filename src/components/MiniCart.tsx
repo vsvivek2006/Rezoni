@@ -292,7 +292,7 @@ export default function MiniCart() {
                     </div>
                   ))}
 
-                  {/* Free Gift Line Items - 1:1 like user's screenshot */}
+                  {/* Free Gift Line Items - 1:1 like user's mobile & desktop screenshots */}
                   {FREE_GIFTS.map((gift) => (
                     <div
                       key={gift.id}
@@ -326,33 +326,17 @@ export default function MiniCart() {
                         />
                       </div>
 
-                      <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                          <h4 style={{ fontSize: '14px', fontWeight: 500, margin: '0 0 4px', color: '#222' }}>
-                            {gift.title.split(' (')[0]}
-                          </h4>
-                          <span
-                            style={{
-                              fontSize: '10px',
-                              fontWeight: 700,
-                              color: '#16a34a',
-                              backgroundColor: '#f0fdf4',
-                              border: '1px solid #bbf7d0',
-                              padding: '2px 6px',
-                              borderRadius: '4px',
-                            }}
-                          >
-                            Free Gift Included
-                          </span>
-                        </div>
-
-                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                          <div style={{ fontSize: '14px', fontWeight: 600, color: '#e53e3e' }}>
+                      <div className="mini-cart-gift-info">
+                        <h4 style={{ fontSize: '14px', fontWeight: 500, margin: 0, color: '#222222' }}>
+                          {gift.title.split(' (')[0]}
+                        </h4>
+                        <div className="mini-cart-gift-prices">
+                          <span style={{ fontSize: '14px', fontWeight: 600, color: '#e53e3e' }}>
                             Free!
-                          </div>
-                          <div style={{ fontSize: '12px', textDecoration: 'line-through', color: '#888' }}>
+                          </span>
+                          <span style={{ fontSize: '13px', textDecoration: 'line-through', color: '#888888' }}>
                             Rs. {gift.originalPrice}.00
-                          </div>
+                          </span>
                         </div>
                       </div>
                     </div>

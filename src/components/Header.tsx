@@ -172,7 +172,7 @@ export default function Header() {
             </Link>
 
             <Link
-              href="/pages/track-order"
+              href="/track-order"
               className="link--animated"
               style={{
                 fontSize: '14px',
@@ -605,7 +605,7 @@ export default function Header() {
                 {/* 7. Track Order (Direct Link) */}
                 <div className="mobile-nav-item" style={{ borderBottom: 'none' }}>
                   <Link
-                    href="/pages/track-order"
+                    href="/track-order"
                     onClick={closeMobileMenu}
                     className="mobile-nav-trigger"
                   >

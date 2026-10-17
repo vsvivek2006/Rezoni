@@ -291,7 +291,7 @@ function SuccessContent() {
             {/* Action Buttons */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginTop: '16px' }}>
               <Link
-                href="/pages/track-order"
+                href="/track-order"
                 style={{
                   height: '48px',
                   backgroundColor: '#000000',

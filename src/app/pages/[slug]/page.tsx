@@ -1,5 +1,6 @@
 import React from 'react';
 import StaticPageClient from '@/components/StaticPageClient';
+import { redirect } from 'next/navigation';
 
 export function generateStaticParams() {
   return [
@@ -10,7 +11,6 @@ export function generateStaticParams() {
     { slug: 'cancellation-policy' },
     { slug: 'terms-and-conditions' },
     { slug: 'privacy-policy' },
-    { slug: 'track-order' },
   ];
 }
 
@@ -20,5 +20,8 @@ interface PageProps {
 
 export default async function StaticInfoPage({ params }: PageProps) {
   const { slug } = await params;
+  if (slug === 'track-order') {
+    redirect('/track-order');
+  }
   return <StaticPageClient slug={slug} />;
 }

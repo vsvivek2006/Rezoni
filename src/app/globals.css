@@ -1257,4 +1257,36 @@ img {
   }
 }
 
+/* Cart Drawer Free Gift Responsive Layout (Desktop: space-between, Mobile: stacked with inline price) */
+.mini-cart-gift-info {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mini-cart-gift-prices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .mini-cart-gift-info {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+  }
+  .mini-cart-gift-prices {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+    text-align: left;
+  }
+}
+
 
