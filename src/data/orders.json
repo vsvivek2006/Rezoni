@@ -1,5 +1,53 @@
 [
   {
+    "orderId": "RZ-206177",
+    "receipt": "rcpt_RZ206177_8256",
+    "razorpayOrderId": "order_Tos70AzLXCNZuY",
+    "amount": 299,
+    "currency": "INR",
+    "status": "created",
+    "customer": {
+      "fullName": "Free Gift Test",
+      "email": "gift@example.com",
+      "phone": "9876543210",
+      "addressLine1": "Gift Lane",
+      "city": "Delhi",
+      "state": "Delhi",
+      "pincode": "110001"
+    },
+    "items": [
+      {
+        "id": "the-weeknd-iPhone 16 Pro Max-White-clear",
+        "title": "Anti-Yellow Case (Non-MagSafe)",
+        "price": 299,
+        "quantity": 1,
+        "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3.jpg?v=1725349229"
+      },
+      {
+        "id": "free-gift-sticky-pod",
+        "title": "Sticky Pod (Universal Phone Suction Mount) [FREE GIFT]",
+        "price": 0,
+        "quantity": 1,
+        "image": "/images/gifts/sticky_pod.jpg"
+      },
+      {
+        "id": "free-gift-cable-protector",
+        "title": "Cable Protector (4 Pcs Spiral Guards) [FREE GIFT]",
+        "price": 0,
+        "quantity": 1,
+        "image": "/images/gifts/cable_protector.jpg"
+      },
+      {
+        "id": "free-gift-usb-cable",
+        "title": "USB Fast Charging Cable [FREE GIFT]",
+        "price": 0,
+        "quantity": 1,
+        "image": "/images/gifts/usb_cable.jpg"
+      }
+    ],
+    "createdAt": "2026-10-17T06:11:20.146Z"
+  },
+  {
     "orderId": "RZ-527781",
     "receipt": "rcpt_RZ527781_5055",
     "razorpayOrderId": "order_TormUruILbs2Ia",

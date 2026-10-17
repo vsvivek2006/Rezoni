@@ -95,6 +95,31 @@ export function validateAndCalculateCart(incomingItems: any[]): ValidatedCartRes
     });
   }
 
+  // Automatically attach 3 Free Gifts to every confirmed order at ₹0 cost
+  verifiedItems.push(
+    {
+      id: 'free-gift-sticky-pod',
+      title: 'Sticky Pod (Universal Phone Suction Mount) [FREE GIFT]',
+      price: 0,
+      quantity: 1,
+      image: '/images/gifts/sticky_pod.jpg',
+    },
+    {
+      id: 'free-gift-cable-protector',
+      title: 'Cable Protector (4 Pcs Spiral Guards) [FREE GIFT]',
+      price: 0,
+      quantity: 1,
+      image: '/images/gifts/cable_protector.jpg',
+    },
+    {
+      id: 'free-gift-usb-cable',
+      title: 'USB Fast Charging Cable [FREE GIFT]',
+      price: 0,
+      quantity: 1,
+      image: '/images/gifts/usb_cable.jpg',
+    }
+  );
+
   // Delivery Fee calculation: 100% Free Shipping sitewide on all orders
   const shippingFee = 0;
   const totalAmount = subtotal + shippingFee;

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import CheckoutAddressForm from './CheckoutAddressForm';
+import { FREE_GIFTS, TOTAL_FREE_GIFTS_VALUE } from '@/data/freeGifts';
 
 export default function MiniCart() {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice } = useCart();
@@ -296,6 +297,65 @@ export default function MiniCart() {
                     </div>
                   ))}
 
+                  {/* 3 Free Gifts Unlocked Section */}
+                  <div
+                    style={{
+                      margin: '16px 0 10px',
+                      backgroundColor: '#f0fdf4',
+                      border: '1.5px solid #86efac',
+                      borderRadius: '8px',
+                      padding: '12px 14px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 800, color: '#166534', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>🎁</span> 3 FREE GIFTS UNLOCKED!
+                      </span>
+                      <span style={{ backgroundColor: '#22c55e', color: '#fff', fontSize: '10px', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>
+                        100% FREE
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#15803d', marginBottom: '10px' }}>
+                      Worth ₹{TOTAL_FREE_GIFTS_VALUE}.00 — Automatically included with your order at ₹0!
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                      {FREE_GIFTS.map((gift) => (
+                        <div
+                          key={gift.id}
+                          style={{
+                            textAlign: 'center',
+                            backgroundColor: '#ffffff',
+                            borderRadius: '6px',
+                            padding: '6px 4px',
+                            border: '1px solid #bbf7d0',
+                          }}
+                        >
+                          <img
+                            src={gift.image}
+                            alt={gift.title}
+                            style={{ width: '100%', height: '52px', objectFit: 'contain' }}
+                          />
+                          <div
+                            style={{
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              color: '#166534',
+                              marginTop: '4px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {gift.id.includes('sticky') ? 'Sticky Pod' : gift.id.includes('protector') ? 'Protector (4P)' : 'Fast Cable'}
+                          </div>
+                          <div style={{ fontSize: '9.5px', color: '#16a34a', fontWeight: 800 }}>
+                            FREE
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Order Note */}
                   <div style={{ marginTop: '10px' }}>
                     <button
@@ -354,57 +414,35 @@ export default function MiniCart() {
                   Taxes included. Nationwide express shipping applied at checkout.
                 </p>
 
-                {/* 1-Click Fast Checkout Button -> Opens Address Step */}
+                {/* Single Unified Checkout Button -> Opens Address Step */}
                 <button
                   onClick={() => setDrawerStep('checkout')}
                   style={{
                     width: '100%',
-                    height: '52px',
-                    borderRadius: '5px',
+                    height: '50px',
+                    borderRadius: '6px',
                     backgroundColor: '#ff6700',
                     color: '#ffffff',
                     border: 'none',
                     display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
                     alignItems: 'center',
-                    fontWeight: 700,
+                    justifyContent: 'center',
+                    gap: '8px',
+                    fontWeight: 800,
                     fontSize: '13px',
                     letterSpacing: '1px',
-                    marginBottom: '10px',
                     cursor: 'pointer',
-                    boxShadow: '0 4px 12px rgba(255, 103, 0, 0.3)',
-                    transition: 'background-color 0.2s',
+                    boxShadow: '0 4px 14px rgba(255, 103, 0, 0.35)',
+                    transition: 'all 0.2s ease',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e65c00')}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
                 >
-                  <span>1-CLICK QUICK CHECKOUT</span>
-                  <span style={{ fontSize: '9px', fontWeight: 400, opacity: 0.9 }}>
-                    UPI • GOOGLE PAY • PHONEPE • CARDS • COD
-                  </span>
-                </button>
-
-                {/* Standard Checkout Button -> Opens Address Step */}
-                <button
-                  onClick={() => setDrawerStep('checkout')}
-                  style={{
-                    width: '100%',
-                    height: '46px',
-                    borderRadius: '5px',
-                    backgroundColor: '#000000',
-                    color: '#ffffff',
-                    border: 'none',
-                    fontWeight: 700,
-                    fontSize: '12px',
-                    letterSpacing: '1px',
-                    cursor: 'pointer',
-                    transition: 'opacity 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                >
-                  PROCEED TO STANDARD CHECKOUT
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  <span>CHECKOUT • RS. {safeTotalPrice.toFixed(2)}</span>
                 </button>
               </div>
             )}

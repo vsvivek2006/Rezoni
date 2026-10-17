@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { openRazorpayCheckout } from '@/lib/razorpayClient';
 import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_FEE } from '@/lib/priceCalculator';
+import { FREE_GIFTS, TOTAL_FREE_GIFTS_VALUE } from '@/data/freeGifts';
 import CheckoutTrustBadges from './CheckoutTrustBadges';
 
 export interface AddressData {
@@ -130,7 +131,7 @@ export default function CheckoutAddressForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const [showOrderSummary, setShowOrderSummary] = useState(false);
+  const [showOrderSummary, setShowOrderSummary] = useState(true);
   const { clearCart, setIsCartOpen } = useCart();
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -483,7 +484,7 @@ export default function CheckoutAddressForm({
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>🛍️ Order Summary ({safeCart.length} {safeCart.length === 1 ? 'item' : 'items'})</span>
+              <span>🛍️ Order Summary ({safeCart.length} {safeCart.length === 1 ? 'item' : 'items'} + 3 Free Gifts 🎁)</span>
               <span style={{ color: '#ff6700' }}>{showOrderSummary ? 'Hide ▲' : 'Show ▼'}</span>
             </div>
             <div style={{ fontSize: '13px', fontWeight: 800, color: '#111' }}>
@@ -531,6 +532,80 @@ export default function CheckoutAddressForm({
                 ))}
               </div>
 
+              {/* 3 Free Gifts Included with Order */}
+              <div style={{ marginTop: '6px', paddingTop: '10px', borderTop: '1px solid #e2e8f0', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#15803d', letterSpacing: '0.3px', textTransform: 'uppercase' }}>
+                    🎁 3 Free Gifts Included (Value: ₹{TOTAL_FREE_GIFTS_VALUE})
+                  </span>
+                  <span style={{ backgroundColor: '#dcfce7', color: '#166534', fontSize: '10px', fontWeight: 800, padding: '2px 6px', borderRadius: '4px' }}>
+                    100% FREE
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {FREE_GIFTS.map((gift) => (
+                    <div
+                      key={gift.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        backgroundColor: '#f0fdf4',
+                        padding: '7px 10px',
+                        borderRadius: '6px',
+                        border: '1px solid #bbf7d0',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '38px',
+                          height: '46px',
+                          borderRadius: '4px',
+                          overflow: 'hidden',
+                          backgroundColor: '#ffffff',
+                          flexShrink: 0,
+                          border: '1px solid #86efac',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <img
+                          src={gift.image}
+                          alt={gift.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div
+                          style={{
+                            fontSize: '11.5px',
+                            fontWeight: 700,
+                            color: '#166534',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {gift.title}
+                        </div>
+                        <div style={{ fontSize: '10.5px', color: '#15803d' }}>
+                          Qty: 1 • {gift.subtitle}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{ fontSize: '10px', color: '#888', textDecoration: 'line-through' }}>
+                          Rs. {gift.originalPrice}.00
+                        </div>
+                        <div style={{ fontSize: '11px', fontWeight: 800, color: '#16a34a' }}>
+                          FREE
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div style={{ borderTop: '1px dashed #e0e0e0', paddingTop: '10px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', color: '#666', marginBottom: '4px' }}>
                 <span>Delivery:</span>
                 {isFreeShipping ? (
@@ -550,6 +625,43 @@ export default function CheckoutAddressForm({
         {/* State 1: Fill Address Form */}
         {!isConfirmed ? (
           <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {/* Free Gifts Banner */}
+            <div
+              style={{
+                backgroundColor: '#f0fdf4',
+                border: '1.5px solid #86efac',
+                borderRadius: '8px',
+                padding: '12px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+              }}
+            >
+              <div style={{ fontSize: '24px', lineHeight: 1 }}>🎁</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#166534', letterSpacing: '-0.2px' }}>
+                  3 FREE GIFTS ADDED TO YOUR ORDER!
+                </div>
+                <div style={{ fontSize: '11px', color: '#15803d', marginTop: '2px', lineHeight: 1.4 }}>
+                  Sticky Pod + Cable Protectors (4 Pcs) + Fast Charging Cable (Value: ₹{TOTAL_FREE_GIFTS_VALUE}) — <strong>100% FREE</strong>
+                </div>
+              </div>
+              <span
+                style={{
+                  backgroundColor: '#22c55e',
+                  color: '#ffffff',
+                  fontSize: '10px',
+                  fontWeight: 800,
+                  padding: '3px 7px',
+                  borderRadius: '4px',
+                  letterSpacing: '0.4px',
+                  flexShrink: 0,
+                }}
+              >
+                ₹0.00
+              </span>
+            </div>
+
             {/* Quick Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '6px', borderBottom: '1px solid #f0f0f0' }}>
               <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#222' }}>
@@ -968,6 +1080,10 @@ export default function CheckoutAddressForm({
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '6px' }}>
                 <span>Cart Subtotal</span>
                 <span>Rs. {totalPrice.toFixed(2)}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#15803d', marginBottom: '6px', fontWeight: 600 }}>
+                <span>🎁 3 Free Gifts (Value: Rs. {TOTAL_FREE_GIFTS_VALUE}.00)</span>
+                <span style={{ color: '#16a34a', fontWeight: 700 }}>FREE (-Rs. {TOTAL_FREE_GIFTS_VALUE}.00)</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '10px' }}>
                 <span>Nationwide Express Shipping</span>
