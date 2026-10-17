@@ -1427,19 +1427,73 @@ img {
 }
 
 /* Track Order Radar Ping & Responsive Mobile Styles */
-@keyframes liveRadarPulse {
+@keyframes liveRadarRingPulse {
   0% {
-    transform: scale(0.9);
+    transform: scale(0.95);
     opacity: 0.9;
   }
-  60% {
-    transform: scale(2.2);
-    opacity: 0;
+  50% {
+    transform: scale(1.55);
+    opacity: 0.45;
   }
   100% {
-    transform: scale(2.4);
+    transform: scale(2.1);
     opacity: 0;
   }
+}
+
+@keyframes liveRadarGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.4), 0 0 8px rgba(22, 163, 74, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.6), 0 0 14px rgba(22, 163, 74, 0.65);
+  }
+}
+
+.track-node-wrapper {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.track-radar-ping-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #16a34a;
+  background-color: rgba(34, 197, 94, 0.25);
+  animation: liveRadarRingPulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.track-radar-ping-ring-delayed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid #22c55e;
+  background-color: rgba(34, 197, 94, 0.12);
+  animation: liveRadarRingPulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  animation-delay: 0.65s;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.track-node-active {
+  animation: liveRadarGlow 2s ease-in-out infinite;
 }
 
 .track-order-page-wrapper {

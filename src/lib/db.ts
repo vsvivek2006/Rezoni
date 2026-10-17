@@ -436,23 +436,43 @@ export function getAllOrders(): Order[] {
 }
 
 export function getOrderByIdOrQuery(query: string): Order | null {
-  const clean = query.trim().toUpperCase().replace('#', '');
+  const clean = query.trim();
+  if (!clean || clean.length < 4) return null;
+
+  const cleanUpper = clean.toUpperCase().replace(/^#/, '');
+  const digits = clean.replace(/[^0-9]/g, '');
+  const lowerQuery = clean.toLowerCase();
+
   const orders = getAllOrders();
 
-  // Try exact match on ID
-  const direct = orders.find((o) => o.id.toUpperCase().replace('#', '') === clean);
+  // 1. Exact match on ID (e.g. 'RZ-91108' or '91108')
+  const direct = orders.find((o) => {
+    const oId = o.id.toUpperCase().replace(/^#/, '');
+    return oId === cleanUpper || oId === `RZ-${cleanUpper}` || (cleanUpper.startsWith('RZ-') && oId === cleanUpper);
+  });
   if (direct) return direct;
 
-  // Try matching phone, tracking number, or email
-  const lowerQuery = query.trim().toLowerCase();
-  return (
-    orders.find(
-      (o) =>
-        o.trackingNumber.toLowerCase().includes(lowerQuery) ||
-        o.customerEmail.toLowerCase() === lowerQuery ||
-        (o.customerPhone && o.customerPhone.replace(/[^0-9]/g, '').includes(query.replace(/[^0-9]/g, '')))
-    ) || null
-  );
+  // 2. Exact match on tracking number
+  const trackingMatch = orders.find((o) => o.trackingNumber && o.trackingNumber.toUpperCase() === cleanUpper);
+  if (trackingMatch) return trackingMatch;
+
+  // 3. Exact match on email
+  if (lowerQuery.includes('@')) {
+    const emailMatch = orders.find((o) => o.customerEmail && o.customerEmail.toLowerCase() === lowerQuery);
+    if (emailMatch) return emailMatch;
+  }
+
+  // 4. Phone number match: MUST be at least 10 digits and match exact last 10 digits
+  if (digits.length >= 10) {
+    const last10 = digits.slice(-10);
+    const phoneMatch = orders.find((o) => {
+      const pDigits = (o.customerPhone || '').replace(/[^0-9]/g, '');
+      return pDigits.length >= 10 && pDigits.slice(-10) === last10;
+    });
+    if (phoneMatch) return phoneMatch;
+  }
+
+  return null;
 }
 
 export function createNewOrder(orderData: Omit<Order, 'id' | 'timeline' | 'status' | 'statusLabel' | 'carrier' | 'trackingNumber' | 'estimatedDelivery'>): Order {

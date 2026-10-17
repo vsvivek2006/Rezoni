@@ -178,35 +178,57 @@ function normalizeToOrder(raw: any): Order {
 
 async function findUnifiedOrder(query: string): Promise<Order | null> {
   const clean = query.trim();
-  const cleanId = clean.toUpperCase().replace('#', '');
+  if (!clean || clean.length < 4) return null;
+
+  const cleanUpper = clean.toUpperCase().replace(/^#/, '');
   const digits = clean.replace(/[^0-9]/g, '');
   const lowerQuery = clean.toLowerCase();
+
+  // Guard against short random inputs: if not at least 4 alphanumeric chars and not 10 digits
+  if (cleanUpper.length < 4 && digits.length < 5) {
+    return null;
+  }
 
   // 1. Check Supabase DB orders table
   const supabase = getSupabaseAdminClient();
   if (supabase) {
     try {
-      // By exact or partial Order ID / ID
-      const { data: idMatches } = await supabase
+      // 1a. Exact order ID or AWB tracking number match
+      const targetIds = [cleanUpper, `RZ-${cleanUpper}`];
+      const { data: exactMatches } = await supabase
         .from('orders')
         .select('*')
-        .or(`order_id.ilike.%${cleanId}%,id.ilike.%${cleanId}%,tracking_number.ilike.%${cleanId}%`)
+        .or(`order_id.in.("${targetIds.join('","')}"),id.in.("${targetIds.join('","')}"),tracking_number.eq."${cleanUpper}"`)
         .limit(1);
 
-      if (idMatches && idMatches.length > 0) {
-        return normalizeToOrder(idMatches[0]);
+      if (exactMatches && exactMatches.length > 0) {
+        return normalizeToOrder(exactMatches[0]);
       }
 
-      // By phone number
-      if (digits.length >= 7) {
+      // 1b. Exact 10-digit phone match
+      if (digits.length >= 10) {
+        const last10 = digits.slice(-10);
         const { data: phoneMatches } = await supabase
           .from('orders')
           .select('*')
-          .ilike('customer_phone', `%${digits}%`)
+          .ilike('customer_phone', `%${last10}`)
           .limit(1);
 
         if (phoneMatches && phoneMatches.length > 0) {
           return normalizeToOrder(phoneMatches[0]);
+        }
+      }
+
+      // 1c. Exact email match
+      if (lowerQuery.includes('@')) {
+        const { data: emailMatches } = await supabase
+          .from('orders')
+          .select('*')
+          .ilike('customer_email', lowerQuery)
+          .limit(1);
+
+        if (emailMatches && emailMatches.length > 0) {
+          return normalizeToOrder(emailMatches[0]);
         }
       }
     } catch (sbErr) {
@@ -217,14 +239,15 @@ async function findUnifiedOrder(query: string): Promise<Order | null> {
   // 2. Check orders.json (Razorpay store)
   const storeOrders = readOrdersFromOrderStore();
   const storeMatch = storeOrders.find((o) => {
-    const oId = (o.orderId || '').toUpperCase().replace('#', '');
-    if (oId === cleanId || oId.includes(cleanId)) return true;
-    if (o.receipt && o.receipt.toUpperCase().includes(cleanId)) return true;
-    if (digits.length >= 7 && o.customer?.phone) {
+    const oId = (o.orderId || '').toUpperCase().replace(/^#/, '');
+    if (oId === cleanUpper || oId === `RZ-${cleanUpper}`) return true;
+    if (o.receipt && o.receipt.toUpperCase() === cleanUpper) return true;
+    if (o.razorpayOrderId && o.razorpayOrderId.toUpperCase() === cleanUpper) return true;
+    if (digits.length >= 10 && o.customer?.phone) {
       const pDigits = o.customer.phone.replace(/[^0-9]/g, '');
-      if (pDigits.includes(digits)) return true;
+      if (pDigits.length >= 10 && pDigits.slice(-10) === digits.slice(-10)) return true;
     }
-    if (o.customer?.email && o.customer.email.toLowerCase() === lowerQuery) return true;
+    if (lowerQuery.includes('@') && o.customer?.email && o.customer.email.toLowerCase() === lowerQuery) return true;
     return false;
   });
 

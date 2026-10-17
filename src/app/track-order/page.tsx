@@ -20,8 +20,9 @@ function TrackOrderContent() {
 
   const fetchTracking = async (searchQuery: string) => {
     const trimmed = searchQuery.trim();
-    if (!trimmed) {
-      setError('Please enter your Order ID, Phone Number, or Tracking Number.');
+    if (!trimmed || trimmed.length < 4) {
+      setError('Please enter a valid Order ID (e.g. #RZ-206177) or 10-digit mobile number.');
+      setOrder(null);
       setOrderNotFound(false);
       return;
     }
@@ -366,26 +367,21 @@ function TrackOrderContent() {
 
                 return (
                   <div key={idx} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <div style={{ position: 'relative', width: '28px', height: '28px' }}>
+                    <div className="track-node-wrapper">
                       {isCurrent && (
-                        <span
-                          style={{
-                            position: 'absolute',
-                            inset: '-4px',
-                            borderRadius: '50%',
-                            backgroundColor: 'rgba(22, 163, 74, 0.4)',
-                            animation: 'liveRadarPulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite',
-                            pointerEvents: 'none',
-                          }}
-                        />
+                        <>
+                          <span className="track-radar-ping-ring" />
+                          <span className="track-radar-ping-ring-delayed" />
+                        </>
                       )}
                       <div
+                        className={isCurrent ? 'track-node-active' : ''}
                         style={{
                           width: '28px',
                           height: '28px',
                           borderRadius: '50%',
                           backgroundColor: isCompleted ? '#16a34a' : '#ffffff',
-                          border: isCompleted ? 'none' : '2px solid #d1d5db',
+                          border: isCompleted ? '2px solid #16a34a' : '2px solid #d1d5db',
                           color: isCompleted ? '#ffffff' : '#9ca3af',
                           display: 'flex',
                           alignItems: 'center',
@@ -393,11 +389,8 @@ function TrackOrderContent() {
                           fontSize: '12px',
                           fontWeight: 800,
                           position: 'relative',
-                          boxShadow: isCurrent
-                            ? '0 0 0 3px rgba(34, 197, 94, 0.3), 0 2px 8px rgba(22, 163, 74, 0.4)'
-                            : isCompleted
-                            ? '0 2px 6px rgba(22, 163, 74, 0.3)'
-                            : 'none',
+                          zIndex: 3,
+                          boxShadow: isCompleted ? '0 2px 6px rgba(22, 163, 74, 0.25)' : 'none',
                         }}
                       >
                         {isCompleted ? '✓' : idx + 1}
@@ -507,9 +500,10 @@ function TrackOrderContent() {
                             <div
                               style={{
                                 position: 'absolute',
-                                top: '26px',
-                                left: '13px',
-                                bottom: '-8px',
+                                top: '28px',
+                                left: '14px',
+                                transform: 'translateX(-50%)',
+                                bottom: '-6px',
                                 width: '2px',
                                 backgroundColor: sIdx < currentStageIndex ? '#16a34a' : '#e5e7eb',
                                 zIndex: 1,
@@ -518,26 +512,21 @@ function TrackOrderContent() {
                           )}
 
                           {/* Node with Live Radar Ping on Current Stage */}
-                          <div style={{ position: 'relative', zIndex: 2, marginRight: '16px', flexShrink: 0 }}>
+                          <div className="track-node-wrapper" style={{ marginRight: '16px', zIndex: 2 }}>
                             {isCurrent && (
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  inset: '-4px',
-                                  borderRadius: '50%',
-                                  backgroundColor: 'rgba(22, 163, 74, 0.4)',
-                                  animation: 'liveRadarPulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite',
-                                  pointerEvents: 'none',
-                                }}
-                              />
+                              <>
+                                <span className="track-radar-ping-ring" />
+                                <span className="track-radar-ping-ring-delayed" />
+                              </>
                             )}
                             <div
+                              className={isCurrent ? 'track-node-active' : ''}
                               style={{
                                 width: '28px',
                                 height: '28px',
                                 borderRadius: '50%',
                                 backgroundColor: isCompleted ? '#16a34a' : '#ffffff',
-                                border: isCompleted ? 'none' : '2px solid #d1d5db',
+                                border: isCompleted ? '2px solid #16a34a' : '2px solid #d1d5db',
                                 color: isCompleted ? '#ffffff' : '#9ca3af',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -545,11 +534,8 @@ function TrackOrderContent() {
                                 fontSize: '12px',
                                 fontWeight: 800,
                                 position: 'relative',
-                                boxShadow: isCurrent
-                                  ? '0 0 0 3px rgba(34, 197, 94, 0.3), 0 2px 8px rgba(22, 163, 74, 0.4)'
-                                  : isCompleted
-                                  ? '0 2px 6px rgba(22, 163, 74, 0.25)'
-                                  : 'none',
+                                zIndex: 3,
+                                boxShadow: isCompleted ? '0 2px 6px rgba(22, 163, 74, 0.25)' : 'none',
                               }}
                             >
                               {isCompleted ? '✓' : sIdx + 1}
