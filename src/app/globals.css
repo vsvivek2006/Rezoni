@@ -613,12 +613,66 @@ img {
 }
 
 /* ================= REZONI LIVE PDP STYLES ================= */
+.pdp-main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 900px) {
+  .pdp-main-grid {
+    grid-template-columns: 1.02fr 1fr;
+    gap: 48px;
+  }
+}
+
+.pdp-media-sticky {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 900px) {
+  .pdp-media-sticky {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+.pdp-reviews-header-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  
+  .pdp-main-grid {
+    gap: 22px;
+  }
+}
+
 .product-switcher-container {
   border: 1px solid #d3d3d3;
   border-radius: 12px 12px 0 0;
   padding: 16px;
   background: #f7f7f7;
   margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .case-type-title {

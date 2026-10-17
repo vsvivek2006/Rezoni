@@ -38,21 +38,76 @@ import { getDeviceMedia, DeviceMedia } from '@/data/deviceMediaMap';
 export function normalizeBrandKey(key?: string | null): string {
   if (!key) return 'iPhone Cases';
   const k = key.toLowerCase();
-  if (k.includes('samsung')) return 'Samsung Cases';
+  if (k.includes('samsung') || k.includes('galaxy')) return 'Samsung Cases';
   if (k.includes('iphone') || k.includes('apple')) return 'iPhone Cases';
-  if (k.includes('oneplus')) return 'OnePlus Cases';
-  if (k.includes('pixel')) return 'Google Pixel Cases';
-  if (k.includes('nothing')) return 'Nothing Cases';
+  if (k.includes('oneplus') || k.includes('nord')) return 'OnePlus Cases';
+  if (k.includes('pixel') || k.includes('google')) return 'Google Pixel Cases';
+  if (k.includes('nothing') || k.includes('cmf')) return 'Nothing Cases';
   if (k.includes('vivo')) return 'Vivo Cases';
   if (k.includes('iqoo')) return 'iQOO Cases';
-  if (k.includes('oppo')) return 'Oppo Cases';
-  if (k.includes('realme')) return 'Realme Cases';
+  if (k.includes('oppo') || k.includes('find n')) return 'Oppo Cases';
+  if (k.includes('realme') || k.includes('narzo')) return 'Realme Cases';
   if (k.includes('redmi')) return 'Redmi Cases';
-  if (k.includes('xiaomi') || k.includes('mi')) return 'Xiaomi Cases';
-  if (k.includes('motorola') || k.includes('moto')) return 'Motorola Cases';
+  if (k.includes('xiaomi') || k.includes('mi ') || k.includes('mi-') || k.includes('mi10') || k.includes('mi11')) return 'Xiaomi Cases';
+  if (k.includes('motorola') || k.includes('moto') || k.includes('razr')) return 'Motorola Cases';
   return 'iPhone Cases';
 }
 
+// Accurately detect authentic brand from initialModel, handle, title, or models list
+export function detectInitialBrand(product: ProductDetailProps['product'], initialModel?: string | null): string {
+  // 1. From model param / initialModel
+  if (initialModel) {
+    const clean = initialModel.replace(/^New!\s*/i, '').trim().toLowerCase();
+    const fromMap = modelToBrandMap[clean];
+    if (fromMap) return normalizeBrandKey(fromMap);
+    const directNorm = normalizeBrandKey(clean);
+    if (directNorm !== 'iPhone Cases' || clean.includes('iphone')) return directNorm;
+  }
+
+  // 2. From product.handle
+  const h = (product.handle || '').toLowerCase();
+  if (h.includes('samsung') || h.includes('galaxy')) return 'Samsung Cases';
+  if (h.includes('oneplus') || h.includes('nord')) return 'OnePlus Cases';
+  if (h.includes('pixel') || h.includes('google')) return 'Google Pixel Cases';
+  if (h.includes('nothing') || h.includes('cmf')) return 'Nothing Cases';
+  if (h.includes('vivo')) return 'Vivo Cases';
+  if (h.includes('iqoo')) return 'iQOO Cases';
+  if (h.includes('oppo')) return 'Oppo Cases';
+  if (h.includes('realme') || h.includes('narzo')) return 'Realme Cases';
+  if (h.includes('redmi')) return 'Redmi Cases';
+  if (h.includes('xiaomi') || h.includes('mi-')) return 'Xiaomi Cases';
+  if (h.includes('motorola') || h.includes('moto')) return 'Motorola Cases';
+
+  // 3. From product.title
+  const t = (product.title || '').toLowerCase();
+  if (t.includes('samsung') || t.includes('galaxy')) return 'Samsung Cases';
+  if (t.includes('oneplus') || t.includes('nord')) return 'OnePlus Cases';
+  if (t.includes('pixel') || t.includes('google')) return 'Google Pixel Cases';
+  if (t.includes('nothing') || t.includes('cmf')) return 'Nothing Cases';
+  if (t.includes('vivo')) return 'Vivo Cases';
+  if (t.includes('iqoo')) return 'iQOO Cases';
+  if (t.includes('oppo')) return 'Oppo Cases';
+  if (t.includes('realme')) return 'Realme Cases';
+  if (t.includes('redmi')) return 'Redmi Cases';
+  if (t.includes('xiaomi')) return 'Xiaomi Cases';
+  if (t.includes('motorola') || t.includes('moto')) return 'Motorola Cases';
+
+  // 4. From product.models list
+  if (product.models && product.models.length > 0) {
+    for (const m of product.models) {
+      const clean = m.replace(/^New!\s*/i, '').trim().toLowerCase();
+      const fromMap = modelToBrandMap[clean];
+      if (fromMap) return normalizeBrandKey(fromMap);
+      const norm = normalizeBrandKey(clean);
+      if (norm !== 'iPhone Cases' || clean.includes('iphone')) return norm;
+    }
+  }
+
+  // 5. From product.brand
+  if (product.brand) return normalizeBrandKey(product.brand);
+
+  return 'iPhone Cases';
+}
 
 // Authentic FAQ data from Rezoni Live Store
 const faqItems = [
@@ -130,7 +185,6 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
   const { addToCart } = useCart();
 
   const cleanInitialModel = initialModel ? initialModel.replace(/^New!\s*/i, '').trim() : null;
-  const initialBrandFromModel = cleanInitialModel ? normalizeBrandKey(modelToBrandMap[cleanInitialModel.toLowerCase()]) : null;
 
   // Color Variants
   const colorVariants: ColorVariant[] = product.color_variants || [];
@@ -138,13 +192,8 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
     colorVariants.length > 0 ? colorVariants[0].name : ''
   );
 
-  // Brand dropdown state
-  const rawBrand =
-    initialBrandFromModel ||
-    product.brand ||
-    brandOptions.find((b) => b.handle === product.handle)?.brandKey ||
-    'iPhone Cases';
-  const initialBrandKey = normalizeBrandKey(rawBrand);
+  // Brand dropdown state: accurately initialized to the product's authentic brand
+  const initialBrandKey = detectInitialBrand(product, cleanInitialModel);
   const [selectedBrandKey, setSelectedBrandKey] = useState<string>(initialBrandKey);
 
   // Model dropdown state - sanitized clean model names (NO "New!" prefix)
@@ -152,9 +201,11 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
     brandModelsMap[selectedBrandKey] ||
     (product.models ? product.models.map((m) => m.replace(/^New!\s*/i, '')) : []);
 
-  const [selectedDevice, setSelectedDevice] = useState<string>(
-    cleanInitialModel || (currentBrandModels.length > 0 ? currentBrandModels[0] : 'iPhone 16 Pro Max')
-  );
+  const [selectedDevice, setSelectedDevice] = useState<string>(() => {
+    if (cleanInitialModel) return cleanInitialModel;
+    if (currentBrandModels.length > 0) return currentBrandModels[0];
+    return 'iPhone 16 Pro Max';
+  });
 
   // Variant Switcher state: Non-MagSafe (clear) by default (1:1 with Rezoni)
   const [selectedVariantType, setSelectedVariantType] = useState<'magsafe' | 'clear'>('clear');
@@ -164,7 +215,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
   const [activePhotoModal, setActivePhotoModal] = useState<CustomerReview | null>(null);
   const [writeReviewOpen, setWriteReviewOpen] = useState<boolean>(false);
 
-  // ================= CRITICAL: Pre-select model from URL search params & variant ID =================
+  // ================= Pre-select model and brand from URL search params & variant ID =================
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -177,10 +228,10 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
 
     if (modelParam) {
       resolvedModel = decodeURIComponent(modelParam).replace(/^New!\s*/i, '').trim();
-      resolvedBrand = modelToBrandMap[resolvedModel.toLowerCase()];
+      resolvedBrand = modelToBrandMap[resolvedModel.toLowerCase()] || normalizeBrandKey(resolvedModel);
     } else if (variantParam && variantToModelMap[variantParam]) {
       resolvedModel = variantToModelMap[variantParam];
-      resolvedBrand = modelToBrandMap[resolvedModel.toLowerCase()];
+      resolvedBrand = modelToBrandMap[resolvedModel.toLowerCase()] || normalizeBrandKey(resolvedModel);
     } else {
       // Check pathname
       const path = window.location.pathname.toLowerCase();
@@ -191,13 +242,14 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
       });
       if (matched) {
         resolvedModel = matched;
+        resolvedBrand = modelToBrandMap[matched.toLowerCase()] || normalizeBrandKey(matched);
       }
     }
 
     if (resolvedModel) {
       setSelectedDevice(resolvedModel);
       if (resolvedBrand) {
-        setSelectedBrandKey(resolvedBrand);
+        setSelectedBrandKey(normalizeBrandKey(resolvedBrand));
       }
       const media = getDeviceMedia(resolvedModel);
       if (media) {
@@ -207,7 +259,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
         setSelectedImage(product.model_variants[resolvedModel].image);
       }
     }
-  }, [product, currentBrandModels]);
+  }, [product, currentBrandModels, selectedVariantType]);
 
   const activeColorVariant =
     colorVariants.find(
@@ -393,23 +445,25 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
 
       <div className="container" style={{ paddingTop: '20px', paddingBottom: '80px' }}>
         {/* Breadcrumb matching Rezoni */}
-        <div style={{ fontSize: '12px', color: '#888888', marginBottom: '24px' }}>
+        <div
+          style={{
+            fontSize: '12px',
+            color: '#888888',
+            marginBottom: '20px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
           <Link href="/" style={{ color: '#888888', textDecoration: 'none' }}>Home</Link>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ color: '#111111' }}>{product.title}</span>
         </div>
 
         {/* 2-Column Product Layout matching Rezoni live store */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-            gap: '50px',
-            alignItems: 'start',
-          }}
-        >
+        <div className="pdp-main-grid">
           {/* ================= LEFT COLUMN: 1:1 SQUARE MEDIA GALLERY ================= */}
-          <div style={{ position: 'sticky', top: '100px' }}>
+          <div className="pdp-media-sticky">
             {/* Primary Square Media Box */}
             <div
               style={{
@@ -420,6 +474,8 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
                 aspectRatio: '1 / 1',
                 marginBottom: '16px',
                 border: '1px solid #f0f0f0',
+                width: '100%',
+                maxWidth: '100%',
               }}
             >
               <img
@@ -475,7 +531,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
           </div>
 
           {/* ================= RIGHT COLUMN: 1:1 PRODUCT DETAILS MATCHING REZONI ================= */}
-          <div>
+          <div style={{ width: '100%', maxWidth: '100%', minWidth: 0 }}>
             {/* 1. Loox Reviews Star Rating Header */}
             <div
               onClick={scrollToReviews}
@@ -1024,18 +1080,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
           {/* Loox Widget Container */}
           <div style={{ marginTop: '40px' }}>
             {/* Loox Header Bar (4.9 Rating, 96,241 Reviews, Write a review) */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: '16px',
-                paddingBottom: '20px',
-                borderBottom: '1px solid #e0e0e0',
-                marginBottom: '24px',
-              }}
-            >
+            <div className="pdp-reviews-header-bar">
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <svg
