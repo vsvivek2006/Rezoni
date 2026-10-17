@@ -1,9 +1,5 @@
 import crypto from 'crypto';
 
-const ADMIN_ID = process.env.ADMIN_ID || 'admin@rezoni.shop';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'rezoni@admin2026';
-const ADMIN_SESSION_SECRET = process.env.ADMIN_SESSION_SECRET || 'rezoni_isolated_admin_secret_token_key_2026';
-
 export interface AdminSession {
   adminId: string;
   role: string;
@@ -13,22 +9,28 @@ export interface AdminSession {
 
 /**
  * Timing-safe credential comparison to prevent timing attacks
+ * Strictly ingests credentials from environment variables without hardcoded fallbacks
  */
 export function verifyAdminCredentials(inputId: string, inputPassword: string): boolean {
-  if (!inputId || !inputPassword) return false;
+  const adminId = process.env.ADMIN_ID?.trim();
+  const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+
+  // If server environment credentials are not configured, deny access immediately
+  if (!adminId || !adminPassword || !inputId || !inputPassword) {
+    return false;
+  }
 
   const cleanInputId = inputId.trim().toLowerCase();
-  const cleanTargetId = ADMIN_ID.trim().toLowerCase();
+  const cleanTargetId = adminId.toLowerCase();
 
   // Also accept 'admin' as an alias if ADMIN_ID is an email
   const isIdValid = cleanInputId === cleanTargetId || cleanInputId === 'admin';
   if (!isIdValid) return false;
 
-  const targetPassword = ADMIN_PASSWORD.trim();
   const providedPassword = inputPassword.trim();
 
   // Constant-time buffer comparison if lengths match
-  const bufTarget = Buffer.from(targetPassword);
+  const bufTarget = Buffer.from(adminPassword);
   const bufProvided = Buffer.from(providedPassword);
 
   if (bufTarget.length !== bufProvided.length) {
@@ -42,6 +44,11 @@ export function verifyAdminCredentials(inputId: string, inputPassword: string): 
  * Generate a cryptographically signed HMAC session token
  */
 export function createSessionToken(adminId: string): string {
+  const sessionSecret = process.env.ADMIN_SESSION_SECRET?.trim();
+  if (!sessionSecret) {
+    throw new Error('ADMIN_SESSION_SECRET environment variable is missing');
+  }
+
   const payload: AdminSession = {
     adminId,
     role: 'Executive Store Administrator',
@@ -52,7 +59,7 @@ export function createSessionToken(adminId: string): string {
   const json = JSON.stringify(payload);
   const base64Payload = Buffer.from(json).toString('base64url');
   const signature = crypto
-    .createHmac('sha256', ADMIN_SESSION_SECRET)
+    .createHmac('sha256', sessionSecret)
     .update(base64Payload)
     .digest('base64url');
 
@@ -64,11 +71,12 @@ export function createSessionToken(adminId: string): string {
  */
 export function verifySessionToken(token: string): AdminSession | null {
   try {
-    if (!token || !token.includes('.')) return null;
+    const sessionSecret = process.env.ADMIN_SESSION_SECRET?.trim();
+    if (!sessionSecret || !token || !token.includes('.')) return null;
 
     const [base64Payload, signature] = token.split('.');
     const expectedSignature = crypto
-      .createHmac('sha256', ADMIN_SESSION_SECRET)
+      .createHmac('sha256', sessionSecret)
       .update(base64Payload)
       .digest('base64url');
 
