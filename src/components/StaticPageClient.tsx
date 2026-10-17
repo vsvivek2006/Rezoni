@@ -15,6 +15,41 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
   }
 
   const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactLoading, setContactLoading] = useState(false);
+  const [contactError, setContactError] = useState('');
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactLoading(true);
+    setContactError('');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: contactName,
+          email: contactEmail,
+          phone: contactPhone,
+          message: contactMessage,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setContactSubmitted(true);
+      } else {
+        setContactError(data.message || 'Failed to send message. Please try again.');
+      }
+    } catch {
+      setContactError('Unable to connect to server. Please try again later.');
+    } finally {
+      setContactLoading(false);
+    }
+  };
 
   const getPageTitle = (s: string) => {
     switch (s) {
@@ -72,21 +107,27 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
           {slug === 'contact' && (
             <div>
               {contactSubmitted ? (
-                <div style={{ padding: '20px', backgroundColor: '#eaf8ed', color: '#1b4332', borderRadius: '4px', fontWeight: 600, textAlign: 'center', marginBottom: '24px' }}>
-                  ✓ Message received! Our support team will get back to you within 24 business hours.
+                <div style={{ padding: '24px 20px', backgroundColor: '#eaf8ed', color: '#1b4332', borderRadius: '8px', fontWeight: 600, textAlign: 'center', marginBottom: '24px', border: '1px solid #b7e4c7' }}>
+                  <div style={{ fontSize: '20px', marginBottom: '6px' }}>✓</div>
+                  <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: '4px' }}>Message Received Successfully!</div>
+                  <div style={{ fontSize: '13px', color: '#2d6a4f' }}>Our support team will review your inquiry and get back to you within 24 business hours.</div>
                 </div>
               ) : (
                 <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setContactSubmitted(true);
-                  }}
+                  onSubmit={handleContactSubmit}
                   style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}
                 >
+                  {contactError && (
+                    <div style={{ padding: '10px 14px', backgroundColor: '#fef2f2', color: '#dc2626', borderRadius: '4px', fontSize: '13px', fontWeight: 500 }}>
+                      {contactError}
+                    </div>
+                  )}
                   <input
                     type="text"
                     required
-                    placeholder="Name"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    placeholder="Full Name"
                     style={{
                       width: '100%',
                       height: '48px',
@@ -94,7 +135,7 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                       border: '1px solid #d5d5d5',
                       borderRadius: '4px',
                       fontFamily: 'inherit',
-                      fontSize: '16px',
+                      fontSize: '15px',
                       color: '#222',
                       outline: 'none',
                     }}
@@ -102,7 +143,9 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                   <input
                     type="email"
                     required
-                    placeholder="E-mail"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    placeholder="E-mail Address"
                     style={{
                       width: '100%',
                       height: '48px',
@@ -110,7 +153,24 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                       border: '1px solid #d5d5d5',
                       borderRadius: '4px',
                       fontFamily: 'inherit',
-                      fontSize: '16px',
+                      fontSize: '15px',
+                      color: '#222',
+                      outline: 'none',
+                    }}
+                  />
+                  <input
+                    type="tel"
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    placeholder="Phone Number (Optional)"
+                    style={{
+                      width: '100%',
+                      height: '48px',
+                      padding: '0 14px',
+                      border: '1px solid #d5d5d5',
+                      borderRadius: '4px',
+                      fontFamily: 'inherit',
+                      fontSize: '15px',
                       color: '#222',
                       outline: 'none',
                     }}
@@ -118,20 +178,23 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                   <textarea
                     rows={5}
                     required
-                    placeholder="Message"
+                    value={contactMessage}
+                    onChange={(e) => setContactMessage(e.target.value)}
+                    placeholder="Your Message / Inquiry..."
                     style={{
                       width: '100%',
                       padding: '12px 14px',
                       border: '1px solid #d5d5d5',
                       borderRadius: '4px',
                       fontFamily: 'inherit',
-                      fontSize: '16px',
+                      fontSize: '15px',
                       color: '#222',
                       outline: 'none',
                     }}
                   />
                   <button
                     type="submit"
+                    disabled={contactLoading}
                     style={{
                       width: '100%',
                       height: '48px',
@@ -143,13 +206,11 @@ export default function StaticPageClient({ slug }: StaticPageClientProps) {
                       fontWeight: 800,
                       letterSpacing: '1px',
                       textTransform: 'uppercase',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.2s',
+                      cursor: contactLoading ? 'not-allowed' : 'pointer',
+                      opacity: contactLoading ? 0.7 : 1,
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e65c00')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
                   >
-                    SUBMIT
+                    {contactLoading ? 'Sending Inquiry...' : 'Send Message'}
                   </button>
                 </form>
               )}

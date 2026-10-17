@@ -41,22 +41,6 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Fallback to local db if 0
-    if (returns.length === 0) {
-      try {
-        const localPath = fs.existsSync(path.resolve(process.cwd(), 'src', 'data', 'db.json'))
-          ? path.resolve(process.cwd(), 'src', 'data', 'db.json')
-          : path.resolve(process.cwd(), '..', 'src', 'data', 'db.json');
-        if (fs.existsSync(localPath)) {
-          const raw = JSON.parse(fs.readFileSync(localPath, 'utf8'));
-          returns = raw.returns || [];
-          if (status && status !== 'all') {
-            returns = returns.filter((r: any) => r.status === status);
-          }
-        }
-      } catch (e) {}
-    }
-
     return NextResponse.json({ success: true, count: returns.length, returns });
   } catch (error: any) {
     return NextResponse.json(

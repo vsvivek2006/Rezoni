@@ -128,15 +128,21 @@ export function saveOrder(order: OrderRecord): void {
   // 1. Instant in-memory cache update
   memoryOrders.set(order.orderId, order);
 
-  // 2. Local JSON fallback persistence
-  const currentOrders = readOrdersFromFile();
-  const existingIdx = currentOrders.findIndex((o) => o.orderId === order.orderId);
-  if (existingIdx >= 0) {
-    currentOrders[existingIdx] = order;
-  } else {
-    currentOrders.unshift(order);
-  }
-  writeOrdersToFile(currentOrders);
+  // 2. Non-blocking asynchronous local JSON fallback persistence
+  setImmediate(() => {
+    try {
+      const currentOrders = readOrdersFromFile();
+      const existingIdx = currentOrders.findIndex((o) => o.orderId === order.orderId);
+      if (existingIdx >= 0) {
+        currentOrders[existingIdx] = order;
+      } else {
+        currentOrders.unshift(order);
+      }
+      writeOrdersToFile(currentOrders);
+    } catch (e) {
+      console.warn('Async fallback write skipped:', e);
+    }
+  });
 
   // 3. Asynchronous cloud persistence to Supabase PostgreSQL
   syncOrderToSupabase(order).catch((err) => {

@@ -29,18 +29,6 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    if (reviews.length === 0) {
-      try {
-        const localPath = fs.existsSync(path.resolve(process.cwd(), 'src', 'data', 'db.json'))
-          ? path.resolve(process.cwd(), 'src', 'data', 'db.json')
-          : path.resolve(process.cwd(), '..', 'src', 'data', 'db.json');
-        if (fs.existsSync(localPath)) {
-          const raw = JSON.parse(fs.readFileSync(localPath, 'utf8'));
-          reviews = raw.reviews || [];
-        }
-      } catch (e) {}
-    }
-
     return NextResponse.json({ success: true, count: reviews.length, reviews });
   } catch (error: any) {
     return NextResponse.json(

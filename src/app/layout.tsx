@@ -35,6 +35,11 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="p:domain_verify" content="af207071a0871ae92bad697aafd63a33" />
+        {/* Preconnect to Razorpay servers for instant checkout popup launch */}
+        <link rel="preconnect" href="https://checkout.razorpay.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.razorpay.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+        <link rel="dns-prefetch" href="https://api.razorpay.com" />
       </head>
       <body suppressHydrationWarning>
         <AuthProvider>

@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
-import { openRazorpayCheckout } from '@/lib/razorpayClient';
+import { openRazorpayCheckout, loadRazorpayScript } from '@/lib/razorpayClient';
 import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_FEE } from '@/lib/priceCalculator';
 import { FREE_GIFTS, TOTAL_FREE_GIFTS_VALUE } from '@/data/freeGifts';
 import CheckoutTrustBadges from './CheckoutTrustBadges';
@@ -137,6 +137,15 @@ export default function CheckoutAddressForm({
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
 
+  // Production Performance Optimizations: Background pre-warmed SDK & pre-order intent
+  const preOrderPromiseRef = useRef<Promise<any> | null>(null);
+  const [cachedOrderData, setCachedOrderData] = useState<any>(null);
+
+  // 1. Production Standard: Pre-warm Razorpay SDK in the background immediately
+  useEffect(() => {
+    loadRazorpayScript().catch(() => {});
+  }, []);
+
   // Delivery fee tracking logic
   const safeCart = Array.isArray(cart) ? cart.filter(Boolean) : [];
   const safeTotalPrice = typeof totalPrice === 'number' && !isNaN(totalPrice) ? totalPrice : 0;
@@ -144,6 +153,7 @@ export default function CheckoutAddressForm({
   const deliveryFee = isFreeShipping ? 0 : STANDARD_SHIPPING_FEE;
   const finalPayable = safeTotalPrice + deliveryFee;
   const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - safeTotalPrice);
+
 
   // Load saved address from localStorage if available
   useEffect(() => {
@@ -258,6 +268,33 @@ export default function CheckoutAddressForm({
     }
 
     setIsConfirmed(true);
+
+    // 2. Production Standard: Silently pre-create Razorpay Order in the background
+    // while user is reviewing the order summary, delivery fee, and free gifts in Step 2.
+    try {
+      preOrderPromiseRef.current = fetch('/api/razorpay/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart,
+          customer: addressPayload,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.success) {
+            setCachedOrderData(data);
+            return data;
+          }
+          return null;
+        })
+        .catch((err) => {
+          console.warn('Pre-order background fetch note:', err);
+          return null;
+        });
+    } catch {
+      // Non-blocking background intent
+    }
   };
 
   const handlePayWithRazorpay = async () => {
@@ -278,31 +315,43 @@ export default function CheckoutAddressForm({
     };
 
     try {
-      // 1. Initiate order creation on server with price verification
-      const res = await fetch('/api/razorpay/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cart,
-          customer: addressPayload,
-        }),
-      });
+      // 1. Check if order was already pre-created in background while user was on Step 2
+      let data = cachedOrderData;
 
-      const data = await res.json();
+      if (!data && preOrderPromiseRef.current) {
+        // Await the in-flight pre-order request
+        data = await preOrderPromiseRef.current;
+      }
 
-      if (!res.ok || !data.success) {
-        if (data.isConfigError) {
+      // If pre-order wasn't ready or failed, fetch on-demand in parallel with SDK ensure
+      if (!data || !data.success) {
+        const [res] = await Promise.all([
+          fetch('/api/razorpay/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: cart,
+              customer: addressPayload,
+            }),
+          }),
+          loadRazorpayScript(),
+        ]);
+        data = await res.json();
+      }
+
+      if (!data || !data.success) {
+        if (data?.isConfigError) {
           setPaymentError(
             'Razorpay Setup Notice: Please configure NEXT_PUBLIC_RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env.local to activate payments.'
           );
         } else {
-          setPaymentError(data.message || 'Failed to initiate checkout order. Please try again.');
+          setPaymentError(data?.message || 'Failed to initiate checkout order. Please try again.');
         }
         setIsProcessingPayment(false);
         return;
       }
 
-      // 2. Open official Razorpay Checkout Modal
+      // 2. Open official Razorpay Checkout Modal (instant because SDK & order are ready)
       await openRazorpayCheckout({
         keyId: data.keyId,
         orderId: data.razorpayOrderId,
@@ -1202,7 +1251,11 @@ export default function CheckoutAddressForm({
 
               <button
                 type="button"
-                onClick={() => setIsConfirmed(false)}
+                onClick={() => {
+                  setIsConfirmed(false);
+                  setCachedOrderData(null);
+                  preOrderPromiseRef.current = null;
+                }}
                 disabled={isProcessingPayment}
                 style={{
                   width: '100%',

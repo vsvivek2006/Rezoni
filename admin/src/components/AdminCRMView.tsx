@@ -8,7 +8,6 @@ import {
   DollarSign,
   Users,
   Star,
-  ShieldCheck,
   RefreshCw,
   Search,
   LogOut,
@@ -29,6 +28,12 @@ import {
   Check,
   Save,
   FileText,
+  MessageSquare,
+  UserCheck,
+  CreditCard,
+  ExternalLink,
+  Inbox,
+  Filter,
 } from 'lucide-react';
 
 interface OrderItem {
@@ -101,6 +106,10 @@ interface AdminMetrics {
   deliveredCount: number;
   averageOrderValue: number;
   totalCustomers: number;
+  totalRegisteredUsers?: number;
+  totalInquiries?: number;
+  unreadInquiries?: number;
+  razorpayCaptured?: number;
   totalReviews: number;
 }
 
@@ -123,10 +132,59 @@ interface Customer {
   ordersCount: number;
   totalSpent: number;
   lastOrder: string;
+  isRegistered?: boolean;
+  registeredAt?: string;
 }
 
+interface ContactInquiry {
+  id: string;
+  ticketId: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject?: string;
+  message: string;
+  status: 'unread' | 'read' | 'replied';
+  createdAt: string;
+  repliedAt?: string;
+}
+
+interface RazorpayData {
+  success: boolean;
+  gateway: {
+    configured: boolean;
+    keyId: string;
+  };
+  balance: {
+    totalCaptured: number;
+    totalCapturedPaise: number;
+    currency: string;
+    totalTransactions: number;
+    capturedCount: number;
+    failedCount: number;
+    successRate: number;
+  };
+  payments: Array<{
+    id: string;
+    amount: number;
+    currency: string;
+    status: string;
+    method: string;
+    email?: string;
+    contact?: string;
+    createdAt: string;
+    upiVpa?: string;
+    cardNetwork?: string;
+    cardLast4?: string;
+    errorDescription?: string;
+    notes?: Record<string, any>;
+  }>;
+}
+
+export type TabKey = 'overview' | 'orders' | 'returns' | 'financials' | 'customers' | 'inquiries' | 'reviews';
+
 interface NavTabItem {
-  id: 'overview' | 'orders' | 'returns' | 'financials' | 'customers' | 'reviews' | 'security';
+  id: TabKey;
   label: string;
   icon: React.ComponentType<{ size?: number; className?: string; color?: string; style?: React.CSSProperties }>;
   badge?: number;
@@ -135,7 +193,7 @@ interface NavTabItem {
 export default function AdminCRMView({
   initialTab = 'overview',
 }: {
-  initialTab?: 'overview' | 'orders' | 'returns' | 'financials' | 'customers' | 'reviews' | 'security';
+  initialTab?: TabKey;
 }) {
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -147,7 +205,7 @@ export default function AdminCRMView({
   const [checkingAuth, setCheckingAuth] = useState<boolean>(true);
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState<'overview' | 'orders' | 'returns' | 'financials' | 'customers' | 'reviews' | 'security'>(initialTab);
+  const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
 
   // Data state
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null);
@@ -155,13 +213,24 @@ export default function AdminCRMView({
   const [returns, setReturns] = useState<ReturnRequest[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [reviews, setReviews] = useState<UserReview[]>([]);
+  const [inquiries, setInquiries] = useState<ContactInquiry[]>([]);
+  const [razorpayData, setRazorpayData] = useState<RazorpayData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // Inquiries filter & view state
+  const [inquiryStatusFilter, setInquiryStatusFilter] = useState<'all' | 'unread' | 'read' | 'replied'>('all');
+  const [inquirySearch, setInquirySearch] = useState<string>('');
+  const [selectedInquiry, setSelectedInquiry] = useState<ContactInquiry | null>(null);
+
+  // Customers filter
+  const [customerTypeFilter, setCustomerTypeFilter] = useState<'all' | 'registered' | 'guest'>('all');
 
   // Search & Filter state
   const [orderSearch, setOrderSearch] = useState<string>('');
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
   const [returnStatusFilter, setReturnStatusFilter] = useState<string>('all');
   const [customerSearch, setCustomerSearch] = useState<string>('');
+
 
   // Selected Order for Detail Drawer / Modal
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -206,7 +275,7 @@ export default function AdminCRMView({
     checkSession();
   }, []);
 
-  const switchTab = (tab: 'overview' | 'orders' | 'returns' | 'financials' | 'customers' | 'reviews' | 'security') => {
+  const switchTab = (tab: TabKey) => {
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
       const targetUrl = tab === 'overview' ? '/' : `/${tab}`;
@@ -252,16 +321,18 @@ export default function AdminCRMView({
     showToast('Logged out of Admin Portal.');
   };
 
-  // Load all CRM datasets
+  // Load all CRM datasets (Real Supabase + Real Razorpay + Real Inquiries)
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      const [statsRes, ordersRes, returnsRes, customersRes, reviewsRes] = await Promise.all([
+      const [statsRes, ordersRes, returnsRes, customersRes, reviewsRes, inquiriesRes, razorpayRes] = await Promise.all([
         fetch('/api/stats'),
         fetch(`/api/orders?status=${orderStatusFilter}&q=${encodeURIComponent(orderSearch)}`),
         fetch(`/api/returns?status=${returnStatusFilter}`),
         fetch('/api/customers'),
         fetch('/api/reviews'),
+        fetch('/api/contact'),
+        fetch('/api/razorpay'),
       ]);
 
       if (statsRes.ok) {
@@ -283,6 +354,14 @@ export default function AdminCRMView({
       if (reviewsRes.ok) {
         const reviewsData = await reviewsRes.json();
         if (reviewsData.success) setReviews(reviewsData.reviews);
+      }
+      if (inquiriesRes.ok) {
+        const inqData = await inquiriesRes.json();
+        if (inqData.success) setInquiries(inqData.inquiries || []);
+      }
+      if (razorpayRes.ok) {
+        const rzpData = await razorpayRes.json();
+        if (rzpData.success) setRazorpayData(rzpData);
       }
     } catch (err) {
       console.error('Failed to load CRM data:', err);
@@ -435,15 +514,111 @@ export default function AdminCRMView({
 
   // Filtered customers with memoization
   const filteredCustomers = useMemo(() => {
-    if (!customerSearch.trim()) return customers;
+    let list = customers;
+    if (customerTypeFilter === 'registered') {
+      list = list.filter((c) => c.isRegistered);
+    } else if (customerTypeFilter === 'guest') {
+      list = list.filter((c) => !c.isRegistered);
+    }
+    if (!customerSearch.trim()) return list;
     const q = customerSearch.toLowerCase();
-    return customers.filter(
+    return list.filter(
       (c) =>
         c.name.toLowerCase().includes(q) ||
         c.email.toLowerCase().includes(q) ||
         c.phone.includes(q)
     );
-  }, [customers, customerSearch]);
+  }, [customers, customerSearch, customerTypeFilter]);
+
+  const registeredCustomersCount = useMemo(() => {
+    return customers.filter((c) => c.isRegistered).length;
+  }, [customers]);
+
+  const guestCustomersCount = useMemo(() => {
+    return customers.filter((c) => !c.isRegistered).length;
+  }, [customers]);
+
+  const unreadInquiriesCount = useMemo(() => {
+    return inquiries.filter((i) => i.status === 'unread').length;
+  }, [inquiries]);
+
+  const filteredInquiries = useMemo(() => {
+    let list = inquiries;
+    if (inquiryStatusFilter !== 'all') {
+      list = list.filter((i) => i.status === inquiryStatusFilter);
+    }
+    if (!inquirySearch.trim()) return list;
+    const q = inquirySearch.toLowerCase();
+    return list.filter(
+      (i) =>
+        i.name.toLowerCase().includes(q) ||
+        i.email.toLowerCase().includes(q) ||
+        (i.phone && i.phone.includes(q)) ||
+        (i.subject && i.subject.toLowerCase().includes(q)) ||
+        i.message.toLowerCase().includes(q) ||
+        i.ticketId.toLowerCase().includes(q)
+    );
+  }, [inquiries, inquiryStatusFilter, inquirySearch]);
+
+  const handleUpdateInquiryStatus = async (inquiryId: string, status: 'read' | 'replied') => {
+    setInquiries((prev) =>
+      prev.map((inq) =>
+        inq.id === inquiryId
+          ? { ...inq, status, repliedAt: status === 'replied' ? new Date().toISOString() : inq.repliedAt }
+          : inq
+      )
+    );
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: inquiryId, status }),
+      });
+      if (res.ok) {
+        showToast(`✓ Ticket marked as ${status}`);
+        fetch('/api/stats')
+          .then((r) => r.json())
+          .then((st) => st.success && setMetrics(st.metrics))
+          .catch(() => {});
+      }
+    } catch (e) {
+      console.error('Failed to update inquiry status:', e);
+    }
+  };
+
+  // Skeleton Loaders for optimized UX
+  const TableSkeleton = ({ rows = 5, cols = 6 }: { rows?: number; cols?: number }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px' }}>
+      {Array.from({ length: rows }).map((_, rIdx) => (
+        <div key={rIdx} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          {Array.from({ length: cols }).map((_, cIdx) => (
+            <div
+              key={cIdx}
+              className="skeleton"
+              style={{
+                height: '22px',
+                flex: cIdx === 0 ? 0.8 : cIdx === 1 ? 1.4 : 1,
+                borderRadius: '6px',
+              }}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+
+  const MetricSkeletonGrid = () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '22px' }}>
+      {Array.from({ length: 6 }).map((_, idx) => (
+        <div key={idx} className="shadcn-card" style={{ padding: '20px' }}>
+          <div className="skeleton" style={{ width: '40%', height: '14px', marginBottom: '12px' }} />
+          <div className="skeleton" style={{ width: '70%', height: '28px', marginBottom: '8px' }} />
+          <div className="skeleton" style={{ width: '50%', height: '12px' }} />
+        </div>
+      ))}
+    </div>
+  );
+
 
   if (checkingAuth) {
     return (
@@ -607,7 +782,7 @@ export default function AdminCRMView({
           </form>
 
           <div style={{ marginTop: '22px', textAlign: 'center', fontSize: '11px', color: '#71717a', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-            <ShieldCheck size={14} color="#10b981" />
+            <CheckCircle2 size={14} color="#10b981" />
             <span>Protected Subdomain • SSL Encrypted Session</span>
           </div>
         </div>
@@ -615,16 +790,17 @@ export default function AdminCRMView({
     );
   }
 
-  // Navigation Items
+  // Navigation Items (Settings & Security removed per user request; Inquiries added)
   const navTabs: NavTabItem[] = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'orders', label: 'Orders', icon: Package, badge: orders.length },
     { id: 'returns', label: 'Returns', icon: RotateCcw, badge: returns.length },
     { id: 'financials', label: 'Financials', icon: DollarSign },
     { id: 'customers', label: 'Customers', icon: Users, badge: customers.length },
+    { id: 'inquiries', label: 'Inquiries', icon: MessageSquare, badge: unreadInquiriesCount > 0 ? unreadInquiriesCount : undefined },
     { id: 'reviews', label: 'Reviews', icon: Star, badge: reviews.length },
-    { id: 'security', label: 'Security', icon: ShieldCheck },
   ];
+
 
   // ================= AUTHENTICATED EXECUTIVE SHADCN DASHBOARD =================
   return (
@@ -827,14 +1003,14 @@ export default function AdminCRMView({
                 {activeTab === 'overview' && 'Executive Dashboard'}
                 {activeTab === 'orders' && 'Orders Fulfillment & Tracking'}
                 {activeTab === 'returns' && 'Returns & Warranty Claims'}
-                {activeTab === 'financials' && 'Financial Analytics'}
+                {activeTab === 'financials' && 'Financials & Razorpay Gateway'}
                 {activeTab === 'customers' && 'Customer Directory'}
+                {activeTab === 'inquiries' && 'Contact Inquiries & Submissions'}
                 {activeTab === 'reviews' && 'Reviews Moderation'}
-                {activeTab === 'security' && 'Security & Status'}
               </h1>
             </div>
             <p style={{ fontSize: '12px', color: 'var(--muted-foreground)', marginTop: '3px' }}>
-              Real-time telemetry • Direct Supabase sync at admin.rezoni.shop
+              Real-time telemetry • Direct Supabase & Razorpay API sync at admin.rezoni.shop
             </p>
           </div>
           <button
@@ -851,73 +1027,111 @@ export default function AdminCRMView({
         {/* TAB 1: OVERVIEW */}
         {activeTab === 'overview' && (
           <div>
-            {/* KPI Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '22px' }}>
-              {/* Card 1 */}
-              <div className="shadcn-card">
-                <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span className="shadcn-card-title">Gross Revenue</span>
-                  <DollarSign size={16} color="#ff6700" />
-                </div>
-                <div className="shadcn-card-content">
-                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
-                    ₹{(metrics?.totalRevenue || 0).toLocaleString()}
+            {loading ? (
+              <MetricSkeletonGrid />
+            ) : (
+              /* KPI Cards */
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '14px', marginBottom: '22px' }}>
+                {/* Card 1: Gross Sales */}
+                <div className="shadcn-card">
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Gross Revenue</span>
+                    <DollarSign size={16} color="#ff6700" />
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#10b981', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <TrendingUp size={12} />
-                    <span>Net: ₹{(metrics?.netRevenue || 0).toLocaleString()}</span>
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
+                      ₹{(metrics?.totalRevenue || 0).toLocaleString()}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#10b981', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <TrendingUp size={12} />
+                      <span>Net: ₹{(metrics?.netRevenue || 0).toLocaleString()}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Card 2 */}
-              <div className="shadcn-card">
-                <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span className="shadcn-card-title">Total Orders</span>
-                  <Package size={16} color="#38bdf8" />
-                </div>
-                <div className="shadcn-card-content">
-                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
-                    {metrics?.totalOrders || 0}
+                {/* Card 2: Razorpay Live Captured */}
+                <div className="shadcn-card" style={{ borderColor: 'rgba(56, 189, 248, 0.25)' }}>
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Razorpay Captured</span>
+                    <CreditCard size={16} color="#38bdf8" />
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#fbbf24', marginTop: '4px' }}>
-                    {metrics?.pendingDispatches || 0} pending dispatch
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#38bdf8' }}>
+                      ₹{((razorpayData?.balance?.totalCaptured !== undefined ? razorpayData.balance.totalCaptured : (metrics?.razorpayCaptured || 0))).toLocaleString()}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#a1a1aa', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span className="shadcn-badge shadcn-badge-success" style={{ fontSize: '9.5px', padding: '1px 5px' }}>LIVE</span>
+                      <span>{razorpayData?.balance?.capturedCount || 0} captured txn</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Card 3 */}
-              <div className="shadcn-card">
-                <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span className="shadcn-card-title">Returns & Claims</span>
-                  <RotateCcw size={16} color="#f87171" />
-                </div>
-                <div className="shadcn-card-content">
-                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
-                    {metrics?.totalReturns || 0}
+                {/* Card 3: Total Orders */}
+                <div className="shadcn-card">
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Total Orders</span>
+                    <Package size={16} color="#fbbf24" />
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#f87171', marginTop: '4px' }}>
-                    ₹{(metrics?.totalRefunded || 0).toLocaleString()} refunded
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
+                      {metrics?.totalOrders || 0}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#fbbf24', marginTop: '4px' }}>
+                      {metrics?.pendingDispatches || 0} pending dispatch
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Card 4 */}
-              <div className="shadcn-card">
-                <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span className="shadcn-card-title">Avg Order Value</span>
-                  <ArrowUpRight size={16} color="#c084fc" />
-                </div>
-                <div className="shadcn-card-content">
-                  <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
-                    ₹{(metrics?.averageOrderValue || 0).toLocaleString()}
+                {/* Card 4: Registered Users */}
+                <div className="shadcn-card" style={{ borderColor: 'rgba(16, 185, 129, 0.25)' }}>
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Registered Users</span>
+                    <UserCheck size={16} color="#10b981" />
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#a1a1aa', marginTop: '4px' }}>
-                    {metrics?.totalCustomers || 0} total customers
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#34d399' }}>
+                      {metrics?.totalRegisteredUsers !== undefined ? metrics.totalRegisteredUsers : registeredCustomersCount}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#a1a1aa', marginTop: '4px' }}>
+                      Supabase customer accounts
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 5: Contact Inquiries */}
+                <div className="shadcn-card" style={{ borderColor: unreadInquiriesCount > 0 ? 'rgba(245, 158, 11, 0.4)' : undefined }}>
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Contact Inquiries</span>
+                    <MessageSquare size={16} color="#f472b6" />
+                  </div>
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
+                      {inquiries.length}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: unreadInquiriesCount > 0 ? '#fbbf24' : '#10b981', marginTop: '4px' }}>
+                      {unreadInquiriesCount > 0 ? `${unreadInquiriesCount} unread message(s)` : 'All inquiries addressed'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 6: Claims & Returns */}
+                <div className="shadcn-card">
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Returns & Claims</span>
+                    <RotateCcw size={16} color="#f87171" />
+                  </div>
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
+                      {metrics?.totalReturns || 0}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#f87171', marginTop: '4px' }}>
+                      ₹{(metrics?.totalRefunded || 0).toLocaleString()} refunded
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
+
 
             {/* Pipeline progress */}
             <div className="shadcn-card" style={{ marginBottom: '22px' }}>
@@ -1219,51 +1433,205 @@ export default function AdminCRMView({
           </div>
         )}
 
-        {/* TAB 4: FINANCIALS */}
+        {/* TAB 4: FINANCIALS & RAZORPAY GATEWAY */}
         {activeTab === 'financials' && (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px', marginBottom: '22px' }}>
-              <div className="shadcn-card">
-                <div className="shadcn-card-header">
-                  <span className="shadcn-card-title">Gross Payments Received</span>
-                </div>
-                <div className="shadcn-card-content">
-                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#ffffff' }}>
-                    ₹{(metrics?.totalRevenue || 0).toLocaleString()}
+            {loading ? (
+              <MetricSkeletonGrid />
+            ) : (
+              /* Revenue & Gateway Balance Overview */
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '22px' }}>
+                <div className="shadcn-card" style={{ borderColor: 'rgba(56, 189, 248, 0.3)' }}>
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Razorpay Captured Balance</span>
+                    <CreditCard size={16} color="#38bdf8" />
                   </div>
-                  <div style={{ fontSize: '12px', color: '#10b981', marginTop: '6px' }}>
-                    100% via Razorpay & Online Prepaid
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '24px', fontWeight: 800, color: '#38bdf8' }}>
+                      ₹{((razorpayData?.balance?.totalCaptured !== undefined ? razorpayData.balance.totalCaptured : (metrics?.razorpayCaptured || 0))).toLocaleString()}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#10b981', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span className="shadcn-badge shadcn-badge-success" style={{ fontSize: '9px', padding: '1px 5px' }}>LIVE API</span>
+                      <span>{razorpayData?.balance?.capturedCount || 0} captured payments</span>
+                    </div>
                   </div>
                 </div>
+
+                <div className="shadcn-card">
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Gross Orders Revenue</span>
+                    <DollarSign size={16} color="#ff6700" />
+                  </div>
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '24px', fontWeight: 800, color: '#ffffff' }}>
+                      ₹{(metrics?.totalRevenue || 0).toLocaleString()}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#a1a1aa', marginTop: '4px' }}>
+                      All prepaid online checkouts
+                    </div>
+                  </div>
+                </div>
+
+                <div className="shadcn-card">
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Refund Deductions</span>
+                    <RotateCcw size={16} color="#f87171" />
+                  </div>
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '24px', fontWeight: 800, color: '#f87171' }}>
+                      -₹{(metrics?.totalRefunded || 0).toLocaleString()}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#71717a', marginTop: '4px' }}>
+                      {metrics?.totalReturns || 0} warranty claim(s) settled
+                    </div>
+                  </div>
+                </div>
+
+                <div className="shadcn-card">
+                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="shadcn-card-title">Net Store Balance</span>
+                    <TrendingUp size={16} color="#10b981" />
+                  </div>
+                  <div className="shadcn-card-content">
+                    <div style={{ fontSize: '24px', fontWeight: 800, color: '#10b981' }}>
+                      ₹{(metrics?.netRevenue || 0).toLocaleString()}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#c084fc', marginTop: '4px' }}>
+                      Realized net revenue
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Gateway Telemetry Banner */}
+            <div className="shadcn-card" style={{ marginBottom: '20px', padding: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '8px', backgroundColor: 'rgba(56, 189, 248, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <CreditCard size={18} color="#38bdf8" />
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 700, color: '#fafafa' }}>Razorpay Payment Gateway</span>
+                      <span className="shadcn-badge shadcn-badge-success" style={{ fontSize: '10px' }}>Connected</span>
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#a1a1aa', marginTop: '2px' }}>
+                      Key ID: <span style={{ fontFamily: 'monospace', color: '#ff6700' }}>{razorpayData?.gateway?.keyId || 'rzp_live_ToZAuEOwENq9Ka'}</span> • INR Currency
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '11px', color: '#71717a', textTransform: 'uppercase', fontWeight: 600 }}>Success Rate</div>
+                    <div style={{ fontSize: '16px', fontWeight: 800, color: '#10b981' }}>
+                      {razorpayData?.balance?.successRate ?? 100}%
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '11px', color: '#71717a', textTransform: 'uppercase', fontWeight: 600 }}>Total Attempts</div>
+                    <div style={{ fontSize: '16px', fontWeight: 800, color: '#fafafa' }}>
+                      {razorpayData?.balance?.totalTransactions || 0}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Razorpay Transactions Table */}
+            <div className="shadcn-card">
+              <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#fafafa' }}>
+                    Live Razorpay Transactions
+                  </h2>
+                  <p style={{ fontSize: '11.5px', color: 'var(--muted-foreground)' }}>
+                    Direct transaction telemetry from Razorpay API
+                  </p>
+                </div>
+                <span className="shadcn-badge shadcn-badge-info" style={{ fontSize: '10.5px' }}>
+                  {razorpayData?.payments?.length || 0} Records
+                </span>
               </div>
 
-              <div className="shadcn-card">
-                <div className="shadcn-card-header">
-                  <span className="shadcn-card-title">Refund Deductions</span>
+              {loading ? (
+                <TableSkeleton rows={4} cols={6} />
+              ) : (
+                <div className="shadcn-table-wrapper" style={{ border: 'none', borderRadius: 0 }}>
+                  <table className="shadcn-table">
+                    <thead>
+                      <tr>
+                        <th>Payment ID</th>
+                        <th>Customer / Contact</th>
+                        <th>Payment Method</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Timestamp</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(razorpayData?.payments || []).map((p) => (
+                        <tr key={p.id}>
+                          <td style={{ fontFamily: 'monospace', fontWeight: 700, color: '#38bdf8' }}>
+                            {p.id}
+                          </td>
+                          <td>
+                            <div style={{ fontWeight: 600, fontSize: '12.5px' }}>{p.email || 'Customer'}</div>
+                            {p.contact && (
+                              <div style={{ fontSize: '11px', color: '#a1a1aa' }}>{p.contact}</div>
+                            )}
+                          </td>
+                          <td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <span style={{ textTransform: 'uppercase', fontSize: '11px', fontWeight: 700, color: '#fbbf24' }}>
+                                {p.method}
+                              </span>
+                              {p.upiVpa && (
+                                <span style={{ fontSize: '11px', color: '#a1a1aa' }}>({p.upiVpa})</span>
+                              )}
+                              {p.cardNetwork && (
+                                <span style={{ fontSize: '11px', color: '#a1a1aa' }}>({p.cardNetwork} •••• {p.cardLast4})</span>
+                              )}
+                            </div>
+                          </td>
+                          <td style={{ fontWeight: 700, color: p.status === 'captured' ? '#10b981' : '#f87171' }}>
+                            ₹{p.amount.toLocaleString()}
+                          </td>
+                          <td>
+                            <span
+                              className={`shadcn-badge ${
+                                p.status === 'captured' ? 'shadcn-badge-success' :
+                                p.status === 'failed' ? 'shadcn-badge-destructive' : 'shadcn-badge-warning'
+                              }`}
+                            >
+                              {p.status}
+                            </span>
+                            {p.errorDescription && (
+                              <div style={{ fontSize: '10px', color: '#f87171', marginTop: '2px', maxWidth: '200px' }}>
+                                {p.errorDescription}
+                              </div>
+                            )}
+                          </td>
+                          <td style={{ color: '#a1a1aa', fontSize: '11.5px' }}>
+                            {new Date(p.createdAt).toLocaleString('en-IN', {
+                              dateStyle: 'short',
+                              timeStyle: 'short',
+                            })}
+                          </td>
+                        </tr>
+                      ))}
+                      {(!razorpayData?.payments || razorpayData.payments.length === 0) && (
+                        <tr>
+                          <td colSpan={6} style={{ textAlign: 'center', color: '#71717a', padding: '32px' }}>
+                            No Razorpay transactions found.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
-                <div className="shadcn-card-content">
-                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#f87171' }}>
-                    -₹{(metrics?.totalRefunded || 0).toLocaleString()}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#71717a', marginTop: '6px' }}>
-                    Claims QC settled
-                  </div>
-                </div>
-              </div>
-
-              <div className="shadcn-card">
-                <div className="shadcn-card-header">
-                  <span className="shadcn-card-title">Net Revenue Balance</span>
-                </div>
-                <div className="shadcn-card-content">
-                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#10b981' }}>
-                    ₹{(metrics?.netRevenue || 0).toLocaleString()}
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#c084fc', marginTop: '6px' }}>
-                    After warranty adjustments
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         )}
@@ -1271,53 +1639,133 @@ export default function AdminCRMView({
         {/* TAB 5: CUSTOMER DIRECTORY */}
         {activeTab === 'customers' && (
           <div>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
-              <div style={{ position: 'relative', flex: 1, maxWidth: '360px' }}>
-                <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#71717a' }} />
+            {/* Registered Users Overview Metric Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+              <div className="shadcn-card" style={{ padding: '14px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', textTransform: 'uppercase', fontWeight: 600 }}>Total Customers</div>
+                <div style={{ fontSize: '20px', fontWeight: 800, marginTop: '2px', color: '#ffffff' }}>
+                  {customers.length}
+                </div>
+              </div>
+
+              <div className="shadcn-card" style={{ padding: '14px', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
+                <div style={{ fontSize: '11px', color: '#34d399', textTransform: 'uppercase', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <UserCheck size={13} />
+                  <span>Registered Users</span>
+                </div>
+                <div style={{ fontSize: '20px', fontWeight: 800, marginTop: '2px', color: '#34d399' }}>
+                  {metrics?.totalRegisteredUsers !== undefined ? metrics.totalRegisteredUsers : registeredCustomersCount}
+                </div>
+                <div style={{ fontSize: '10.5px', color: '#a1a1aa', marginTop: '2px' }}>
+                  Supabase auth accounts
+                </div>
+              </div>
+
+              <div className="shadcn-card" style={{ padding: '14px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', textTransform: 'uppercase', fontWeight: 600 }}>Guest Shoppers</div>
+                <div style={{ fontSize: '20px', fontWeight: 800, marginTop: '2px', color: '#a1a1aa' }}>
+                  {guestCustomersCount}
+                </div>
+                <div style={{ fontSize: '10.5px', color: '#71717a', marginTop: '2px' }}>
+                  Prepaid direct orders
+                </div>
+              </div>
+            </div>
+
+            {/* Filter buttons & Search */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '2px' }}>
+                <button
+                  onClick={() => setCustomerTypeFilter('all')}
+                  className={`shadcn-btn ${customerTypeFilter === 'all' ? 'shadcn-btn-primary' : 'shadcn-btn-outline'}`}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                >
+                  All ({customers.length})
+                </button>
+                <button
+                  onClick={() => setCustomerTypeFilter('registered')}
+                  className={`shadcn-btn ${customerTypeFilter === 'registered' ? 'shadcn-btn-accent' : 'shadcn-btn-outline'}`}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                >
+                  <UserCheck size={13} />
+                  <span>Registered ({metrics?.totalRegisteredUsers !== undefined ? metrics.totalRegisteredUsers : registeredCustomersCount})</span>
+                </button>
+                <button
+                  onClick={() => setCustomerTypeFilter('guest')}
+                  className={`shadcn-btn ${customerTypeFilter === 'guest' ? 'shadcn-btn-secondary' : 'shadcn-btn-outline'}`}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                >
+                  Guests ({guestCustomersCount})
+                </button>
+              </div>
+
+              <div style={{ position: 'relative', flex: 1, minWidth: '220px', maxWidth: '360px' }}>
+                <Search size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#71717a' }} />
                 <input
                   type="text"
                   placeholder="Search customer by name, email, phone..."
                   value={customerSearch}
                   onChange={(e) => setCustomerSearch(e.target.value)}
                   className="shadcn-input"
-                  style={{ paddingLeft: '34px' }}
+                  style={{ paddingLeft: '32px', fontSize: '12.5px' }}
                 />
               </div>
             </div>
 
-            <div className="shadcn-table-wrapper">
-              <table className="shadcn-table">
-                <thead>
-                  <tr>
-                    <th>Customer Name</th>
-                    <th>Email Address</th>
-                    <th>Phone</th>
-                    <th>Orders</th>
-                    <th>Lifetime Value</th>
-                    <th>Last Order</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredCustomers.map((c, i) => (
-                    <tr key={i}>
-                      <td style={{ fontWeight: 600 }}>{c.name}</td>
-                      <td style={{ color: '#38bdf8' }}>{c.email}</td>
-                      <td style={{ color: '#a1a1aa' }}>{c.phone || 'On file'}</td>
-                      <td style={{ fontWeight: 700 }}>{c.ordersCount} orders</td>
-                      <td style={{ fontWeight: 700, color: '#10b981' }}>₹{c.totalSpent.toLocaleString()}</td>
-                      <td style={{ color: '#a1a1aa' }}>{c.lastOrder}</td>
-                    </tr>
-                  ))}
-                  {filteredCustomers.length === 0 && (
+            {loading ? (
+              <TableSkeleton rows={5} cols={7} />
+            ) : (
+              <div className="shadcn-table-wrapper">
+                <table className="shadcn-table">
+                  <thead>
                     <tr>
-                      <td colSpan={6} style={{ textAlign: 'center', color: '#71717a', padding: '32px' }}>
-                        No customers match search query.
-                      </td>
+                      <th>Customer Name</th>
+                      <th>Account Status</th>
+                      <th>Email Address</th>
+                      <th>Phone</th>
+                      <th>Orders</th>
+                      <th>Lifetime Spent</th>
+                      <th>Activity Date</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filteredCustomers.map((c, i) => (
+                      <tr key={i}>
+                        <td style={{ fontWeight: 600 }}>{c.name}</td>
+                        <td>
+                          {c.isRegistered ? (
+                            <span className="shadcn-badge shadcn-badge-success" style={{ fontSize: '10px' }}>
+                              <UserCheck size={11} />
+                              <span>Registered</span>
+                            </span>
+                          ) : (
+                            <span className="shadcn-badge shadcn-badge-neutral" style={{ fontSize: '10px' }}>
+                              Guest
+                            </span>
+                          )}
+                        </td>
+                        <td style={{ color: '#38bdf8' }}>{c.email}</td>
+                        <td style={{ color: '#a1a1aa' }}>{c.phone || 'On file'}</td>
+                        <td style={{ fontWeight: 700 }}>{c.ordersCount} orders</td>
+                        <td style={{ fontWeight: 700, color: '#10b981' }}>₹{c.totalSpent.toLocaleString()}</td>
+                        <td style={{ color: '#a1a1aa', fontSize: '11.5px' }}>
+                          {c.registeredAt
+                            ? `Joined ${new Date(c.registeredAt).toLocaleDateString('en-IN')}`
+                            : c.lastOrder || 'Active'}
+                        </td>
+                      </tr>
+                    ))}
+                    {filteredCustomers.length === 0 && (
+                      <tr>
+                        <td colSpan={7} style={{ textAlign: 'center', color: '#71717a', padding: '32px' }}>
+                          No customers match current filter or search query.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
 
@@ -1356,46 +1804,212 @@ export default function AdminCRMView({
           </div>
         )}
 
-        {/* TAB 7: SECURITY & SYSTEM */}
-        {activeTab === 'security' && (
+        {/* TAB 7: CONTACT INQUIRIES & MESSAGES */}
+        {activeTab === 'inquiries' && (
           <div>
-            <div className="shadcn-card" style={{ maxWidth: '640px' }}>
-              <div className="shadcn-card-header">
-                <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#fafafa' }}>
-                  Deployment & Infrastructure Isolation
-                </h2>
+            {/* Inquiries Summary Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+              <div className="shadcn-card" style={{ padding: '14px' }}>
+                <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', textTransform: 'uppercase', fontWeight: 600 }}>Total Inquiries</div>
+                <div style={{ fontSize: '20px', fontWeight: 800, marginTop: '2px', color: '#ffffff' }}>
+                  {inquiries.length}
+                </div>
+                <div style={{ fontSize: '10.5px', color: '#a1a1aa', marginTop: '2px' }}>
+                  Storefront contact submissions
+                </div>
               </div>
-              <div className="shadcn-card-content" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: '#0d0d10', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '12.5px', color: '#a1a1aa' }}>Host Target</span>
-                  <span style={{ fontWeight: 700, color: '#ff6700', fontSize: '12.5px' }}>admin.rezoni.shop</span>
+
+              <div className="shadcn-card" style={{ padding: '14px', borderColor: unreadInquiriesCount > 0 ? 'rgba(245, 158, 11, 0.4)' : undefined }}>
+                <div style={{ fontSize: '11px', color: '#fbbf24', textTransform: 'uppercase', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Inbox size={13} />
+                  <span>Unread Inquiries</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: '#0d0d10', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '12.5px', color: '#a1a1aa' }}>Main Storefront</span>
-                  <span style={{ fontWeight: 700, color: '#38bdf8', fontSize: '12.5px' }}>rezoni.shop</span>
+                <div style={{ fontSize: '20px', fontWeight: 800, marginTop: '2px', color: '#fbbf24' }}>
+                  {unreadInquiriesCount}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: '#0d0d10', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '12.5px', color: '#a1a1aa' }}>Database Engine</span>
-                  <span className="shadcn-badge shadcn-badge-success" style={{ fontSize: '11px' }}>
-                    Supabase PostgreSQL (Connected)
-                  </span>
+                <div style={{ fontSize: '10.5px', color: '#a1a1aa', marginTop: '2px' }}>
+                  Requires admin response
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: '#0d0d10', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '12.5px', color: '#a1a1aa' }}>Authentication Protocol</span>
-                  <span className="shadcn-badge shadcn-badge-purple" style={{ fontSize: '11px' }}>
-                    HMAC Timing-Safe Cookie
-                  </span>
+              </div>
+
+              <div className="shadcn-card" style={{ padding: '14px', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
+                <div style={{ fontSize: '11px', color: '#34d399', textTransform: 'uppercase', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <CheckCircle2 size={13} />
+                  <span>Replied / Resolved</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', backgroundColor: '#0d0d10', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                  <span style={{ fontSize: '12.5px', color: '#a1a1aa' }}>Client Secret Exposure</span>
-                  <span className="shadcn-badge shadcn-badge-success" style={{ fontSize: '11px' }}>
-                    0% (Fully Server Isolated)
-                  </span>
+                <div style={{ fontSize: '20px', fontWeight: 800, marginTop: '2px', color: '#34d399' }}>
+                  {inquiries.filter((i) => i.status === 'replied').length}
+                </div>
+                <div style={{ fontSize: '10.5px', color: '#a1a1aa', marginTop: '2px' }}>
+                  Successfully addressed
                 </div>
               </div>
             </div>
+
+            {/* Inquiries Filters & Search */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '2px' }}>
+                <button
+                  onClick={() => setInquiryStatusFilter('all')}
+                  className={`shadcn-btn ${inquiryStatusFilter === 'all' ? 'shadcn-btn-primary' : 'shadcn-btn-outline'}`}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                >
+                  All ({inquiries.length})
+                </button>
+                <button
+                  onClick={() => setInquiryStatusFilter('unread')}
+                  className={`shadcn-btn ${inquiryStatusFilter === 'unread' ? 'shadcn-btn-accent' : 'shadcn-btn-outline'}`}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                >
+                  Unread ({unreadInquiriesCount})
+                </button>
+                <button
+                  onClick={() => setInquiryStatusFilter('read')}
+                  className={`shadcn-btn ${inquiryStatusFilter === 'read' ? 'shadcn-btn-secondary' : 'shadcn-btn-outline'}`}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                >
+                  Read ({inquiries.filter((i) => i.status === 'read').length})
+                </button>
+                <button
+                  onClick={() => setInquiryStatusFilter('replied')}
+                  className={`shadcn-btn ${inquiryStatusFilter === 'replied' ? 'shadcn-btn-secondary' : 'shadcn-btn-outline'}`}
+                  style={{ padding: '6px 12px', fontSize: '12px' }}
+                >
+                  Replied ({inquiries.filter((i) => i.status === 'replied').length})
+                </button>
+              </div>
+
+              <div style={{ position: 'relative', flex: 1, minWidth: '220px', maxWidth: '360px' }}>
+                <Search size={14} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#71717a' }} />
+                <input
+                  type="text"
+                  placeholder="Search inquiries by ticket, name, email, or message..."
+                  value={inquirySearch}
+                  onChange={(e) => setInquirySearch(e.target.value)}
+                  className="shadcn-input"
+                  style={{ paddingLeft: '32px', fontSize: '12.5px' }}
+                />
+              </div>
+            </div>
+
+            {loading ? (
+              <TableSkeleton rows={5} cols={6} />
+            ) : (
+              <div className="shadcn-table-wrapper">
+                <table className="shadcn-table">
+                  <thead>
+                    <tr>
+                      <th>Ticket ID</th>
+                      <th>Customer</th>
+                      <th>Subject & Message</th>
+                      <th>Received</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredInquiries.map((inq) => (
+                      <tr key={inq.id}>
+                        <td style={{ fontFamily: 'monospace', fontWeight: 700, color: '#ff6700' }}>
+                          {inq.ticketId || inq.id.slice(0, 8)}
+                        </td>
+                        <td>
+                          <div style={{ fontWeight: 600, fontSize: '12.5px' }}>{inq.name}</div>
+                          <div style={{ fontSize: '11px', color: '#38bdf8' }}>{inq.email}</div>
+                          {inq.phone && (
+                            <div style={{ fontSize: '11px', color: '#a1a1aa' }}>{inq.phone}</div>
+                          )}
+                        </td>
+                        <td style={{ maxWidth: '340px' }}>
+                          {inq.subject && (
+                            <div style={{ fontWeight: 600, fontSize: '12px', color: '#fafafa', marginBottom: '2px' }}>
+                              {inq.subject}
+                            </div>
+                          )}
+                          <div
+                            style={{
+                              fontSize: '11.5px',
+                              color: '#a1a1aa',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {inq.message}
+                          </div>
+                        </td>
+                        <td style={{ color: '#a1a1aa', fontSize: '11.5px', whiteSpace: 'nowrap' }}>
+                          {new Date(inq.createdAt).toLocaleString('en-IN', {
+                            dateStyle: 'short',
+                            timeStyle: 'short',
+                          })}
+                        </td>
+                        <td>
+                          <span
+                            className={`shadcn-badge ${
+                              inq.status === 'replied' ? 'shadcn-badge-success' :
+                              inq.status === 'read' ? 'shadcn-badge-info' : 'shadcn-badge-warning'
+                            }`}
+                          >
+                            {inq.status}
+                          </span>
+                        </td>
+                        <td>
+                          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                            <button
+                              onClick={() => {
+                                setSelectedInquiry(inq);
+                                if (inq.status === 'unread') {
+                                  handleUpdateInquiryStatus(inq.id, 'read');
+                                }
+                              }}
+                              className="shadcn-btn shadcn-btn-ghost"
+                              style={{ padding: '4px 8px', fontSize: '11.5px' }}
+                            >
+                              <Eye size={13} />
+                              <span>View</span>
+                            </button>
+
+                            {inq.status !== 'replied' && (
+                              <button
+                                onClick={() => handleUpdateInquiryStatus(inq.id, 'replied')}
+                                className="shadcn-btn shadcn-btn-secondary"
+                                style={{ padding: '4px 8px', fontSize: '11.5px', color: '#34d399' }}
+                                title="Mark as Replied"
+                              >
+                                <Check size={12} />
+                                <span>Replied</span>
+                              </button>
+                            )}
+
+                            <a
+                              href={`mailto:${inq.email}?subject=Re: ${encodeURIComponent(inq.subject || 'Your inquiry at Rezoni')}`}
+                              className="shadcn-btn shadcn-btn-outline"
+                              style={{ padding: '4px 8px', fontSize: '11.5px', color: '#38bdf8', textDecoration: 'none' }}
+                              target="_blank"
+                              rel="noreferrer"
+                              title="Email Customer"
+                            >
+                              <Mail size={12} />
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {filteredInquiries.length === 0 && (
+                      <tr>
+                        <td colSpan={6} style={{ textAlign: 'center', color: '#71717a', padding: '32px' }}>
+                          No contact inquiries found.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
+
       </main>
 
       {/* ORDER DETAIL & LOGISTICS MANAGEMENT MODAL */}
@@ -1613,6 +2227,150 @@ export default function AdminCRMView({
               >
                 Close
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* INQUIRY DETAIL MODAL */}
+
+      {selectedInquiry && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '16px',
+          }}
+          onClick={() => setSelectedInquiry(null)}
+        >
+          <div
+            className="shadcn-card"
+            style={{
+              width: '100%',
+              maxWidth: '560px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              backgroundColor: '#121215',
+              border: '1px solid var(--border)',
+              padding: '24px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', textTransform: 'uppercase', fontWeight: 600 }}>
+                  Customer Support Ticket
+                </div>
+                <div style={{ fontSize: '18px', fontWeight: 800, color: '#ff6700' }}>
+                  {selectedInquiry.ticketId || selectedInquiry.id}
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedInquiry(null)}
+                className="shadcn-btn shadcn-btn-ghost"
+                style={{ padding: '6px' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Customer Info */}
+            <div style={{ backgroundColor: '#0d0d10', borderRadius: '8px', padding: '14px', marginBottom: '16px', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '14px', fontWeight: 700, marginBottom: '6px', color: '#fafafa' }}>
+                {selectedInquiry.name}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: '#a1a1aa' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Mail size={13} color="#38bdf8" />
+                  <span>{selectedInquiry.email}</span>
+                </div>
+                {selectedInquiry.phone && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Phone size={13} color="#34d399" />
+                    <span>{selectedInquiry.phone}</span>
+                  </div>
+                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                  <Clock size={13} color="#fbbf24" />
+                  <span>Received on {new Date(selectedInquiry.createdAt).toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Message Content */}
+            <div style={{ marginBottom: '16px' }}>
+              {selectedInquiry.subject && (
+                <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#fafafa', marginBottom: '8px' }}>
+                  Subject: {selectedInquiry.subject}
+                </div>
+              )}
+              <div style={{ fontSize: '11.5px', color: 'var(--muted-foreground)', textTransform: 'uppercase', fontWeight: 600, marginBottom: '6px' }}>
+                Customer Inquiry Message:
+              </div>
+              <div
+                style={{
+                  backgroundColor: '#0d0d10',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  padding: '14px',
+                  fontSize: '13px',
+                  lineHeight: '1.6',
+                  color: '#e4e4e7',
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                {selectedInquiry.message}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', paddingTop: '12px', borderTop: '1px solid var(--border)', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {selectedInquiry.status !== 'replied' ? (
+                  <button
+                    onClick={() => {
+                      handleUpdateInquiryStatus(selectedInquiry.id, 'replied');
+                      setSelectedInquiry((prev) => (prev ? { ...prev, status: 'replied' } : null));
+                    }}
+                    className="shadcn-btn shadcn-btn-primary"
+                    style={{ fontSize: '12px', padding: '6px 12px' }}
+                  >
+                    <Check size={13} />
+                    <span>Mark as Replied</span>
+                  </button>
+                ) : (
+                  <span className="shadcn-badge shadcn-badge-success" style={{ fontSize: '11px' }}>
+                    <CheckCircle2 size={12} />
+                    <span>Replied</span>
+                  </span>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <a
+                  href={`mailto:${selectedInquiry.email}?subject=Re: ${encodeURIComponent(selectedInquiry.subject || 'Your inquiry at Rezoni')}`}
+                  className="shadcn-btn shadcn-btn-accent"
+                  style={{ fontSize: '12px', padding: '6px 12px', textDecoration: 'none' }}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Mail size={13} />
+                  <span>Reply via Email</span>
+                </a>
+                <button
+                  onClick={() => setSelectedInquiry(null)}
+                  className="shadcn-btn shadcn-btn-secondary"
+                  style={{ fontSize: '12px', padding: '6px 12px' }}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>

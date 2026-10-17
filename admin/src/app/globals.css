@@ -391,3 +391,46 @@ input, button, select, textarea {
     padding: 10px 12px !important;
   }
 }
+
+@media (max-width: 640px) {
+  .crm-main {
+    padding: 8px 6px 36px !important;
+  }
+
+  .shadcn-card-header {
+    padding: 10px 10px 6px !important;
+  }
+
+  .shadcn-card-content {
+    padding: 0 10px 10px !important;
+  }
+
+  .shadcn-table th,
+  .shadcn-table td {
+    padding: 8px 8px !important;
+    font-size: 12px !important;
+  }
+
+  .shadcn-btn {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ================= SKELETON SHIMMER LOADER ================= */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #18181b 25%, #27272a 50%, #18181b 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+  border-radius: 6px;
+}
+

@@ -51,15 +51,25 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Fallback to local db if Supabase returned 0
+    // Fallback to real orders.json if Supabase returned 0
     if (orders.length === 0) {
       try {
-        const localPath = fs.existsSync(path.resolve(process.cwd(), 'src', 'data', 'db.json'))
-          ? path.resolve(process.cwd(), 'src', 'data', 'db.json')
-          : path.resolve(process.cwd(), '..', 'src', 'data', 'db.json');
-        if (fs.existsSync(localPath)) {
-          const raw = JSON.parse(fs.readFileSync(localPath, 'utf8'));
-          orders = raw.orders || [];
+        const ordersJsonPath = path.resolve(process.cwd(), '..', 'src', 'data', 'orders.json');
+        if (fs.existsSync(ordersJsonPath)) {
+          const ords = JSON.parse(fs.readFileSync(ordersJsonPath, 'utf8'));
+          orders = ords.map((o: any) => ({
+            id: o.orderId || o.id,
+            customerName: o.customer?.fullName || 'Rezoni Customer',
+            customerEmail: o.customer?.email || 'customer@rezoni.com',
+            customerPhone: o.customer?.phone || '',
+            shippingAddress: o.customer,
+            items: o.items || [],
+            total: Number(o.amount || 0),
+            status: o.status === 'created' || o.status === 'paid' ? 'confirmed' : o.status || 'confirmed',
+            carrier: o.carrier || 'BlueDart Express',
+            trackingNumber: o.trackingNumber || o.razorpayOrderId || '',
+            date: o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent',
+          }));
           if (status && status !== 'all') {
             orders = orders.filter((o) => o.status === status);
           }

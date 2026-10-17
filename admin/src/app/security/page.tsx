@@ -1,9 +1,5 @@
-import AdminCRMView from '@/components/AdminCRMView';
-
-export const metadata = {
-  title: 'Security & Database Status | admin.rezoni.shop',
-};
+import { redirect } from 'next/navigation';
 
 export default function SecurityPage() {
-  return <AdminCRMView initialTab="security" />;
+  redirect('/inquiries');
 }
