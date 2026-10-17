@@ -39,22 +39,24 @@ export async function GET(req: NextRequest) {
       const { data: orders } = await supabase.from('orders').select('*');
       if (orders) {
         orders.forEach((o) => {
-          const email = (o.customer_email || 'guest@rezoni.com').toLowerCase();
+          const email = (o.customer?.email || o.customer_email || 'guest@rezoni.com').toLowerCase();
           const existing = customerMap.get(email);
-          const orderTotal = Number(o.total_amount) || 0;
+          const orderTotal = Number(o.amount || o.total_amount || o.total) || 0;
           const orderDate = o.created_at ? new Date(o.created_at).toLocaleDateString() : 'Recent';
+          const custName = o.customer?.fullName || o.customer?.name || o.customer_name || email.split('@')[0];
+          const custPhone = o.customer?.phone || o.customer_phone || '';
 
           if (existing) {
             existing.ordersCount += 1;
             existing.totalSpent += orderTotal;
             existing.lastOrder = orderDate;
-            if (o.customer_name && existing.name.includes('@')) existing.name = o.customer_name;
-            if (o.customer_phone) existing.phone = o.customer_phone;
+            if (custName && (existing.name.includes('@') || !existing.name)) existing.name = custName;
+            if (custPhone && !existing.phone) existing.phone = custPhone;
           } else {
             customerMap.set(email, {
-              name: o.customer_name || email.split('@')[0],
-              email: o.customer_email,
-              phone: o.customer_phone || '',
+              name: custName,
+              email: o.customer?.email || o.customer_email || email,
+              phone: custPhone,
               ordersCount: 1,
               totalSpent: orderTotal,
               lastOrder: orderDate,

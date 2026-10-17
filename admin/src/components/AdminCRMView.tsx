@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   LayoutDashboard,
   Package,
@@ -27,6 +27,8 @@ import {
   X,
   Eye,
   Check,
+  Save,
+  FileText,
 } from 'lucide-react';
 
 interface OrderItem {
@@ -123,6 +125,13 @@ interface Customer {
   lastOrder: string;
 }
 
+interface NavTabItem {
+  id: 'overview' | 'orders' | 'returns' | 'financials' | 'customers' | 'reviews' | 'security';
+  label: string;
+  icon: React.ComponentType<{ size?: number; className?: string; color?: string; style?: React.CSSProperties }>;
+  badge?: number;
+}
+
 export default function AdminCRMView({
   initialTab = 'overview',
 }: {
@@ -152,14 +161,29 @@ export default function AdminCRMView({
   const [orderSearch, setOrderSearch] = useState<string>('');
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
   const [returnStatusFilter, setReturnStatusFilter] = useState<string>('all');
+  const [customerSearch, setCustomerSearch] = useState<string>('');
 
   // Selected Order for Detail Drawer / Modal
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [modalStatus, setModalStatus] = useState<Order['status']>('confirmed');
+  const [modalCarrier, setModalCarrier] = useState<string>('BlueDart Express');
+  const [modalTracking, setModalTracking] = useState<string>('');
+  const [savingLogistics, setSavingLogistics] = useState<boolean>(false);
+
+  // Toast Notification state
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  // Open order detail modal with fresh inputs
+  const openOrderModal = (order: Order) => {
+    setSelectedOrder(order);
+    setModalStatus(order.status);
+    setModalCarrier(order.carrier || 'BlueDart Express');
+    setModalTracking(order.trackingNumber || '');
   };
 
   // Check existing session
@@ -273,13 +297,43 @@ export default function AdminCRMView({
     }
   }, [isAuthenticated, orderStatusFilter, returnStatusFilter]);
 
-  // Update order status
+  // Update order status with instant Optimistic UI update
   const handleUpdateOrderStatus = async (
     orderId: string,
     newStatus: Order['status'],
     carrier?: string,
     trackingNumber?: string
   ) => {
+    const prevOrders = [...orders];
+    const prevMetrics = metrics ? { ...metrics } : null;
+
+    // 1. Optimistic Update in UI state
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.id === orderId
+          ? {
+              ...o,
+              status: newStatus,
+              carrier: carrier !== undefined ? carrier : o.carrier,
+              trackingNumber: trackingNumber !== undefined ? trackingNumber : o.trackingNumber,
+            }
+          : o
+      )
+    );
+
+    if (selectedOrder && selectedOrder.id === orderId) {
+      setSelectedOrder((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: newStatus,
+              carrier: carrier !== undefined ? carrier : prev.carrier,
+              trackingNumber: trackingNumber !== undefined ? trackingNumber : prev.trackingNumber,
+            }
+          : null
+      );
+    }
+
     try {
       const res = await fetch('/api/orders', {
         method: 'PATCH',
@@ -288,21 +342,49 @@ export default function AdminCRMView({
       });
       const data = await res.json();
       if (data.success) {
-        showToast(`Order ${orderId} updated to ${newStatus}`);
-        fetchAllData();
-        if (selectedOrder && selectedOrder.id === orderId) {
-          setSelectedOrder((prev) => (prev ? { ...prev, status: newStatus, carrier: carrier || prev.carrier, trackingNumber: trackingNumber || prev.trackingNumber } : null));
-        }
+        showToast(`✓ Order ${orderId} status updated to ${newStatus.replace('_', ' ')}`);
+        // Refresh metrics in background to stay 100% in sync
+        fetch('/api/stats')
+          .then((r) => r.json())
+          .then((st) => st.success && setMetrics(st.metrics))
+          .catch(() => {});
       } else {
-        alert(data.message || 'Failed to update order');
+        // Revert on failure
+        setOrders(prevOrders);
+        if (prevMetrics) setMetrics(prevMetrics);
+        alert(data.message || 'Failed to update order status');
       }
     } catch (e: any) {
+      setOrders(prevOrders);
+      if (prevMetrics) setMetrics(prevMetrics);
       alert('Error updating order status: ' + e.message);
     }
   };
 
-  // Update return status
+  // Save changes from inside Order Detail Modal
+  const handleSaveModalLogistics = async () => {
+    if (!selectedOrder) return;
+    setSavingLogistics(true);
+    try {
+      await handleUpdateOrderStatus(
+        selectedOrder.id,
+        modalStatus,
+        modalCarrier,
+        modalTracking
+      );
+      showToast('✓ Logistics & Status synced to live database.');
+    } finally {
+      setSavingLogistics(false);
+    }
+  };
+
+  // Update return status with optimistic UI update
   const handleUpdateReturnStatus = async (returnId: string, newStatus: ReturnRequest['status'], notes?: string) => {
+    const prevReturns = [...returns];
+    setReturns((prev) =>
+      prev.map((r) => (r.id === returnId ? { ...r, status: newStatus, notes: notes || r.notes } : r))
+    );
+
     try {
       const res = await fetch('/api/returns', {
         method: 'PATCH',
@@ -311,30 +393,57 @@ export default function AdminCRMView({
       });
       const data = await res.json();
       if (data.success) {
-        showToast(`Return ${returnId} marked as ${newStatus}`);
-        fetchAllData();
+        showToast(`✓ Claim ${returnId} marked as ${newStatus}`);
+        fetch('/api/stats')
+          .then((r) => r.json())
+          .then((st) => st.success && setMetrics(st.metrics))
+          .catch(() => {});
       } else {
+        setReturns(prevReturns);
         alert(data.message || 'Failed to update return');
       }
     } catch (e: any) {
+      setReturns(prevReturns);
       alert('Error updating return: ' + e.message);
     }
   };
 
-  // Delete review
+  // Delete review with optimistic UI update
   const handleDeleteReview = async (reviewId: string) => {
     if (!confirm('Are you sure you want to delete this customer review?')) return;
+    const prevReviews = [...reviews];
+    setReviews((prev) => prev.filter((r) => r.id !== reviewId));
+
     try {
       const res = await fetch(`/api/reviews?id=${reviewId}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
-        showToast('Review removed from storefront.');
-        fetchAllData();
+        showToast('✓ Review removed from storefront.');
+        fetch('/api/stats')
+          .then((r) => r.json())
+          .then((st) => st.success && setMetrics(st.metrics))
+          .catch(() => {});
+      } else {
+        setReviews(prevReviews);
+        alert(data.message || 'Failed to delete review');
       }
     } catch (e: any) {
+      setReviews(prevReviews);
       alert('Error deleting review: ' + e.message);
     }
   };
+
+  // Filtered customers with memoization
+  const filteredCustomers = useMemo(() => {
+    if (!customerSearch.trim()) return customers;
+    const q = customerSearch.toLowerCase();
+    return customers.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        c.phone.includes(q)
+    );
+  }, [customers, customerSearch]);
 
   if (checkingAuth) {
     return (
@@ -506,13 +615,6 @@ export default function AdminCRMView({
     );
   }
 
-  interface NavTabItem {
-    id: 'overview' | 'orders' | 'returns' | 'financials' | 'customers' | 'reviews' | 'security';
-    label: string;
-    icon: React.ComponentType<{ size?: number; className?: string; color?: string; style?: React.CSSProperties }>;
-    badge?: number;
-  }
-
   // Navigation Items
   const navTabs: NavTabItem[] = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -534,7 +636,7 @@ export default function AdminCRMView({
             position: 'fixed',
             top: '18px',
             right: '18px',
-            zIndex: 9999,
+            zIndex: 99999,
             backgroundColor: '#10b981',
             color: '#ffffff',
             padding: '10px 18px',
@@ -569,7 +671,7 @@ export default function AdminCRMView({
             onClick={fetchAllData}
             className="shadcn-btn shadcn-btn-ghost"
             style={{ padding: '6px 8px', fontSize: '11.5px' }}
-            title="Refresh"
+            title="Refresh Data"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           </button>
@@ -592,7 +694,7 @@ export default function AdminCRMView({
           return (
             <button
               key={item.id}
-              onClick={() => switchTab(item.id as any)}
+              onClick={() => switchTab(item.id)}
               className="shadcn-btn"
               style={{
                 padding: '6px 12px',
@@ -648,7 +750,7 @@ export default function AdminCRMView({
             return (
               <button
                 key={item.id}
-                onClick={() => switchTab(item.id as any)}
+                onClick={() => switchTab(item.id)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -723,7 +825,7 @@ export default function AdminCRMView({
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#ffffff', letterSpacing: '-0.02em', textTransform: 'capitalize' }}>
                 {activeTab === 'overview' && 'Executive Dashboard'}
-                {activeTab === 'orders' && 'Orders Fulfillment'}
+                {activeTab === 'orders' && 'Orders Fulfillment & Tracking'}
                 {activeTab === 'returns' && 'Returns & Warranty Claims'}
                 {activeTab === 'financials' && 'Financial Analytics'}
                 {activeTab === 'customers' && 'Customer Directory'}
@@ -732,7 +834,7 @@ export default function AdminCRMView({
               </h1>
             </div>
             <p style={{ fontSize: '12px', color: 'var(--muted-foreground)', marginTop: '3px' }}>
-              Real-time telemetry • Isolated operations portal at admin.rezoni.shop
+              Real-time telemetry • Direct Supabase sync at admin.rezoni.shop
             </p>
           </div>
           <button
@@ -827,7 +929,7 @@ export default function AdminCRMView({
               <div className="shadcn-card-content">
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
                   <div style={{ backgroundColor: '#0d0d10', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #f59e0b' }}>
-                    <div style={{ fontSize: '10.5px', color: '#a1a1aa', textTransform: 'uppercase', fontWeight: 600 }}>Placed</div>
+                    <div style={{ fontSize: '10.5px', color: '#a1a1aa', textTransform: 'uppercase', fontWeight: 600 }}>Confirmed</div>
                     <div style={{ fontSize: '18px', fontWeight: 700, marginTop: '4px' }}>{metrics?.pendingDispatches || 0}</div>
                   </div>
                   <div style={{ backgroundColor: '#0d0d10', padding: '12px 14px', borderRadius: '8px', borderLeft: '3px solid #38bdf8' }}>
@@ -952,62 +1054,68 @@ export default function AdminCRMView({
                     <th>Amount</th>
                     <th>Status</th>
                     <th>Carrier / Tracking</th>
-                    <th>Update Status</th>
-                    <th>Details</th>
+                    <th>Change Status (Live)</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((o) => (
-                    <tr key={o.id}>
-                      <td style={{ fontWeight: 700, color: '#ff6700' }}>{o.id}</td>
-                      <td>
-                        <div style={{ fontWeight: 600 }}>{o.customerName || 'Rezoni Customer'}</div>
-                        <div style={{ fontSize: '11px', color: '#71717a' }}>{o.customerEmail}</div>
-                      </td>
-                      <td style={{ color: '#a1a1aa' }}>{o.date}</td>
-                      <td style={{ fontWeight: 700, color: '#10b981' }}>₹{Number(o.total).toLocaleString()}</td>
-                      <td>
-                        <span
-                          className={`shadcn-badge ${
-                            o.status === 'delivered' ? 'shadcn-badge-success' :
-                            o.status === 'out_for_delivery' ? 'shadcn-badge-pink' :
-                            o.status === 'in_transit' ? 'shadcn-badge-purple' :
-                            o.status === 'dispatched' ? 'shadcn-badge-info' : 'shadcn-badge-warning'
-                          }`}
-                        >
-                          {o.status.replace('_', ' ')}
-                        </span>
-                      </td>
-                      <td>
-                        <div style={{ fontSize: '12px', fontWeight: 600 }}>{o.carrier}</div>
-                        <div style={{ fontSize: '11px', color: '#38bdf8' }}>{o.trackingNumber || 'Unassigned'}</div>
-                      </td>
-                      <td>
-                        <select
-                          value={o.status}
-                          onChange={(e) => handleUpdateOrderStatus(o.id, e.target.value as any)}
-                          className="shadcn-input"
-                          style={{ padding: '4px 8px', fontSize: '12px', width: 'auto' }}
-                        >
-                          <option value="confirmed">Confirmed</option>
-                          <option value="dispatched">Dispatched</option>
-                          <option value="in_transit">In Transit</option>
-                          <option value="out_for_delivery">Out for Delivery</option>
-                          <option value="delivered">Delivered</option>
-                        </select>
-                      </td>
-                      <td>
-                        <button
-                          onClick={() => setSelectedOrder(o)}
-                          className="shadcn-btn shadcn-btn-ghost"
-                          style={{ padding: '4px 8px', fontSize: '11.5px' }}
-                        >
-                          <Eye size={13} />
-                          <span>View</span>
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {orders.map((o) => {
+                    const safeStatus: Order['status'] = ['confirmed', 'dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(o.status)
+                      ? o.status
+                      : 'confirmed';
+
+                    return (
+                      <tr key={o.id}>
+                        <td style={{ fontWeight: 700, color: '#ff6700' }}>{o.id}</td>
+                        <td>
+                          <div style={{ fontWeight: 600 }}>{o.customerName || 'Rezoni Customer'}</div>
+                          <div style={{ fontSize: '11px', color: '#71717a' }}>{o.customerEmail}</div>
+                        </td>
+                        <td style={{ color: '#a1a1aa' }}>{o.date}</td>
+                        <td style={{ fontWeight: 700, color: '#10b981' }}>₹{Number(o.total).toLocaleString()}</td>
+                        <td>
+                          <span
+                            className={`shadcn-badge ${
+                              safeStatus === 'delivered' ? 'shadcn-badge-success' :
+                              safeStatus === 'out_for_delivery' ? 'shadcn-badge-pink' :
+                              safeStatus === 'in_transit' ? 'shadcn-badge-purple' :
+                              safeStatus === 'dispatched' ? 'shadcn-badge-info' : 'shadcn-badge-warning'
+                            }`}
+                          >
+                            {safeStatus.replace('_', ' ')}
+                          </span>
+                        </td>
+                        <td>
+                          <div style={{ fontSize: '12px', fontWeight: 600 }}>{o.carrier || 'BlueDart Express'}</div>
+                          <div style={{ fontSize: '11px', color: '#38bdf8' }}>{o.trackingNumber || 'Unassigned'}</div>
+                        </td>
+                        <td>
+                          <select
+                            value={safeStatus}
+                            onChange={(e) => handleUpdateOrderStatus(o.id, e.target.value as any, o.carrier, o.trackingNumber)}
+                            className="shadcn-input"
+                            style={{ padding: '4px 8px', fontSize: '12px', width: 'auto', cursor: 'pointer' }}
+                          >
+                            <option value="confirmed">Confirmed</option>
+                            <option value="dispatched">Dispatched</option>
+                            <option value="in_transit">In Transit</option>
+                            <option value="out_for_delivery">Out for Delivery</option>
+                            <option value="delivered">Delivered</option>
+                          </select>
+                        </td>
+                        <td>
+                          <button
+                            onClick={() => openOrderModal(o)}
+                            className="shadcn-btn shadcn-btn-ghost"
+                            style={{ padding: '4px 8px', fontSize: '11.5px' }}
+                          >
+                            <Eye size={13} />
+                            <span>Manage</span>
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                   {orders.length === 0 && (
                     <tr>
                       <td colSpan={8} style={{ textAlign: 'center', color: '#71717a', padding: '32px' }}>
@@ -1163,6 +1271,20 @@ export default function AdminCRMView({
         {/* TAB 5: CUSTOMER DIRECTORY */}
         {activeTab === 'customers' && (
           <div>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+              <div style={{ position: 'relative', flex: 1, maxWidth: '360px' }}>
+                <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#71717a' }} />
+                <input
+                  type="text"
+                  placeholder="Search customer by name, email, phone..."
+                  value={customerSearch}
+                  onChange={(e) => setCustomerSearch(e.target.value)}
+                  className="shadcn-input"
+                  style={{ paddingLeft: '34px' }}
+                />
+              </div>
+            </div>
+
             <div className="shadcn-table-wrapper">
               <table className="shadcn-table">
                 <thead>
@@ -1176,7 +1298,7 @@ export default function AdminCRMView({
                   </tr>
                 </thead>
                 <tbody>
-                  {customers.map((c, i) => (
+                  {filteredCustomers.map((c, i) => (
                     <tr key={i}>
                       <td style={{ fontWeight: 600 }}>{c.name}</td>
                       <td style={{ color: '#38bdf8' }}>{c.email}</td>
@@ -1186,10 +1308,10 @@ export default function AdminCRMView({
                       <td style={{ color: '#a1a1aa' }}>{c.lastOrder}</td>
                     </tr>
                   ))}
-                  {customers.length === 0 && (
+                  {filteredCustomers.length === 0 && (
                     <tr>
                       <td colSpan={6} style={{ textAlign: 'center', color: '#71717a', padding: '32px' }}>
-                        No customers recorded yet.
+                        No customers match search query.
                       </td>
                     </tr>
                   )}
@@ -1276,7 +1398,7 @@ export default function AdminCRMView({
         )}
       </main>
 
-      {/* ORDER DETAIL MODAL DIALOG */}
+      {/* ORDER DETAIL & LOGISTICS MANAGEMENT MODAL */}
       {selectedOrder && (
         <div
           style={{
@@ -1296,7 +1418,7 @@ export default function AdminCRMView({
             className="shadcn-card"
             style={{
               width: '100%',
-              maxWidth: '560px',
+              maxWidth: '600px',
               maxHeight: '90vh',
               overflowY: 'auto',
               backgroundColor: '#121215',
@@ -1308,7 +1430,7 @@ export default function AdminCRMView({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div>
                 <div style={{ fontSize: '11.5px', color: 'var(--muted-foreground)', textTransform: 'uppercase', fontWeight: 600 }}>
-                  Order Details
+                  Order Details & Fulfillment Control
                 </div>
                 <div style={{ fontSize: '18px', fontWeight: 800, color: '#ff6700' }}>
                   {selectedOrder.id}
@@ -1320,6 +1442,89 @@ export default function AdminCRMView({
                 style={{ padding: '6px' }}
               >
                 <X size={18} />
+              </button>
+            </div>
+
+            {/* LIVE STATUS & LOGISTICS EDIT FORM */}
+            <div
+              style={{
+                backgroundColor: '#0d0d10',
+                border: '1px solid #27272a',
+                borderRadius: '8px',
+                padding: '14px',
+                marginBottom: '16px',
+              }}
+            >
+              <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#fafafa', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Truck size={14} color="#ff6700" />
+                <span>Live Supabase Order Status & Logistics Editor</span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px', marginBottom: '12px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#a1a1aa', marginBottom: '4px' }}>
+                    Current Order Status
+                  </label>
+                  <select
+                    value={modalStatus}
+                    onChange={(e) => setModalStatus(e.target.value as any)}
+                    className="shadcn-input"
+                    style={{ fontSize: '12px', padding: '6px 8px' }}
+                  >
+                    <option value="confirmed">Confirmed</option>
+                    <option value="dispatched">Dispatched</option>
+                    <option value="in_transit">In Transit</option>
+                    <option value="out_for_delivery">Out for Delivery</option>
+                    <option value="delivered">Delivered</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#a1a1aa', marginBottom: '4px' }}>
+                    Logistics Carrier
+                  </label>
+                  <input
+                    type="text"
+                    value={modalCarrier}
+                    onChange={(e) => setModalCarrier(e.target.value)}
+                    placeholder="e.g. BlueDart Express"
+                    className="shadcn-input"
+                    style={{ fontSize: '12px', padding: '6px 8px' }}
+                  />
+                </div>
+
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: '#a1a1aa', marginBottom: '4px' }}>
+                    AWB / Tracking Number (Used for /track-order)
+                  </label>
+                  <input
+                    type="text"
+                    value={modalTracking}
+                    onChange={(e) => setModalTracking(e.target.value)}
+                    placeholder="e.g. BD-29502555 or DELHIVERY-782109"
+                    className="shadcn-input"
+                    style={{ fontSize: '12px', padding: '6px 8px' }}
+                  />
+                </div>
+              </div>
+
+              <button
+                onClick={handleSaveModalLogistics}
+                disabled={savingLogistics}
+                className="shadcn-btn shadcn-btn-accent"
+                style={{ width: '100%', padding: '8px', fontSize: '12.5px' }}
+              >
+                {savingLogistics ? (
+                  <>
+                    <RefreshCw size={13} className="animate-spin" />
+                    <span>Syncing with Supabase...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save size={14} />
+                    <span>Save Logistics & Status to Database</span>
+                  </>
+                )}
               </button>
             </div>
 

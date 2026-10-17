@@ -19,12 +19,12 @@ export async function GET(req: NextRequest) {
       if (!error && data) {
         reviews = data.map((r) => ({
           id: r.id,
-          userName: r.customer_name,
-          userEmail: r.customer_email,
+          userName: r.user_name || r.customer_name || 'Customer',
+          userEmail: r.user_email || r.customer_email || 'customer@rezoni.com',
           productTitle: r.product_title || 'Anti-Yellow Magsafe Clear Case',
           rating: r.rating,
           body: r.body,
-          date: r.created_at ? new Date(r.created_at).toLocaleDateString() : 'Recent',
+          date: r.date || (r.created_at ? new Date(r.created_at).toLocaleDateString() : 'Recent'),
         }));
       }
     }

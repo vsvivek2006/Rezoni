@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
           customerEmail: r.customer_email,
           customerPhone: r.customer_phone,
           reason: r.reason,
-          items: r.item_title,
+          items: r.items || r.item_title || 'Rezoni Item',
           amount: r.amount,
           status: r.status,
           statusLabel: r.status_label,

@@ -21,23 +21,33 @@ export async function GET(req: NextRequest) {
     if (supabase) {
       let q = supabase.from('orders').select('*').order('created_at', { ascending: false });
       if (status && status !== 'all') {
-        q = q.eq('order_status', status);
+        if (status === 'confirmed') {
+          q = q.in('status', ['confirmed', 'paid', 'created']);
+        } else {
+          q = q.eq('status', status);
+        }
       }
       const { data, error } = await q;
       if (!error && data) {
-        orders = data.map((o) => ({
-          id: o.order_id || o.id,
-          customerName: o.customer_name || o.customer?.fullName || 'Rezoni Customer',
-          customerEmail: o.customer_email || o.customer?.email || 'customer@rezoni.com',
-          customerPhone: o.customer_phone || o.customer?.phone || '',
-          shippingAddress: o.shipping_address || o.customer,
-          items: o.items || [],
-          total: Number(o.total_amount || o.amount || o.total) || 0,
-          status: o.order_status || o.status || 'confirmed',
-          carrier: o.carrier || 'BlueDart Express',
-          trackingNumber: o.tracking_number || '',
-          date: o.created_at ? new Date(o.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recent',
-        }));
+        orders = data.map((o) => {
+          let orderStatus = (o.status || 'confirmed').toLowerCase();
+          if (orderStatus === 'paid' || orderStatus === 'created') {
+            orderStatus = 'confirmed';
+          }
+          return {
+            id: o.order_id || o.id,
+            customerName: o.customer?.fullName || o.customer?.name || o.customer_name || 'Rezoni Customer',
+            customerEmail: o.customer?.email || o.customer_email || 'customer@rezoni.com',
+            customerPhone: o.customer?.phone || o.customer_phone || '',
+            shippingAddress: o.shipping_address || o.customer,
+            items: o.items || [],
+            total: Number(o.amount || o.total_amount || o.total) || 0,
+            status: orderStatus,
+            carrier: o.customer?.carrier || o.carrier || 'BlueDart Express',
+            trackingNumber: o.customer?.trackingNumber || o.tracking_number || o.razorpay_order_id || '',
+            date: o.created_at ? new Date(o.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recent',
+          };
+        });
       }
     }
 
@@ -91,35 +101,96 @@ export async function PATCH(req: NextRequest) {
     }
 
     const supabase = getSupabaseAdminClient();
-    const updatePayload: any = {};
-    if (status) updatePayload.order_status = status;
-    if (trackingNumber) updatePayload.tracking_number = trackingNumber;
-    if (carrier) updatePayload.carrier = carrier;
+    let supabaseSuccess = false;
+    let supabaseError: string | null = null;
 
     if (supabase) {
-      await supabase.from('orders').update(updatePayload).eq('order_id', orderId);
+      // 1. Fetch existing order to safely merge customer metadata
+      const { data: existingList } = await supabase
+        .from('orders')
+        .select('*')
+        .or(`order_id.eq."${orderId}",id.eq."${orderId}"`)
+        .limit(1);
+
+      const existingOrder = existingList && existingList[0] ? existingList[0] : null;
+
+      const updatePayload: any = {};
+      if (status) {
+        updatePayload.status = status;
+      }
+
+      const mergedCustomer = {
+        ...(existingOrder?.customer || {}),
+        ...(carrier ? { carrier } : {}),
+        ...(trackingNumber ? { trackingNumber } : {}),
+      };
+
+      updatePayload.customer = mergedCustomer;
+      if (trackingNumber) {
+        updatePayload.razorpay_order_id = trackingNumber;
+      }
+
+      // 2. Perform Supabase update with error checking
+      const { data: updatedData, error } = await supabase
+        .from('orders')
+        .update(updatePayload)
+        .or(`order_id.eq."${orderId}",id.eq."${orderId}"`)
+        .select();
+
+      if (error) {
+        console.error('Supabase order status update error:', error);
+        supabaseError = error.message;
+      } else if (updatedData && updatedData.length > 0) {
+        supabaseSuccess = true;
+      }
     }
 
-    // Also update local db if present
+    // Also update local db and orders.json if present
     try {
-      const localPath = fs.existsSync(path.resolve(process.cwd(), 'src', 'data', 'db.json'))
-        ? path.resolve(process.cwd(), 'src', 'data', 'db.json')
-        : path.resolve(process.cwd(), '..', 'src', 'data', 'db.json');
-      if (fs.existsSync(localPath)) {
-        const raw = JSON.parse(fs.readFileSync(localPath, 'utf8'));
-        const order = (raw.orders || []).find((o: any) => o.id === orderId);
-        if (order) {
-          if (status) order.status = status;
-          if (trackingNumber) order.trackingNumber = trackingNumber;
-          if (carrier) order.carrier = carrier;
-          fs.writeFileSync(localPath, JSON.stringify(raw, null, 2), 'utf8');
+      // 1. orders.json
+      const ordersJsonPath = path.resolve(process.cwd(), '..', 'src', 'data', 'orders.json');
+      if (fs.existsSync(ordersJsonPath)) {
+        const ords = JSON.parse(fs.readFileSync(ordersJsonPath, 'utf8'));
+        const found = ords.find((o: any) => o.orderId === orderId || o.id === orderId);
+        if (found) {
+          if (status) found.status = status;
+          if (carrier) found.carrier = carrier;
+          if (trackingNumber) found.trackingNumber = trackingNumber;
+          fs.writeFileSync(ordersJsonPath, JSON.stringify(ords, null, 2), 'utf8');
         }
       }
-    } catch (e) {}
+
+      // 2. db.json
+      const localPaths = [
+        path.resolve(process.cwd(), 'src', 'data', 'db.json'),
+        path.resolve(process.cwd(), '..', 'src', 'data', 'db.json'),
+      ];
+      for (const p of localPaths) {
+        if (fs.existsSync(p)) {
+          const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
+          const order = (raw.orders || []).find((o: any) => o.id === orderId || o.orderId === orderId);
+          if (order) {
+            if (status) order.status = status;
+            if (trackingNumber) order.trackingNumber = trackingNumber;
+            if (carrier) order.carrier = carrier;
+            fs.writeFileSync(p, JSON.stringify(raw, null, 2), 'utf8');
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Local file sync note:', e);
+    }
+
+    if (supabaseError && !supabaseSuccess) {
+      return NextResponse.json({
+        success: false,
+        message: `Supabase update failed: ${supabaseError}`,
+      }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
-      message: `Order ${orderId} updated successfully.`,
+      message: `Order ${orderId} status successfully updated to ${status}.`,
     });
   } catch (error: any) {
     return NextResponse.json(

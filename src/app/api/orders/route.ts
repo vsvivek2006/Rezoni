@@ -40,10 +40,12 @@ function normalizeToOrder(raw: any): Order {
     delivered: 'Delivered Successfully',
   };
 
-  const carrier = raw.carrier || 'Delhivery Express';
+  const carrier = raw.carrier || raw.customer?.carrier || 'BlueDart Express';
   const trackingNumber =
     raw.tracking_number ||
     raw.trackingNumber ||
+    raw.customer?.trackingNumber ||
+    raw.razorpay_order_id ||
     `DELHIVERY-${orderId.replace(/[^0-9]/g, '') || '782109'}`;
 
   const createdDate = raw.created_at
@@ -198,7 +200,7 @@ async function findUnifiedOrder(query: string): Promise<Order | null> {
       const { data: exactMatches } = await supabase
         .from('orders')
         .select('*')
-        .or(`order_id.in.("${targetIds.join('","')}"),id.in.("${targetIds.join('","')}"),tracking_number.eq."${cleanUpper}"`)
+        .or(`order_id.in.("${targetIds.join('","')}"),id.in.("${targetIds.join('","')}"),razorpay_order_id.eq."${cleanUpper}"`)
         .limit(1);
 
       if (exactMatches && exactMatches.length > 0) {
@@ -211,7 +213,7 @@ async function findUnifiedOrder(query: string): Promise<Order | null> {
         const { data: phoneMatches } = await supabase
           .from('orders')
           .select('*')
-          .ilike('customer_phone', `%${last10}`)
+          .ilike('customer->>phone', `%${last10}`)
           .limit(1);
 
         if (phoneMatches && phoneMatches.length > 0) {
@@ -224,7 +226,7 @@ async function findUnifiedOrder(query: string): Promise<Order | null> {
         const { data: emailMatches } = await supabase
           .from('orders')
           .select('*')
-          .ilike('customer_email', lowerQuery)
+          .ilike('customer->>email', lowerQuery)
           .limit(1);
 
         if (emailMatches && emailMatches.length > 0) {
