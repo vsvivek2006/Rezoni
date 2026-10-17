@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
+import { AuthProvider } from '@/context/AuthContext';
 import AnnouncementBar from '@/components/AnnouncementBar';
 import Header from '@/components/Header';
 import MiniCart from '@/components/MiniCart';
 import Footer from '@/components/Footer';
+import AuthModal from '@/components/AuthModal';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -29,14 +31,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <CartProvider>
-          <AnnouncementBar />
-          <Header />
-          <MiniCart />
-          <main>{children}</main>
-          <Footer />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <AnnouncementBar />
+            <Header />
+            <MiniCart />
+            <main>{children}</main>
+            <Footer />
+            <AuthModal />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
 }
+

@@ -1,0 +1,630 @@
+{
+  "users": [
+    {
+      "id": "usr_1792206007205_hqs76",
+      "email": "testuser@rezoni.com",
+      "password": "password123",
+      "name": "Testuser",
+      "createdAt": "2026-10-17T03:00:07.205Z",
+      "orders": [
+        {
+          "id": "RZ-76571",
+          "customerEmail": "testuser@rezoni.com",
+          "customerName": "Testuser",
+          "date": "October 17, 2026",
+          "total": 699,
+          "status": "confirmed",
+          "statusLabel": "Order Confirmed - Processing for Dispatch",
+          "carrier": "BlueDart Express",
+          "trackingNumber": "BD-96404036",
+          "estimatedDelivery": "In 2-4 business days",
+          "shippingAddress": {
+            "address": "Shipping Address On File",
+            "city": "Customer Location",
+            "state": "India",
+            "pincode": "110001"
+          },
+          "items": [
+            {
+              "title": "Anti-Yellow Magsafe Clear Case",
+              "model": "Galaxy Z Flip6",
+              "variant": "MagSafe",
+              "price": 699,
+              "quantity": 1,
+              "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4a28e8fa-edaa-4bad-8709-5781b9988034.jpg?v=1755339220"
+            }
+          ],
+          "timeline": [
+            {
+              "title": "Order Confirmed",
+              "description": "Order successfully registered and assigned to Rezoni warehouse",
+              "date": "Today",
+              "time": "Just now",
+              "completed": true,
+              "current": true,
+              "location": "Rezoni Warehouse, Gurugram"
+            },
+            {
+              "title": "Dispatched & Packed",
+              "description": "Packed in anti-yellow UV shield protective casing",
+              "date": "Upcoming",
+              "time": "Tomorrow",
+              "completed": false,
+              "location": "Rezoni Fulfillment Center"
+            },
+            {
+              "title": "In Transit",
+              "description": "In transit via Express Air delivery",
+              "date": "Upcoming",
+              "time": "In 2 days",
+              "completed": false,
+              "location": "Courier Network"
+            },
+            {
+              "title": "Delivered",
+              "description": "Delivered safely to doorstep",
+              "date": "Upcoming",
+              "time": "In 3-4 days",
+              "completed": false,
+              "location": "Your Address"
+            }
+          ]
+        }
+      ],
+      "reviews": [
+        {
+          "userEmail": "testuser@rezoni.com",
+          "userName": "Test User",
+          "productTitle": "Crystal clear and does not turn yellow!",
+          "model": "Galaxy Z Flip6",
+          "rating": 5,
+          "body": "Best case ever for my Samsung Z Flip6. High quality finish!",
+          "image": null,
+          "id": "rev_1792206044888",
+          "date": "October 17, 2026"
+        }
+      ]
+    },
+    {
+      "id": "usr_1792209851104_1qdgy",
+      "email": "audit_test@rezoni.com",
+      "password": "password123",
+      "name": "Audit User",
+      "createdAt": "2026-10-17T04:04:11.104Z",
+      "orders": [
+        {
+          "id": "RZ-91108",
+          "customerEmail": "audit_test@rezoni.com",
+          "customerName": "Audit User",
+          "date": "October 17, 2026",
+          "total": 699,
+          "status": "out_for_delivery",
+          "statusLabel": "Out for Delivery - Agent will contact you",
+          "carrier": "BlueDart Express",
+          "trackingNumber": "BD-29502555",
+          "estimatedDelivery": "In 2-4 business days",
+          "shippingAddress": {
+            "address": "Shipping Address On File",
+            "city": "Customer Location",
+            "state": "India",
+            "pincode": "110001"
+          },
+          "items": [
+            {
+              "title": "Anti-Yellow Magsafe Clear Case",
+              "model": "Galaxy Z Flip6",
+              "variant": "MagSafe",
+              "price": 699,
+              "quantity": 1,
+              "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4a28e8fa-edaa-4bad-8709-5781b9988034.jpg?v=1755339220"
+            }
+          ],
+          "timeline": [
+            {
+              "title": "Order Confirmed",
+              "description": "Order successfully registered and assigned to Rezoni warehouse",
+              "date": "Today",
+              "time": "Just now",
+              "completed": true,
+              "current": false,
+              "location": "Rezoni Warehouse, Gurugram"
+            },
+            {
+              "title": "Dispatched & Packed",
+              "description": "Packed in anti-yellow UV shield protective casing",
+              "date": "Upcoming",
+              "time": "Tomorrow",
+              "completed": true,
+              "location": "Rezoni Fulfillment Center",
+              "current": false
+            },
+            {
+              "title": "In Transit",
+              "description": "In transit via Express Air delivery",
+              "date": "Upcoming",
+              "time": "In 2 days",
+              "completed": true,
+              "location": "Courier Network",
+              "current": false
+            },
+            {
+              "title": "Delivered",
+              "description": "Delivered safely to doorstep",
+              "date": "Upcoming",
+              "time": "In 3-4 days",
+              "completed": false,
+              "location": "Your Address",
+              "current": false
+            }
+          ]
+        }
+      ],
+      "reviews": []
+    }
+  ],
+  "orders": [
+    {
+      "id": "RZ-91108",
+      "customerEmail": "audit_test@rezoni.com",
+      "customerName": "Audit User",
+      "date": "October 17, 2026",
+      "total": 699,
+      "status": "out_for_delivery",
+      "statusLabel": "Out for Delivery - Agent will contact you",
+      "carrier": "BlueDart Express",
+      "trackingNumber": "BD-29502555",
+      "estimatedDelivery": "In 2-4 business days",
+      "shippingAddress": {
+        "address": "Shipping Address On File",
+        "city": "Customer Location",
+        "state": "India",
+        "pincode": "110001"
+      },
+      "items": [
+        {
+          "title": "Anti-Yellow Magsafe Clear Case",
+          "model": "Galaxy Z Flip6",
+          "variant": "MagSafe",
+          "price": 699,
+          "quantity": 1,
+          "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4a28e8fa-edaa-4bad-8709-5781b9988034.jpg?v=1755339220"
+        }
+      ],
+      "timeline": [
+        {
+          "title": "Order Confirmed",
+          "description": "Order successfully registered and assigned to Rezoni warehouse",
+          "date": "Today",
+          "time": "Just now",
+          "completed": true,
+          "current": false,
+          "location": "Rezoni Warehouse, Gurugram"
+        },
+        {
+          "title": "Dispatched & Packed",
+          "description": "Packed in anti-yellow UV shield protective casing",
+          "date": "Upcoming",
+          "time": "Tomorrow",
+          "completed": true,
+          "location": "Rezoni Fulfillment Center",
+          "current": false
+        },
+        {
+          "title": "In Transit",
+          "description": "In transit via Express Air delivery",
+          "date": "Upcoming",
+          "time": "In 2 days",
+          "completed": true,
+          "location": "Courier Network",
+          "current": false
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered safely to doorstep",
+          "date": "Upcoming",
+          "time": "In 3-4 days",
+          "completed": false,
+          "location": "Your Address",
+          "current": false
+        }
+      ]
+    },
+    {
+      "id": "RZ-76571",
+      "customerEmail": "testuser@rezoni.com",
+      "customerName": "Testuser",
+      "date": "October 17, 2026",
+      "total": 699,
+      "status": "confirmed",
+      "statusLabel": "Order Confirmed - Processing for Dispatch",
+      "carrier": "BlueDart Express",
+      "trackingNumber": "BD-96404036",
+      "estimatedDelivery": "In 2-4 business days",
+      "shippingAddress": {
+        "address": "Shipping Address On File",
+        "city": "Customer Location",
+        "state": "India",
+        "pincode": "110001"
+      },
+      "items": [
+        {
+          "title": "Anti-Yellow Magsafe Clear Case",
+          "model": "Galaxy Z Flip6",
+          "variant": "MagSafe",
+          "price": 699,
+          "quantity": 1,
+          "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4a28e8fa-edaa-4bad-8709-5781b9988034.jpg?v=1755339220"
+        }
+      ],
+      "timeline": [
+        {
+          "title": "Order Confirmed",
+          "description": "Order successfully registered and assigned to Rezoni warehouse",
+          "date": "Today",
+          "time": "Just now",
+          "completed": true,
+          "current": true,
+          "location": "Rezoni Warehouse, Gurugram"
+        },
+        {
+          "title": "Dispatched & Packed",
+          "description": "Packed in anti-yellow UV shield protective casing",
+          "date": "Upcoming",
+          "time": "Tomorrow",
+          "completed": false,
+          "location": "Rezoni Fulfillment Center"
+        },
+        {
+          "title": "In Transit",
+          "description": "In transit via Express Air delivery",
+          "date": "Upcoming",
+          "time": "In 2 days",
+          "completed": false,
+          "location": "Courier Network"
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered safely to doorstep",
+          "date": "Upcoming",
+          "time": "In 3-4 days",
+          "completed": false,
+          "location": "Your Address"
+        }
+      ]
+    },
+    {
+      "id": "RZ-84920",
+      "customerEmail": "demo@rezoni.com",
+      "customerPhone": "+91 98765 43210",
+      "customerName": "Aman Sharma",
+      "date": "October 15, 2026",
+      "total": 699,
+      "status": "in_transit",
+      "statusLabel": "In Transit - Hub In Scan",
+      "carrier": "BlueDart Express",
+      "trackingNumber": "BLUEDART-849203810",
+      "estimatedDelivery": "Tuesday, October 20, 2026",
+      "shippingAddress": {
+        "address": "Flat 402, Sunshine Heights, Sector 45",
+        "city": "Gurugram",
+        "state": "Haryana",
+        "pincode": "122003"
+      },
+      "items": [
+        {
+          "title": "Anti-Yellow Magsafe Clear Case",
+          "model": "Galaxy Z Flip6",
+          "variant": "MagSafe",
+          "price": 699,
+          "quantity": 1,
+          "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_4a28e8fa-edaa-4bad-8709-5781b9988034.jpg?v=1755339220"
+        }
+      ],
+      "timeline": [
+        {
+          "title": "Order Confirmed",
+          "description": "Order placed and verified by Rezoni team",
+          "date": "Oct 15, 2026",
+          "time": "03:45 PM",
+          "completed": true,
+          "location": "Rezoni Head Office, Gurugram"
+        },
+        {
+          "title": "Dispatched & Packed",
+          "description": "Packed with 4-corner drop-test shock cushioning",
+          "date": "Oct 16, 2026",
+          "time": "11:00 AM",
+          "completed": true,
+          "location": "Rezoni Fulfillment Center, Delhi NCR"
+        },
+        {
+          "title": "In Transit",
+          "description": "Package scanned at sorting center. In transit with BlueDart Express.",
+          "date": "Oct 17, 2026",
+          "time": "07:30 AM",
+          "completed": true,
+          "current": true,
+          "location": "Delhi Sorting Hub - In Scan"
+        },
+        {
+          "title": "Out for Delivery",
+          "description": "Courier delivery agent will contact you before delivery",
+          "date": "Oct 19, 2026",
+          "time": "Expected",
+          "completed": false,
+          "location": "Destination Delivery Station"
+        },
+        {
+          "title": "Delivered",
+          "description": "Direct doorstep contactless delivery",
+          "date": "Oct 20, 2026",
+          "time": "Expected",
+          "completed": false,
+          "location": "Shipping Address"
+        }
+      ]
+    },
+    {
+      "id": "RZ-78210",
+      "customerEmail": "rohit@example.com",
+      "customerPhone": "+91 91234 56789",
+      "customerName": "Rohit Verma",
+      "date": "October 16, 2026",
+      "total": 1398,
+      "status": "out_for_delivery",
+      "statusLabel": "Out for Delivery",
+      "carrier": "Delhivery Express",
+      "trackingNumber": "DELHIVERY-782109923",
+      "estimatedDelivery": "Today by 06:00 PM",
+      "shippingAddress": {
+        "address": "B-12, Kailash Colony",
+        "city": "South Delhi",
+        "state": "Delhi",
+        "pincode": "110048"
+      },
+      "items": [
+        {
+          "title": "Anti-Yellow Magsafe Clear Case",
+          "model": "iPhone 16 Pro Max",
+          "variant": "MagSafe",
+          "price": 699,
+          "quantity": 1,
+          "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/16pm_magsafe_1_7b41bf92-c72a-4b4b-b6b5-8a842f151548.jpg?v=1742899832"
+        },
+        {
+          "title": "Anti-Yellow Clear Case",
+          "model": "OnePlus 12",
+          "variant": "Non-MagSafe",
+          "price": 699,
+          "quantity": 1,
+          "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_fa85aa40-258a-4f2d-840c-a6b341bc2034.jpg?v=1755940658"
+        }
+      ],
+      "timeline": [
+        {
+          "title": "Order Confirmed",
+          "description": "Order placed & prepaid payment verified",
+          "date": "Oct 16, 2026",
+          "time": "09:12 AM",
+          "completed": true,
+          "location": "Rezoni Center"
+        },
+        {
+          "title": "Dispatched",
+          "description": "Handed over to Delhivery logistics",
+          "date": "Oct 16, 2026",
+          "time": "04:00 PM",
+          "completed": true,
+          "location": "Delhi Central Hub"
+        },
+        {
+          "title": "In Transit",
+          "description": "Arrived at South Delhi Distribution Center",
+          "date": "Oct 17, 2026",
+          "time": "05:30 AM",
+          "completed": true,
+          "location": "Okhla Hub"
+        },
+        {
+          "title": "Out for Delivery",
+          "description": "Courier agent Rahul Kumar is out for delivery",
+          "date": "Oct 17, 2026",
+          "time": "08:45 AM",
+          "completed": true,
+          "current": true,
+          "location": "Kailash Colony Delivery Van"
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered to customer",
+          "date": "Oct 17, 2026",
+          "time": "Expected 05:00 PM",
+          "completed": false,
+          "location": "Shipping Address"
+        }
+      ]
+    },
+    {
+      "id": "RZ-91402",
+      "customerEmail": "priya.nair@outlook.com",
+      "customerPhone": "+91 97450 11223",
+      "customerName": "Priya Nair",
+      "date": "October 17, 2026",
+      "total": 999,
+      "status": "confirmed",
+      "statusLabel": "Order Confirmed - Processing for Dispatch",
+      "carrier": "BlueDart Express",
+      "trackingNumber": "BD-91402839",
+      "estimatedDelivery": "In 2-3 business days",
+      "paymentMethod": "prepaid",
+      "paymentStatus": "paid",
+      "shippingAddress": {
+        "address": "Flat 12B, Marine Bay Towers, Panampilly Nagar",
+        "city": "Kochi",
+        "state": "Kerala",
+        "pincode": "682036"
+      },
+      "items": [
+        {
+          "title": "Anti-Yellow Magsafe Clear Case",
+          "model": "iPhone 16 Pro",
+          "variant": "MagSafe",
+          "price": 999,
+          "quantity": 1,
+          "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/16p_magsafe_1_3ba1e8fc-5b7f-4c59-bf75-01e4ec9d96eb.jpg?v=1742899832"
+        }
+      ],
+      "timeline": [
+        {
+          "title": "Order Confirmed",
+          "description": "Prepaid order verified & allocated to warehouse",
+          "date": "Today",
+          "time": "10:14 AM",
+          "completed": true,
+          "current": true,
+          "location": "Rezoni Hub, Gurugram"
+        },
+        {
+          "title": "Dispatched & Packed",
+          "description": "Anti-yellow UV bubble wrapped",
+          "date": "Upcoming",
+          "time": "Today",
+          "completed": false,
+          "location": "Rezoni Fulfillment"
+        }
+      ]
+    },
+    {
+      "id": "RZ-63201",
+      "customerEmail": "arjun.kapoor@gmail.com",
+      "customerPhone": "+91 98200 44556",
+      "customerName": "Arjun Kapoor",
+      "date": "October 15, 2026",
+      "total": 1998,
+      "status": "delivered",
+      "statusLabel": "Delivered Successfully to Customer",
+      "carrier": "Delhivery Express",
+      "trackingNumber": "DLV-63201994",
+      "estimatedDelivery": "Delivered on Oct 16",
+      "paymentMethod": "prepaid",
+      "paymentStatus": "paid",
+      "shippingAddress": {
+        "address": "701 Palm Beach Road, Sanpada",
+        "city": "Navi Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400705"
+      },
+      "items": [
+        {
+          "title": "Anti-Yellow Magsafe Clear Case",
+          "model": "Galaxy S24 Ultra",
+          "variant": "MagSafe",
+          "price": 999,
+          "quantity": 1,
+          "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/s24u_magsafe_1_a5ff1672-d48e-473d-9d41-45cebc25555c.jpg?v=1742899832"
+        },
+        {
+          "title": "Anti-Yellow Clear Case",
+          "model": "Pixel 9 Pro XL",
+          "variant": "Non-MagSafe",
+          "price": 999,
+          "quantity": 1,
+          "image": "https://cdn.shopify.com/s/files/1/0621/7829/6040/files/pixel9pxl_clear_1.jpg?v=1742899832"
+        }
+      ],
+      "timeline": [
+        {
+          "title": "Order Confirmed",
+          "description": "Order verified",
+          "date": "Oct 15, 2026",
+          "time": "02:20 PM",
+          "completed": true,
+          "location": "Rezoni Warehouse"
+        },
+        {
+          "title": "Dispatched & Packed",
+          "description": "Shipped via Delhivery Express Air",
+          "date": "Oct 15, 2026",
+          "time": "06:45 PM",
+          "completed": true,
+          "location": "Delhi Airport Hub"
+        },
+        {
+          "title": "In Transit",
+          "description": "Received at Mumbai Air Hub",
+          "date": "Oct 16, 2026",
+          "time": "03:10 AM",
+          "completed": true,
+          "location": "Mumbai Hub"
+        },
+        {
+          "title": "Delivered",
+          "description": "Delivered to customer doorstep",
+          "date": "Oct 16, 2026",
+          "time": "01:30 PM",
+          "completed": true,
+          "current": true,
+          "location": "Sanpada, Navi Mumbai"
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "userEmail": "testuser@rezoni.com",
+      "userName": "Test User",
+      "productTitle": "Crystal clear and does not turn yellow!",
+      "model": "Galaxy Z Flip6",
+      "rating": 5,
+      "body": "Best case ever for my Samsung Z Flip6. High quality finish!",
+      "image": null,
+      "id": "rev_1792206044888",
+      "date": "October 17, 2026"
+    }
+  ],
+  "returns": [
+    {
+      "id": "RET-8419",
+      "orderId": "RZ-84920",
+      "customerName": "Aman Sharma",
+      "customerEmail": "demo@rezoni.com",
+      "customerPhone": "+91 98765 43210",
+      "reason": "Ordered wrong model (needed S24 Ultra instead of Z Flip6)",
+      "status": "refunded",
+      "statusLabel": "Refund Processed to Original Payment Method",
+      "amount": 699,
+      "date": "October 16, 2026",
+      "items": "Anti-Yellow Magsafe Clear Case (Galaxy Z Flip6)",
+      "trackingNumber": "RT-BLUEDART-8419",
+      "notes": "Refund authorized and credited"
+    },
+    {
+      "id": "RET-7822",
+      "orderId": "RZ-78210",
+      "customerName": "Rohit Verma",
+      "customerEmail": "rohit@example.com",
+      "customerPhone": "+91 91234 56789",
+      "reason": "Wants to upgrade from Non-MagSafe to MagSafe variant",
+      "status": "requested",
+      "statusLabel": "Return Initiated - Awaiting QC Review",
+      "amount": 699,
+      "date": "October 17, 2026",
+      "items": "Anti-Yellow Clear Case (OnePlus 12)",
+      "notes": "Customer willing to pay the price differential for MagSafe ring version."
+    },
+    {
+      "id": "RET-5104",
+      "orderId": "RZ-51092",
+      "customerName": "Vikram Malhotra",
+      "customerEmail": "vikram.m@gmail.com",
+      "customerPhone": "+91 98111 22334",
+      "reason": "Outer courier packaging damaged during heavy transit rains",
+      "status": "refunded",
+      "statusLabel": "Refund Processed to Original UPI Account",
+      "amount": 999,
+      "date": "October 14, 2026",
+      "items": "Anti-Yellow Magsafe Clear Case (iPhone 16 Pro)",
+      "notes": "Instant refund credited back to customer UPI ID via Razorpay."
+    }
+  ]
+}

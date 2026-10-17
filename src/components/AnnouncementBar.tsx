@@ -71,7 +71,15 @@ export default function AnnouncementBar() {
           padding: '0 8px',
         }}
       >
-        <span>{announcements[currentIndex].text}</span>
+        <span
+          key={currentIndex}
+          style={{
+            display: 'inline-block',
+            animation: 'fadeIn 0.35s ease-out',
+          }}
+        >
+          {announcements[currentIndex].text}
+        </span>
       </div>
 
       <button

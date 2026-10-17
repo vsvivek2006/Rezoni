@@ -45,32 +45,33 @@ export default function HeroSlider() {
             </Link>
           ))}
 
-          {/* Desktop Nav Chevrons (matching live site 01_desktop_hero.png: transparent bg, crisp white stroke) */}
+          {/* Desktop Nav Chevrons (matching live site: circular glass bg, crisp white stroke) */}
           <button
             onClick={() => setActiveDesktopIndex((prev) => (prev - 1 + desktopHeroSlides.length) % desktopHeroSlides.length)}
             aria-label="Previous slide"
             style={{
               position: 'absolute',
-              left: '12px',
-              top: '50%',
+              left: '16px',
+              top: '55%',
               transform: 'translateY(-50%)',
-              width: '48px',
-              height: '48px',
-              backgroundColor: 'transparent',
+              width: '42px',
+              height: '42px',
+              backgroundColor: 'rgba(255, 255, 255, 0.38)',
+              backdropFilter: 'blur(4px)',
               color: '#ffffff',
+              borderRadius: '50%',
               border: 'none',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               zIndex: 10,
               cursor: 'pointer',
-              opacity: 0.85,
-              transition: 'opacity 0.2s',
+              transition: 'background-color 0.2s, transform 0.15s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.85')}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.6)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.38)')}
           >
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
@@ -80,32 +81,33 @@ export default function HeroSlider() {
             aria-label="Next slide"
             style={{
               position: 'absolute',
-              right: '12px',
-              top: '50%',
+              right: '16px',
+              top: '55%',
               transform: 'translateY(-50%)',
-              width: '48px',
-              height: '48px',
-              backgroundColor: 'transparent',
+              width: '42px',
+              height: '42px',
+              backgroundColor: 'rgba(255, 255, 255, 0.38)',
+              backdropFilter: 'blur(4px)',
               color: '#ffffff',
+              borderRadius: '50%',
               border: 'none',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               zIndex: 10,
               cursor: 'pointer',
-              opacity: 0.85,
-              transition: 'opacity 0.2s',
+              transition: 'background-color 0.2s, transform 0.15s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.85')}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.6)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.38)')}
           >
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
           </button>
         </div>
 
-        {/* Slide Content Below (Matching live markup from exact_hero.html) */}
+        {/* Slide Content Below (Matching live markup from exact rezoni.com) */}
         <div
           style={{
             textAlign: 'center',
@@ -115,46 +117,49 @@ export default function HeroSlider() {
         >
           <h2
             style={{
-              fontSize: '32px',
+              fontSize: '29px',
               fontWeight: 800,
-              letterSpacing: '-0.5px',
+              fontFamily: 'Montserrat, sans-serif',
+              letterSpacing: '0.2px',
               color: '#000000',
-              marginBottom: '6px',
+              paddingTop: '8px',
+              marginBottom: '4px',
             }}
           >
-            {dSlide.title}
+            {dSlide?.title}
           </h2>
           <p
             style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              letterSpacing: '1.5px',
+              fontSize: '13px',
+              fontWeight: 600,
+              fontFamily: 'Arial, sans-serif',
+              letterSpacing: '0.2px',
               textTransform: 'uppercase',
-              color: '#111111',
+              color: '#000000',
               marginBottom: '16px',
             }}
           >
-            {dSlide.subtitle}
+            {dSlide?.subtitle}
           </p>
           <div>
             <Link
-              href={dSlide.link}
+              href={dSlide?.link || '/collections/all'}
               style={{
                 display: 'inline-block',
                 backgroundColor: '#000000',
                 color: '#ffffff',
-                padding: '12px 34px',
-                fontSize: '12px',
+                padding: '14px 24px',
+                fontSize: '13px',
                 fontWeight: 700,
-                letterSpacing: '2px',
+                letterSpacing: '1px',
                 textTransform: 'uppercase',
-                borderRadius: '0px',
+                borderRadius: '4px',
                 transition: 'background-color 0.2s',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e65c00')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#000000')}
             >
-              Shop Now
+              SHOP NOW
             </Link>
           </div>
         </div>
@@ -184,7 +189,7 @@ export default function HeroSlider() {
             </Link>
           ))}
 
-          {/* Mobile Arrows */}
+          {/* Mobile Chevrons */}
           <button
             onClick={() => setActiveMobileIndex((prev) => (prev - 1 + mobileHeroSlides.length) % mobileHeroSlides.length)}
             aria-label="Previous mobile slide"
@@ -195,8 +200,10 @@ export default function HeroSlider() {
               transform: 'translateY(-50%)',
               width: '36px',
               height: '36px',
-              backgroundColor: 'transparent',
+              backgroundColor: 'rgba(255, 255, 255, 0.38)',
+              backdropFilter: 'blur(4px)',
               color: '#ffffff',
+              borderRadius: '50%',
               border: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -205,7 +212,7 @@ export default function HeroSlider() {
               cursor: 'pointer',
             }}
           >
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
@@ -220,8 +227,10 @@ export default function HeroSlider() {
               transform: 'translateY(-50%)',
               width: '36px',
               height: '36px',
-              backgroundColor: 'transparent',
+              backgroundColor: 'rgba(255, 255, 255, 0.38)',
+              backdropFilter: 'blur(4px)',
               color: '#ffffff',
+              borderRadius: '50%',
               border: 'none',
               display: 'flex',
               alignItems: 'center',
@@ -230,7 +239,7 @@ export default function HeroSlider() {
               cursor: 'pointer',
             }}
           >
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
           </button>
@@ -248,41 +257,43 @@ export default function HeroSlider() {
             style={{
               fontSize: '24px',
               fontWeight: 800,
-              letterSpacing: '-0.5px',
+              fontFamily: 'Montserrat, sans-serif',
+              letterSpacing: '0.2px',
               color: '#000000',
               marginBottom: '4px',
             }}
           >
-            {mSlide.title}
+            {mSlide?.title}
           </h2>
           <p
             style={{
-              fontSize: '11px',
-              fontWeight: 700,
-              letterSpacing: '1.2px',
+              fontSize: '12px',
+              fontWeight: 600,
+              fontFamily: 'Arial, sans-serif',
+              letterSpacing: '0.2px',
               textTransform: 'uppercase',
-              color: '#111111',
+              color: '#000000',
               marginBottom: '14px',
             }}
           >
-            {mSlide.subtitle}
+            {mSlide?.subtitle}
           </p>
           <div>
             <Link
-              href={mSlide.link}
+              href={mSlide?.link || '/collections/all'}
               style={{
                 display: 'inline-block',
                 backgroundColor: '#000000',
                 color: '#ffffff',
-                padding: '10px 28px',
-                fontSize: '11px',
+                padding: '12px 24px',
+                fontSize: '12px',
                 fontWeight: 700,
-                letterSpacing: '1.5px',
+                letterSpacing: '1px',
                 textTransform: 'uppercase',
-                borderRadius: '0px',
+                borderRadius: '4px',
               }}
             >
-              Shop Now
+              SHOP NOW
             </Link>
           </div>
         </div>

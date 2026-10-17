@@ -337,5 +337,870 @@ img {
   }
 }
 
+/* ========================================================
+   REZONI OFFICIAL HEADER ANIMATIONS & HOVER EFFECTS
+   ======================================================== */
+
+/* Directional Expanding Underline Animation for Header Links */
+.link--animated {
+  display: inline-block;
+  position: relative;
+  width: max-content;
+  text-decoration: none;
+  cursor: pointer;
+  padding-bottom: 2px;
+  color: #ffffff;
+  transition: opacity 0.2s ease;
+}
+
+.link--animated::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background-color: #ffffff;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.link--animated:hover::after,
+.link--animated.is-active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.link--animated:hover,
+.link--animated.is-active {
+  color: #ffffff !important;
+}
+
+/* Header Right Action Icons Micro-Interaction */
+.header-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  padding: 4px;
+  border-radius: 50%;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.header-icon-btn:hover {
+  opacity: 0.8;
+  transform: scale(1.08);
+}
+
+/* Mega Menu Backdrop Dimmer Overlay matching Rezoni .mega-menu:after */
+.mega-menu-backdrop {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(1.5px);
+  z-index: 40;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.mega-menu-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Mega Menu Card Image Zoom Micro-Interaction */
+.mega-menu-image-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  cursor: pointer;
+  width: 180px;
+}
+
+.mega-menu-image-card .image-wrapper {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background-color: #f7f7f7;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.mega-menu-image-card .image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.mega-menu-image-card:hover .image-wrapper img {
+  transform: scale(1.04);
+}
+
+.mega-menu-image-card .card-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #111111;
+  text-align: center;
+  transition: opacity 0.2s ease;
+}
+
+.mega-menu-image-card:hover .card-title {
+  opacity: 0.7;
+}
+
+/* Mega Menu Submenu Item Hover (1:1 with Rezoni .link--faded and .link-orange) */
+.link--faded {
+  transition: opacity 0.22s ease-in-out;
+  color: #404040;
+  font-size: 13.5px;
+  font-weight: 400;
+  display: inline-block;
+  line-height: 1.6;
+  text-decoration: none;
+}
+
+.link--faded:hover {
+  opacity: 0.7;
+  color: #111111;
+}
+
+.link-orange, a.link-orange, .mobile-nav__link.link-orange, .mobile-sub-link.link-orange {
+  color: #ff6700 !important;
+  font-weight: 500;
+}
+.link-orange:hover, a.link-orange:hover {
+  opacity: 0.8;
+}
+
+/* Rezoni Mobile Nav Animated Plus/Minus Icon */
+.animated-plus {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  flex-shrink: 0;
+  color: #222222;
+}
+
+.animated-plus::before,
+.animated-plus::after {
+  position: absolute;
+  content: "";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  background-color: currentColor;
+  transition: transform 0.35s ease-in-out, opacity 0.35s ease-in-out;
+}
+
+.animated-plus::before {
+  width: 10px;
+  height: 1.5px;
+  opacity: 1;
+}
+
+.animated-plus::after {
+  width: 1.5px;
+  height: 10px;
+}
+
+.animated-plus.is-open::before {
+  opacity: 0;
+}
+
+.animated-plus.is-open::before,
+.animated-plus.is-open::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* Mobile Nav Drawer Items */
+.mobile-nav-item {
+  border-bottom: 1px solid #ebebeb;
+}
+
+.mobile-nav-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 18px 0;
+  font-family: var(--font-family);
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: -0.3px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mobile-sub-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 0;
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 500;
+  color: #282828;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mobile-sub-link {
+  display: block;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #555555;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.mobile-sub-link:hover {
+  opacity: 0.7;
+}
+
+.mobile-images-scroller {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 12px 0 16px;
+  scrollbar-width: none;
+}
+.mobile-images-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-image-card {
+  flex: 0 0 120px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.mobile-image-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  background-color: #f5f5f5;
+}
+
+.mobile-image-card span {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #111111;
+  display: block;
+}
+
+/* ================= REZONI LIVE PDP STYLES ================= */
+.product-switcher-container {
+  border: 1px solid #d3d3d3;
+  border-radius: 12px 12px 0 0;
+  padding: 16px;
+  background: #f7f7f7;
+  margin-bottom: 16px;
+}
+
+.case-type-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 6px;
+}
+
+.product-switcher-dropdown {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #ffffff;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #111111;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.2em;
+  cursor: pointer;
+  margin-bottom: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.product-switcher-dropdown:focus {
+  border-color: #000000;
+}
+
+#variant-title {
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: #111111;
+  margin-top: 14px;
+}
+
+.variant-selection-container {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.variant-option {
+  width: 150px;
+  height: 113px;
+  padding: 1px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.1s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f8f8f8;
+  position: relative;
+  user-select: none;
+}
+
+.variant-option img {
+  width: 95px;
+  height: auto;
+  max-height: 70px;
+  object-fit: contain;
+}
+
+.variant-option p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333333;
+}
+
+.variant-option.selected {
+  border-color: orange;
+  box-shadow: 0 0 5px orange;
+  background: white;
+  cursor: default;
+}
+
+.variant-option.selected img {
+  border-bottom: solid 3px transparent;
+  border-image: linear-gradient(to right, transparent, #ff6700 50%, transparent) 1;
+}
+
+@media (max-width: 749px) {
+  .variant-selection-container {
+    width: 100%;
+  }
+  
+  .variant-option {
+    width: 100%;
+    flex: 1;
+  }
+}
+
+/* Guarantee Pill Button */
+.guarantee-button {
+  display: inline-flex;
+  align-items: center;
+  background-color: #ff6600;
+  color: white;
+  padding: 3px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+}
+
+.guarantee-button img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+@media (max-width: 600px) {
+  .guarantee-button {
+    font-size: 12px;
+    padding: 5px 15px;
+    margin-top: 1px;
+  }
+
+  .guarantee-button img {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+  }
+}
+
+/* Guarantee Container */
+.guarantee-container {
+  max-width: 600px;
+  margin: 50px auto 35px;
+  background-color: #ffe9d4;
+  border: 1px solid #f3a85f;
+  padding: 12px;
+  text-align: center;
+  border-radius: 8px;
+  position: relative;
+}
+
+.guarantee-icon {
+  position: absolute;
+  top: -70px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.guarantee-icon img {
+  width: 120px;
+  height: auto;
+  display: block;
+}
+
+.guarantee-content {
+  padding-top: 40px;
+  color: #333333;
+}
+
+.guarantee-content p {
+  font-size: 15px;
+  line-height: 1.4;
+  margin: 10px 0;
+  font-weight: 550;
+  color: #333333;
+}
+
+.guarantee-content span {
+  font-weight: bold;
+}
+
+.guarantee-content a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.guarantee-content a:hover {
+  text-decoration: underline;
+}
+
+/* Loox Reviews 1:1 Styling */
+.loox-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+@media (min-width: 1024px) {
+  .loox-reviews-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.loox-review-card-item {
+  background-color: #F0F0F0;
+  overflow: hidden;
+  color: #000000;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.loox-review-card-item:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.09);
+}
+
+.loox-review-card-item .item-img-top {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background-color: #e5e5e5;
+  cursor: zoom-in;
+}
+
+.loox-review-card-item .item-img-top img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.loox-review-card-item .item-img-top:hover img {
+  transform: scale(1.03);
+}
+
+.loox-review-card-item .box-content {
+  padding: 12px 14px;
+}
+
+.loox-review-card-item .block-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.loox-review-card-item .block-stars {
+  display: flex;
+  gap: 2px;
+  margin: 4px 0 8px;
+}
+
+.loox-review-card-item .main-text {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #282828;
+  white-space: pre-line;
+}
+
+.loox-review-card-item .time-meta {
+  color: #73777B;
+  font-size: 11px;
+  margin-top: 8px;
+}
+
+.loox-review-card-item .product-box-bottom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-top: solid 1px #e2e2e2;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.loox-review-card-item .product-box-bottom img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 3px;
+  background: #ffffff;
+}
+
+.loox-review-card-item .product-box-bottom .name {
+  font-size: 11.5px;
+  color: #555555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+/* FAQ Box */
+.faq-box {
+  background-color: #222222;
+  color: #ffffff;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #333333;
+}
+
+.faq-toggle {
+  width: 100%;
+  background-color: #222222;
+  color: #ffffff;
+  border: none;
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+
+.faq-toggle:hover {
+  background-color: #2a2a2a;
+}
+
+.faq-answer {
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.7;
+  padding: 16px 20px;
+  border-top: 1px solid #e5e5e5;
+}
+
+/* Slider scrollbar hiding across all browsers (WebKit, Firefox, IE/Edge) */
+.no-scrollbar::-webkit-scrollbar,
+.hide-scrollbar::-webkit-scrollbar,
+.scroller::-webkit-scrollbar,
+[data-scrollable]::-webkit-scrollbar {
+  display: none !important;
+}
+
+.no-scrollbar,
+.hide-scrollbar,
+.scroller,
+[data-scrollable] {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* Authentic Rezoni PDP Anti-Yellow Top Guarantee Banner */
+.rezoni-anti-yellow-header {
+  background-color: #333333;
+  color: #ffffff;
+  text-align: center;
+  padding: 10px 16px;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  letter-spacing: 0.2px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .rezoni-anti-yellow-header {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 8px 12px;
+  }
+}
+
+/* Authentic PDP Customer Reviews Header */
+.customer-reviews-section {
+  position: relative;
+  text-align: center;
+  background: #f3f2f2;
+  padding-top: 46px;
+  padding-bottom: 46px;
+  border-radius: 8px;
+  z-index: 1;
+}
+
+.customer-reviews-title {
+  font-size: 32px;
+  font-weight: 900;
+  color: #0D0D0D;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  max-width: 800px;
+  margin: 0 auto 12px;
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 768px) {
+  .customer-reviews-title {
+    font-size: 22px;
+    padding: 0 16px;
+  }
+}
+
+/* Authentic PDP Video Split Sections (1:1 with Rezoni Sections A, B, C, D) */
+.rezoni-split-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  padding: 36px 40px;
+  border-radius: 12px;
+  gap: 48px;
+}
+
+.rezoni-split-section.reverse {
+  flex-direction: row-reverse;
+}
+
+.rezoni-split-video {
+  flex: 1;
+  text-align: center;
+}
+
+.rezoni-split-video video {
+  width: 100%;
+  max-width: 580px;
+  border-radius: 10px;
+  display: block;
+  margin: 0 auto;
+}
+
+.rezoni-split-text {
+  flex: 1;
+}
+
+.rezoni-split-text h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.rezoni-split-text p {
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .rezoni-split-section,
+  .rezoni-split-section.reverse {
+    flex-direction: column !important;
+    padding: 20px 16px;
+    gap: 20px;
+    text-align: left;
+  }
+
+  .rezoni-split-video {
+    width: 100%;
+  }
+
+  .rezoni-split-video video {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .rezoni-split-text h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .rezoni-split-text p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+/* Authentic Rezoni Customer Reviews Header Section */
+.customer-reviews-section {
+  position: relative;
+  margin-top: 40px;
+  text-align: center;
+  background: #f3f2f2;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  z-index: 1;
+}
+
+@media screen and (max-width: 500px) {
+  .customer-reviews-section {
+    padding-top: 26px;
+    padding-bottom: 26px;
+  }
+}
+
+.customer-reviews-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #0D0D0D;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  width: 85%;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.2 !important;
+}
+
+@media (max-width: 768px) {
+  .customer-reviews-title {
+    font-size: 20px;
+    width: 92%;
+  }
+}
+
+/* Authentic Loox Reviews Grid & Animations (1:1 with Rezoni) */
+@keyframes fadeContent {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loox-review-card {
+  animation: fadeContent 0.35s ease-out forwards;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.loox-review-card:hover {
+  background-color: #fafafa !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.loox-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .loox-reviews-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .loox-reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
 

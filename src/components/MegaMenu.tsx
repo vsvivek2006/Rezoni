@@ -2,14 +2,18 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { desktopDeviceColumns } from '@/data/deviceMenuData';
+
+export type MegaMenuType = 'category' | 'device' | 'collections';
 
 interface MegaMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  type: 'category' | 'device';
+  type: MegaMenuType;
 }
 
-const brands = [
+// Category Items 1:1 with Rezoni live store
+const categoryProtection = [
   { name: 'iPhone Cases', link: '/collections/iphone-cases' },
   { name: 'Samsung Cases', link: '/products/anti-yellow-magsafe-clear-case-samsung' },
   { name: 'OnePlus Cases', link: '/products/anti-yellow-magsafe-case-oneplus' },
@@ -22,15 +26,60 @@ const brands = [
   { name: 'Redmi Cases', link: '/products/anti-yellow-magsafe-clear-case-redmi' },
   { name: 'Xiaomi Cases', link: '/products/anti-yellow-magsafe-clear-case-xiaomi' },
   { name: 'Motorola Cases', link: '/products/anti-yellow-magsafe-clear-case-motorola' },
+  { name: 'AirPods Cases', link: '/collections/airpods-gen-1-2' },
 ];
 
-const categories = [
-  { name: 'Anti-Yellow Clear Case', link: '/products/anti-yellow-magsafe-clear-case' },
-  { name: 'Reverb 2.0 Impact Case', link: '/products/reverb-2-0-impact-magsafe-clear-case' },
-  { name: 'Polaroid & Custom Cases', link: '/collections/custom-photo-case' },
-  { name: 'Football Collection', link: '/collections/football' },
-  { name: 'Best Sellers', link: '/collections/best-sellers' },
-  { name: 'Mixtape & Vintage', link: '/collections/mixtape' },
+const categoryAccessories = [
+  { name: 'Phone Grips', link: '/collections/phone-grips' },
+];
+
+const categoryPromos = [
+  {
+    title: 'iPhone Cases',
+    link: '/collections/iphone-cases',
+    img: 'https://www.rezoni.com/cdn/shop/files/menu_phone_case_720x.jpg?v=1656144671',
+  },
+  {
+    title: 'AirPods Cases',
+    link: '/collections/airpods-gen-1-2',
+    img: 'https://www.rezoni.com/cdn/shop/files/Menu_airpod_720x.jpg?v=1656144670',
+  },
+  {
+    title: 'Phone Grips',
+    link: '/collections/phone-grips',
+    img: 'https://www.rezoni.com/cdn/shop/files/menu_phone_grip_720x.jpg?v=1656144670',
+  },
+];
+
+// Collections 3-Column List 1:1 with Rezoni live store (desktop-menu-4)
+const collectionsCol1 = [
+  { name: 'Anti-Yellow Case', link: '/products/anti-yellow-magsafe-clear-case' },
+  { name: 'Reverb 2.0 Clear Case', link: '/products/reverb-2-0-impact-magsafe-clear-case' },
+  { name: 'Reverb Clear Case', link: '/products/clearvue' },
+  { name: 'Custom Photo Case', link: '/collections/custom-photo-case' },
+  { name: 'Mixtape', link: '/collections/mixtape' },
+  { name: 'Wild Cats', link: '/collections/wild-cats' },
+  { name: 'Y2K', link: '/collections/y2k' },
+  { name: 'Prints Seen On Social', link: '/collections/prints-seen-on-social' },
+  { name: 'Personalized', link: '/collections/personalised' },
+  { name: 'Tie Dye', link: '/collections/tie-dye' },
+  { name: 'Matching Sets', link: '/collections/matching-sets' },
+];
+
+const collectionsCol2 = [
+  { name: 'New Arrivals', link: '/collections/new-arrivals', isNew: true },
+  { name: 'Polaroid Photo Case', link: '/collections/polaroid-photo-case' },
+  { name: 'Hearts', link: '/collections/heart' },
+  { name: 'Floral', link: '/collections/floral' },
+  { name: 'Stickers', link: '/collections/stickers' },
+  { name: 'Butterfly', link: '/collections/butterfly' },
+  { name: 'Unisex', link: '/collections/unisex' },
+];
+
+const collectionsCol3 = [
+  { name: 'Football', link: '/collections/football' },
+  { name: 'Zodiac', link: '/collections/zodiac' },
+  { name: 'Featured Prints', link: '/collections/featured-prints' },
 ];
 
 export default function MegaMenu({ isOpen, onClose, type }: MegaMenuProps) {
@@ -45,156 +94,300 @@ export default function MegaMenu({ isOpen, onClose, type }: MegaMenuProps) {
         left: 0,
         width: '100%',
         backgroundColor: '#ffffff',
-        color: '#000000',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-        borderTop: '1px solid #ebebeb',
-        zIndex: 40,
-        padding: '36px 0',
+        color: '#111111',
+        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.12)',
+        borderTop: '1px solid #1a1a1a',
+        zIndex: 50,
+        padding: type === 'device' ? '28px 0 36px' : '44px 0 48px',
+        animation: 'fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
-      <div className="container" style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 3fr', gap: '40px' }}>
-        {/* Column 1: Brands / Devices */}
-        <div>
-          <h4
-            style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              color: '#707070',
-              marginBottom: '16px',
-            }}
-          >
-            {type === 'category' ? 'Shop by Device' : 'Popular Brands'}
-          </h4>
-          <ul style={{ listStyle: 'none', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-            {brands.map((b) => (
-              <li key={b.name}>
-                <Link
-                  href={b.link}
-                  onClick={onClose}
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    color: '#282828',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ff6700')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#282828')}
-                >
-                  {b.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="container">
+        {/* ================= TYPE: CATEGORY ================= */}
+        {type === 'category' && (
+          <div style={{ display: 'grid', gridTemplateColumns: '240px 180px 1fr', gap: '48px', alignItems: 'start' }}>
+            {/* Column 1: Cases & Protection */}
+            <div>
+              <span
+                style={{
+                  display: 'block',
+                  fontFamily: 'Montserrat, sans-serif',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.2px',
+                  color: '#111111',
+                  marginBottom: '16px',
+                }}
+              >
+                Cases &amp; Protection
+              </span>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', padding: 0, margin: 0 }}>
+                {categoryProtection.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.link}
+                      onClick={onClose}
+                      className="link--faded"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-        {/* Column 2: Collections & Models */}
-        <div>
-          <h4
-            style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              color: '#707070',
-              marginBottom: '16px',
-            }}
-          >
-            Featured Collections
-          </h4>
-          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {categories.map((c) => (
-              <li key={c.name}>
-                <Link
-                  href={c.link}
-                  onClick={onClose}
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 500,
-                    color: '#282828',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ff6700')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = '#282828')}
-                >
-                  {c.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+            {/* Column 2: Accessories */}
+            <div>
+              <span
+                style={{
+                  display: 'block',
+                  fontFamily: 'Montserrat, sans-serif',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.2px',
+                  color: '#111111',
+                  marginBottom: '16px',
+                }}
+              >
+                Accessories
+              </span>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', padding: 0, margin: 0 }}>
+                {categoryAccessories.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.link}
+                      onClick={onClose}
+                      className="link--faded"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-        {/* Column 3: Visual Feature Promo */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-          <Link
-            href="/products/anti-yellow-magsafe-clear-case"
-            onClick={onClose}
+            {/* Column 3: 3 Promotional Image Cards matching Rezoni */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', maxWidth: '640px', justifySelf: 'end' }}>
+              {categoryPromos.map((p) => (
+                <Link
+                  key={p.title}
+                  href={p.link}
+                  onClick={onClose}
+                  className="mega-menu-image-card"
+                >
+                  <div className="image-wrapper">
+                    <img
+                      src={p.img}
+                      alt={p.title}
+                      loading="lazy"
+                    />
+                  </div>
+                  <span className="card-title">
+                    {p.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ================= TYPE: DEVICE (1:1 with Rezoni live store desktop-menu-2) ================= */}
+        {type === 'device' && (
+          <div
             style={{
-              position: 'relative',
-              borderRadius: '6px',
-              overflow: 'hidden',
-              display: 'block',
-              aspectRatio: '1',
-              backgroundColor: '#f5f5f5',
+              maxHeight: 'calc(100vh - 140px)',
+              overflowY: 'auto',
+              paddingRight: '12px',
             }}
+            className="custom-scroll"
           >
-            <img
-              src="https://cdn.shopify.com/s/files/1/0621/7829/6040/files/DSC00062.jpg?v=1729097458"
-              alt="Anti-Yellow Case"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
             <div
               style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                padding: '12px',
-                background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-                color: '#ffffff',
-                fontSize: '12px',
-                fontWeight: 600,
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '32px 48px',
+                justifyContent: 'flex-start',
               }}
             >
-              Anti-Yellow Series
+              {desktopDeviceColumns.map((col) => (
+                <div
+                  key={col.id}
+                  style={{
+                    minWidth: '170px',
+                    maxWidth: '220px',
+                    flex: '1 0 170px',
+                  }}
+                >
+                  {col.titleHref ? (
+                    <Link
+                      href={col.titleHref}
+                      onClick={onClose}
+                      style={{
+                        display: 'block',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px',
+                        color: '#111111',
+                        marginBottom: '14px',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {col.title}
+                    </Link>
+                  ) : (
+                    <span
+                      style={{
+                        display: 'block',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px',
+                        color: '#111111',
+                        marginBottom: '14px',
+                      }}
+                    >
+                      {col.title}
+                    </span>
+                  )}
+                  <ul
+                    style={{
+                      listStyle: 'none',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '7px',
+                      padding: 0,
+                      margin: 0,
+                    }}
+                  >
+                    {col.items.map((item, itIdx) => {
+                      const itemUrl = item.href.includes('model=')
+                        ? item.href
+                        : `${item.href}${item.href.includes('?') ? '&' : '?'}model=${encodeURIComponent(item.name)}`;
+                      return (
+                        <li key={`${item.name}-${itIdx}`}>
+                          <Link
+                            href={itemUrl}
+                            onClick={onClose}
+                            className={`link--faded ${item.isOrange ? 'link-orange' : ''}`}
+                            style={{
+                              fontSize: '13px',
+                              lineHeight: 1.5,
+                            }}
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
             </div>
-          </Link>
+          </div>
+        )}
 
-          <Link
-            href="/collections/football"
-            onClick={onClose}
-            style={{
-              position: 'relative',
-              borderRadius: '6px',
-              overflow: 'hidden',
-              display: 'block',
-              aspectRatio: '1',
-              backgroundColor: '#f5f5f5',
-            }}
-          >
-            <img
-              src="https://cdn.shopify.com/s/files/1/0621/7829/6040/files/DSC01921.jpg?v=1733748876"
-              alt="Football Collection"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                padding: '12px',
-                background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-                color: '#ffffff',
-                fontSize: '12px',
-                fontWeight: 600,
-              }}
-            >
-              Football Collection
+        {/* ================= TYPE: COLLECTIONS (Exact 3-Column List matching Rezoni desktop-menu-4) ================= */}
+        {type === 'collections' && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '48px', maxWidth: '850px', margin: '0 auto', alignItems: 'start' }}>
+            {/* Column 1 */}
+            <div>
+              <span
+                style={{
+                  display: 'block',
+                  fontFamily: 'Montserrat, sans-serif',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.2px',
+                  color: '#111111',
+                  marginBottom: '16px',
+                }}
+              >
+                Collection
+              </span>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', padding: 0, margin: 0 }}>
+                {collectionsCol1.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.link}
+                      onClick={onClose}
+                      className="link--faded"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </Link>
-        </div>
+
+            {/* Column 2 */}
+            <div>
+              <span
+                style={{
+                  display: 'block',
+                  fontFamily: 'Montserrat, sans-serif',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.2px',
+                  color: '#111111',
+                  marginBottom: '16px',
+                }}
+              >
+                Collection
+              </span>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', padding: 0, margin: 0 }}>
+                {collectionsCol2.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.link}
+                      onClick={onClose}
+                      className={`link--faded ${item.isNew ? 'link-orange' : ''}`}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Column 3 */}
+            <div>
+              <span
+                style={{
+                  display: 'block',
+                  fontFamily: 'Montserrat, sans-serif',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.2px',
+                  color: '#111111',
+                  marginBottom: '16px',
+                }}
+              >
+                Collection
+              </span>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', padding: 0, margin: 0 }}>
+                {collectionsCol3.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.link}
+                      onClick={onClose}
+                      className="link--faded"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

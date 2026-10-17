@@ -2,146 +2,58 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import productsData from '@/data/products.json';
+import { deviceMediaMap } from '@/data/deviceMediaMap';
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Popular quick suggestion chips
-const suggestedSearches = [
-  'Anti-Yellow Case',
-  'The Weeknd',
-  'Football',
-  'Mixtape',
-  'Barcelona',
-  'Real Madrid',
-  'Manchester United',
-  'iPhone 16 Pro Max',
-  'MagSafe',
-  'Coldplay',
-  'Clear Case',
-];
+// Map device to appropriate brand PDP handle
+function getBrandHandleForDevice(modelKey: string, modelName: string): string {
+  const k = (modelKey + ' ' + modelName).toLowerCase();
+  if (k.includes('iphone') || k.includes('airpods') || k.includes('apple')) return 'anti-yellow-magsafe-clear-case';
+  if (k.includes('galaxy') || k.includes('samsung') || k.includes('z flip') || k.includes('z fold')) return 'anti-yellow-magsafe-clear-case-samsung';
+  if (k.includes('oneplus') || k.includes('nord')) return 'anti-yellow-magsafe-case-oneplus';
+  if (k.includes('pixel') || k.includes('google')) return 'anti-yellow-magsafe-clear-case-google-pixel';
+  if (k.includes('nothing') || k.includes('cmf')) return 'anti-yellow-magsafe-clear-case-nothing';
+  if (k.includes('xiaomi') || k.includes('redmi') || k.includes('mi ')) return 'anti-yellow-magsafe-clear-case-xiaomi';
+  if (k.includes('iqoo')) return 'anti-yellow-magsafe-clear-case-iqoo';
+  if (k.includes('vivo')) return 'anti-yellow-magsafe-clear-case-vivo';
+  if (k.includes('realme') || k.includes('narzo')) return 'anti-yellow-magsafe-clear-case-realme';
+  if (k.includes('motorola') || k.includes('moto')) return 'anti-yellow-magsafe-clear-case-motorola';
+  if (k.includes('oppo') || k.includes('find n')) return 'anti-yellow-magsafe-clear-case-oppo-x-series';
+  if (k.includes('poco')) return 'anti-yellow-magsafe-clear-case-poco';
+  return 'anti-yellow-magsafe-clear-case';
+}
 
-// Curated collections with matching keywords for smart collection search
-const availableCollections = [
-  {
-    title: 'Anti-Yellow Clear Cases',
-    href: '/collections/anti-yellow-case',
-    keywords: ['anti-yellow', 'antiyellow', 'clear', 'transparent', 'transperent', 'crystal', 'clean', 'yellow', 'magsafe'],
-  },
-  {
-    title: 'Football Club Collection',
-    href: '/collections/football',
-    keywords: ['football', 'soccer', 'jersey', 'barca', 'barcelona', 'madrid', 'real madrid', 'united', 'manchester', 'manu', 'mancity', 'city', 'arsenal', 'gunners', 'chelsea', 'juventus', 'juve', 'bayern', 'munich', 'messi', 'ronaldo', 'cr7', 'club'],
-  },
-  {
-    title: 'The Weeknd Collection',
-    href: '/collections/the-weeknd',
-    keywords: ['the weeknd', 'weeknd', 'weekend', 'starboy', 'xo', 'abel', 'after hours', 'dawn fm', 'mixtape'],
-  },
-  {
-    title: 'Mixtape Collection',
-    href: '/collections/mixtape',
-    keywords: ['mixtape', 'music', 'cassette', 'rock', 'band', 'bands', 'coldplay', 'metallica', 'linkin park', 'nirvana', 'songs', 'playlist'],
-  },
-  {
-    title: 'iPhone Cases',
-    href: '/collections/iphone-cases',
-    keywords: ['iphone', 'apple', 'ios', 'iphone 16', 'iphone 15', 'iphone 14', 'iphone 13', 'pro max'],
-  },
-  {
-    title: 'Reverb Case Collection',
-    href: '/collections/reverb-case',
-    keywords: ['reverb', 'bumper', 'shockproof', 'camera protection', 'matte', 'grip'],
-  },
-  {
-    title: 'Best Sellers',
-    href: '/collections/best-sellers',
-    keywords: ['best', 'sellers', 'trending', 'popular', 'top', 'favorite', 'hot'],
-  },
-  {
-    title: 'New Arrivals',
-    href: '/collections/new-arrivals',
-    keywords: ['new', 'arrivals', 'latest', 'fresh', 'newest', 'recent', 'drop'],
-  },
-  {
-    title: 'Polaroid Collection',
-    href: '/collections/polaroid',
-    keywords: ['polaroid', 'photo', 'camera', 'retro', 'memories'],
-  },
-  {
-    title: 'Impact Cases',
-    href: '/collections/impact-cases',
-    keywords: ['impact', 'tough', 'heavy duty', 'drop test', 'protection', 'rugged'],
-  },
-];
-
-// Direct entity/brand aliases to link user search terms directly to product titles
 const DIRECT_ALIASES: Record<string, string> = {
   'barca': 'barcelona',
   'messi': 'barcelona',
   'cr7': 'real madrid',
   'ronaldo': 'real madrid',
-  'bellingham': 'real madrid',
-  'vinicius': 'real madrid',
-  'vini': 'real madrid',
   'manu': 'manchester united',
-  'manutd': 'manchester united',
-  'mufc': 'manchester united',
-  'united': 'manchester united',
   'mancity': 'manchester city',
-  'mcfc': 'manchester city',
-  'city': 'manchester city',
-  'haaland': 'manchester city',
-  'madrid': 'real madrid',
-  'juve': 'juventus',
-  'bayern': 'bayern munich',
-  'munich': 'bayern munich',
-  'gunners': 'arsenal',
-  'saka': 'arsenal',
   'weeknd': 'the weeknd',
-  'weekend': 'the weeknd',
-  'starboy': 'the weeknd',
-  'xo': 'the weeknd',
-  'abel': 'the weeknd',
-  'chester': 'linkin park',
-  'kurt': 'nirvana',
-  'cobain': 'nirvana',
+  'antiyellow': 'anti-yellow',
 };
 
-// Broader category keywords to map generic terms to collections/products
-const CATEGORY_KEYWORDS: Record<string, string[]> = {
-  'football': ['barcelona', 'chelsea', 'arsenal', 'manchester united', 'juventus', 'real madrid', 'manchester city', 'bayern munich'],
-  'soccer': ['barcelona', 'chelsea', 'arsenal', 'manchester united', 'juventus', 'real madrid', 'manchester city', 'bayern munich'],
-  'jersey': ['barcelona', 'chelsea', 'arsenal', 'manchester united', 'juventus', 'real madrid', 'manchester city', 'bayern munich'],
-  'club': ['barcelona', 'chelsea', 'arsenal', 'manchester united', 'juventus', 'real madrid', 'manchester city', 'bayern munich'],
-  'music': ['coldplay', 'metallica', 'linkin park', 'nirvana', 'the weeknd'],
-  'rock': ['coldplay', 'metallica', 'linkin park', 'nirvana'],
-  'band': ['coldplay', 'metallica', 'linkin park', 'nirvana', 'the weeknd'],
-  'bands': ['coldplay', 'metallica', 'linkin park', 'nirvana', 'the weeknd'],
-  'metal': ['metallica'],
-  'clear': ['anti-yellow'],
-  'transparent': ['anti-yellow'],
-  'transperent': ['anti-yellow'],
-  'yellow': ['anti-yellow'],
-  'magsafe': ['magsafe'],
-  'moto': ['motorola', 'moto'],
-  'motorola': ['motorola', 'moto'],
-  'redmi': ['redmi'],
-  'realme': ['realme', 'narzo'],
-  'oneplus': ['oneplus', 'nord'],
-  'vivo': ['vivo'],
-  'iphone': ['iphone', 'reverb', 'anti-yellow'],
-};
+const STOP_WORDS = new Set(['a', 'an', 'the', 'for', 'with', 'cover', 'covers', 'case', 'cases']);
 
-// Filter out noise stop words that shouldn't penalize a search
-const STOP_WORDS = new Set(['a', 'an', 'the', 'for', 'with', 'case', 'cases', 'cover', 'covers', 'phone', 'mobile']);
+export interface SearchResultItem {
+  id: string;
+  title: string;
+  image: string;
+  price: number;
+  compare_at_price: number;
+  href: string;
+}
 
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
+  const router = useRouter();
   const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'products' | 'collections'>('products');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -149,131 +61,156 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       document.body.style.overflow = 'hidden';
       const timer = setTimeout(() => {
         inputRef.current?.focus();
-      }, 120);
+      }, 100);
       return () => clearTimeout(timer);
     } else {
       document.body.style.overflow = '';
       setQuery('');
-      setActiveTab('products');
     }
     return () => {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
 
-  // Robust multi-token scoring search
+  // Search logic matching rezoni: searches products and device models with authentic photos
   const filteredProducts = useMemo(() => {
     const cleanQ = query.trim().toLowerCase();
     if (!cleanQ) return [];
 
-    const rawTokens = cleanQ.split(/\s+/).filter(Boolean);
+    const rawTokens = cleanQ.split(/[\s\-_\/()]+/).filter(Boolean);
     const searchTokens = rawTokens.filter((t) => !STOP_WORDS.has(t));
     const tokensToUse = searchTokens.length > 0 ? searchTokens : rawTokens;
+    const compactQ = cleanQ.replace(/[\s\-_()]+/g, '');
 
-    const scored = productsData
-      .map((p) => {
-        let score = 0;
-        const title = p.title.toLowerCase();
-        const handle = p.handle.toLowerCase();
-        const cat = (p.category_tag || '').toLowerCase();
-        const sub = (p.sub_title || '').toLowerCase();
-        const fullBlob = `${title} ${handle} ${cat} ${sub}`;
+    const results: Array<{ item: SearchResultItem; score: number }> = [];
+    const seenHrefs = new Set<string>();
 
-        // 1. Exact or contiguous phrase bonus
-        if (title === cleanQ) score += 300;
-        else if (title.startsWith(cleanQ)) score += 160;
-        else if (title.includes(cleanQ)) score += 110;
-        else if (fullBlob.includes(cleanQ)) score += 70;
+    // 1. Match phone models in deviceMediaMap
+    for (const [modelKey, device] of Object.entries(deviceMediaMap)) {
+      const devName = device.name || modelKey;
+      const devNameLower = devName.toLowerCase();
+      const combined = `${modelKey} ${devNameLower}`;
+      const compactCombined = combined.replace(/[\s\-_()]+/g, '');
 
-        let matchedTokens = 0;
+      let modelScore = 0;
 
-        for (const token of tokensToUse) {
-          let tokenMatched = false;
+      if (devNameLower === cleanQ || modelKey === cleanQ) {
+        modelScore += 700;
+      } else if (compactCombined.includes(compactQ) && compactQ.length >= 3) {
+        modelScore += 550;
+      } else if (devNameLower.includes(cleanQ) || modelKey.includes(cleanQ)) {
+        modelScore += 450;
+      } else {
+        const allTokensMatch = tokensToUse.every((t) => {
+          const alias = DIRECT_ALIASES[t] || t;
+          return combined.includes(alias) || compactCombined.includes(alias);
+        });
 
-          // Word-boundary check for exact word in title
-          const wordRx = new RegExp(`\\b${token}\\b`, 'i');
-          if (wordRx.test(title)) {
-            score += 60;
-            tokenMatched = true;
-          } else if (title.includes(token)) {
-            score += 35;
-            tokenMatched = true;
-          }
-
-          // Direct alias match (e.g. 'barca' -> 'barcelona', 'starboy' -> 'the weeknd')
-          const alias = DIRECT_ALIASES[token];
-          if (alias && title.includes(alias)) {
-            score += 130;
-            tokenMatched = true;
-          }
-
-          // Subtitle / category / handle match
-          if (sub.includes(token) || cat.includes(token)) {
-            score += 30;
-            tokenMatched = true;
-          } else if (handle.includes(token)) {
-            score += 20;
-            tokenMatched = true;
-          }
-
-          // Category keyword expansion (e.g. 'football' -> list of clubs, 'clear' -> 'anti-yellow')
-          const catList = CATEGORY_KEYWORDS[token] || [];
-          for (const kw of catList) {
-            if (fullBlob.includes(kw)) {
-              score += 25;
-              tokenMatched = true;
-              break;
-            }
-          }
-
-          if (tokenMatched) matchedTokens++;
-        }
-
-        // Multi-token completion bonus
-        if (matchedTokens === tokensToUse.length && tokensToUse.length > 1) {
-          score += 60;
-        }
-
-        return { product: p, score };
-      })
-      .filter((r) => r.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .map((r) => r.product);
-
-    return scored;
-  }, [query]);
-
-  // Smart collection filtering
-  const filteredCollections = useMemo(() => {
-    const cleanQ = query.trim().toLowerCase();
-    if (!cleanQ) return availableCollections;
-
-    const tokens = cleanQ.split(/\s+/).filter(Boolean);
-
-    return availableCollections.filter((col) => {
-      const titleLower = col.title.toLowerCase();
-      // Title match
-      if (titleLower.includes(cleanQ)) return true;
-
-      // Token matches title
-      if (tokens.some((t) => titleLower.includes(t))) return true;
-
-      // Keyword matches
-      if (col.keywords.some((kw) => kw.includes(cleanQ) || tokens.some((t) => kw.includes(t) || t.includes(kw)))) {
-        return true;
-      }
-
-      // Check direct aliases
-      for (const t of tokens) {
-        const alias = DIRECT_ALIASES[t];
-        if (alias && (titleLower.includes(alias) || col.keywords.some((kw) => kw.includes(alias)))) {
-          return true;
+        if (allTokensMatch && tokensToUse.length > 0) {
+          modelScore += 350 + tokensToUse.length * 40;
         }
       }
 
-      return false;
-    });
+      if (modelScore > 0) {
+        const brandHandle = getBrandHandleForDevice(modelKey, devName);
+        const href = `/products/${brandHandle}?model=${encodeURIComponent(devName)}`;
+
+        if (!seenHrefs.has(href)) {
+          seenHrefs.add(href);
+          results.push({
+            item: {
+              id: `device-${modelKey}`,
+              title: `Anti-Yellow Magsafe Clear Case ${devName}`,
+              image: device.magsafe || device.clear || 'https://cdn.shopify.com/s/files/1/0621/7829/6040/files/DSC00062.jpg?v=1729097458',
+              price: 699,
+              compare_at_price: 999,
+              href,
+            },
+            score: modelScore,
+          });
+        }
+      }
+    }
+
+    // 2. Match products in productsData
+    for (const p of productsData as any[]) {
+      let score = 0;
+      let matchedModel: string | undefined = undefined;
+
+      const title = (p.title || '').toLowerCase();
+      const handle = (p.handle || '').toLowerCase();
+      const models: string[] = p.models || [];
+      const modelsStr = models.join(' ').toLowerCase();
+
+      if (title === cleanQ) {
+        score += 500;
+      } else if (title.startsWith(cleanQ)) {
+        score += 300;
+      } else if (title.includes(cleanQ)) {
+        score += 200;
+      }
+
+      if (modelsStr.includes(cleanQ)) {
+        score += 220;
+        const found = models.find((m) => m.toLowerCase().includes(cleanQ));
+        if (found) matchedModel = found;
+      }
+
+      let matchedTokens = 0;
+      for (const token of tokensToUse) {
+        const alias = DIRECT_ALIASES[token] || token;
+        if (title.includes(alias)) {
+          score += 70;
+          matchedTokens++;
+        } else if (handle.includes(alias)) {
+          score += 40;
+          matchedTokens++;
+        } else if (modelsStr.includes(alias)) {
+          score += 35;
+          matchedTokens++;
+          if (!matchedModel) {
+            const found = models.find((m) => m.toLowerCase().includes(alias));
+            if (found) matchedModel = found;
+          }
+        }
+      }
+
+      if (matchedTokens === tokensToUse.length && tokensToUse.length > 1) {
+        score += 100;
+      }
+
+      if (score > 0) {
+        const href = matchedModel
+          ? `/products/${p.handle}?model=${encodeURIComponent(matchedModel)}`
+          : `/products/${p.handle}`;
+
+        if (!seenHrefs.has(href)) {
+          seenHrefs.add(href);
+          results.push({
+            item: {
+              id: p.id || p.handle,
+              title: p.title,
+              image: p.primary_image,
+              price: Number(p.price || 699),
+              compare_at_price: Number(p.compare_at_price || 999),
+              href,
+            },
+            score,
+          });
+        }
+      }
+    }
+
+    return results.sort((a, b) => b.score - a.score).map((r) => r.item);
   }, [query]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      onClose();
+      router.push(`/collections/all?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -281,272 +218,186 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     <div
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        inset: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
         zIndex: 99999,
         display: 'flex',
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-end', // Slide in from right (1:1 with Rezoni)
         fontFamily: 'Montserrat, sans-serif',
       }}
       onClick={onClose}
     >
-      {/* Search Drawer matching live Rezoni mobile search */}
+      {/* 1:1 Rezoni Predictive Search Drawer */}
       <div
         style={{
           width: '100%',
-          maxWidth: '460px',
+          maxWidth: '480px',
           height: '100%',
           backgroundColor: '#ffffff',
           color: '#000000',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '10px 0 30px rgba(0,0,0,0.2)',
-          animation: 'slideInLeft 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          boxShadow: '-10px 0 35px rgba(0,0,0,0.25)',
+          animation: 'slideInRight 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Exact Header matching live Rezoni search bar */}
-        <div
+        {/* Drawer Header matching Rezoni 1:1 */}
+        <header
           style={{
-            height: '62px',
-            padding: '0 16px',
+            height: '64px',
+            padding: '0 20px',
             borderBottom: '1px solid #ebebeb',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'space-between',
             gap: '12px',
-            backgroundColor: '#ffffff',
           }}
         >
-          {/* Thin Search Icon on Left */}
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            stroke="#222222"
-            strokeWidth="1.8"
-            style={{ flexShrink: 0 }}
-          >
-            <circle cx="8.5" cy="8.5" r="5.5" />
-            <line x1="12.5" y1="12.5" x2="18" y2="18" />
-          </svg>
-
-          {/* Borderless Input with 16px font-size to prevent mobile auto-zoom */}
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search cases, football, artists, models..."
+          <form
+            onSubmit={handleSubmit}
             style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
               flex: 1,
-              border: 'none',
-              outline: 'none',
-              background: 'transparent',
-              fontSize: '16px', // 16px prevents iOS Safari / Android auto-zoom
-              fontWeight: 400,
-              color: '#111111',
-              fontFamily: 'inherit',
             }}
-          />
-
-          {/* Clear input button when query is present */}
-          {query.trim().length > 0 && (
-            <button
-              onClick={() => {
-                setQuery('');
-                inputRef.current?.focus();
-              }}
-              aria-label="Clear search input"
-              style={{
-                background: '#eeeeee',
-                border: 'none',
-                width: '22px',
-                height: '22px',
-                borderRadius: '50%',
-                cursor: 'pointer',
-                color: '#555555',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '12px',
-                padding: 0,
-                flexShrink: 0,
-              }}
+          >
+            {/* 1:1 Rezoni Search Icon */}
+            <svg
+              focusable="false"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              style={{ flexShrink: 0, stroke: 'currentColor', fill: 'none' }}
             >
-              ✕
-            </button>
-          )}
+              <path
+                d="M12.336 12.336c2.634-2.635 2.682-6.859.106-9.435-2.576-2.576-6.8-2.528-9.435.106C.373 5.642.325 9.866 2.901 12.442c2.576 2.576 6.8 2.528 9.435-.106zm0 0L17 17"
+                strokeWidth="1.9"
+              />
+            </svg>
 
-          {/* Close Search Drawer Button */}
+            {/* 1:1 Rezoni Input Placeholder */}
+            <input
+              ref={inputRef}
+              type="text"
+              name="q"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              autoComplete="off"
+              autoCorrect="off"
+              aria-label="Search"
+              placeholder="What are you looking for?"
+              style={{
+                border: 'none',
+                outline: 'none',
+                width: '100%',
+                fontSize: '15px',
+                fontWeight: 500,
+                color: '#111111',
+                fontFamily: 'inherit',
+                background: 'transparent',
+              }}
+            />
+          </form>
+
+          {/* 1:1 Rezoni Close Button */}
           <button
+            type="button"
             onClick={onClose}
-            aria-label="Close search"
+            title="Close"
             style={{
-              background: 'transparent',
+              background: 'none',
               border: 'none',
-              padding: '6px',
               cursor: 'pointer',
               color: '#222222',
+              padding: '6px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
             }}
           >
-            <svg width="20" height="20" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <line x1="2" y1="2" x2="16" y2="16" />
-              <line x1="16" y1="2" x2="2" y2="16" />
+            <svg focusable="false" width="14" height="14" viewBox="0 0 14 14" style={{ stroke: 'currentColor', fill: 'none' }}>
+              <path d="M13 13L1 1M13 1L1 13" strokeWidth="1.9" />
             </svg>
           </button>
-        </div>
+        </header>
 
-        {/* When Query is Present: Show PRODUCTS (N) / COLLECTIONS (N) tabs */}
-        {query.trim() !== '' ? (
-          <>
-            <div
-              style={{
-                display: 'flex',
-                gap: '20px',
-                padding: '16px 20px 0',
-                borderBottom: '1px solid #f0f0f0',
-              }}
-            >
-              <button
-                onClick={() => setActiveTab('products')}
+        {/* Drawer Content */}
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {query.trim() !== '' && (
+            <div>
+              {/* Rezoni Tab Header */}
+              <div
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  paddingBottom: '10px',
-                  fontSize: '12px',
-                  fontWeight: 800,
-                  letterSpacing: '0.8px',
-                  textTransform: 'uppercase',
-                  color: activeTab === 'products' ? '#000000' : '#888888',
-                  borderBottom: activeTab === 'products' ? '2.5px solid #000000' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
+                  padding: '16px 20px 10px',
+                  borderBottom: '1px solid #f0f0f0',
                 }}
               >
-                <span>PRODUCTS</span>
                 <span
                   style={{
-                    backgroundColor: activeTab === 'products' ? '#000000' : '#f0f0f0',
-                    color: activeTab === 'products' ? '#ffffff' : '#666666',
-                    fontSize: '10px',
-                    padding: '2px 6px',
-                    borderRadius: '10px',
+                    fontSize: '13px',
                     fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    color: '#111111',
+                    borderBottom: '2px solid #000000',
+                    paddingBottom: '10px',
+                    display: 'inline-block',
                   }}
                 >
-                  {filteredProducts.length}
+                  Products ({filteredProducts.length})
                 </span>
-              </button>
-              <button
-                onClick={() => setActiveTab('collections')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  paddingBottom: '10px',
-                  fontSize: '12px',
-                  fontWeight: 800,
-                  letterSpacing: '0.8px',
-                  textTransform: 'uppercase',
-                  color: activeTab === 'collections' ? '#000000' : '#888888',
-                  borderBottom: activeTab === 'collections' ? '2.5px solid #000000' : '2.5px solid transparent',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}
-              >
-                <span>COLLECTIONS</span>
-                <span
-                  style={{
-                    backgroundColor: activeTab === 'collections' ? '#000000' : '#f0f0f0',
-                    color: activeTab === 'collections' ? '#ffffff' : '#666666',
-                    fontSize: '10px',
-                    padding: '2px 6px',
-                    borderRadius: '10px',
-                    fontWeight: 700,
-                  }}
-                >
-                  {filteredCollections.length}
-                </span>
-              </button>
-            </div>
+              </div>
 
-            {/* Tab Content */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
-              {activeTab === 'products' ? (
-                filteredProducts.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#777' }}>
-                    <p style={{ fontSize: '15px', fontWeight: 700, color: '#222', marginBottom: '8px' }}>
-                      No products found for &quot;{query}&quot;
-                    </p>
-                    <p style={{ fontSize: '13px', lineHeight: 1.5, color: '#666' }}>
-                      Try searching for a football club (e.g., Barca, Madrid, United), an artist (e.g., Weeknd, Coldplay), or model (e.g., Redmi, Moto, Realme, OnePlus).
-                    </p>
+              {/* 1:1 Rezoni Product List */}
+              <div style={{ padding: '8px 20px' }}>
+                {filteredProducts.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#777777', fontSize: '14px' }}>
+                    No results could be found.
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                    {filteredProducts.map((item) => (
-                      <Link
-                        key={item.id}
-                        href={`/products/${item.handle}`}
-                        onClick={onClose}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '14px',
-                          textDecoration: 'none',
-                          padding: '8px',
-                          borderRadius: '6px',
-                          transition: 'background-color 0.15s ease',
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#fbfbfb')}
-                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                      >
-                        <div
+                  filteredProducts.slice(0, 25).map((item) => (
+                    <Link
+                      key={item.id}
+                      href={item.href}
+                      onClick={onClose}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '12px 0',
+                        borderBottom: '1px solid #f5f5f5',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
+                        <span
                           style={{
-                            width: '58px',
-                            height: '70px',
-                            borderRadius: '4px',
-                            overflow: 'hidden',
+                            width: '52px',
+                            height: '62px',
                             backgroundColor: '#fafafa',
+                            borderRadius: '3px',
+                            overflow: 'hidden',
                             flexShrink: 0,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            border: '1px solid #f0f0f0',
                           }}
                         >
                           <img
-                            src={item.primary_image}
+                            src={item.image}
                             alt={item.title}
                             style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                           />
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div
+                        </span>
+
+                        <div style={{ flex: 1, minWidth: 0, paddingRight: '8px' }}>
+                          <span
                             style={{
-                              fontSize: '11px',
-                              fontWeight: 600,
-                              color: '#ff6700',
-                              textTransform: 'uppercase',
-                              letterSpacing: '0.5px',
-                              marginBottom: '2px',
-                            }}
-                          >
-                            {item.sub_title ? `${item.sub_title} • ` : ''}{item.category_tag}
-                          </div>
-                          <div
-                            style={{
+                              display: 'block',
                               fontSize: '13px',
                               fontWeight: 600,
                               color: '#111111',
@@ -558,169 +409,71 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             }}
                           >
                             {item.title}
-                          </div>
-                          <div style={{ fontSize: '13px', fontWeight: 700 }}>
-                            <span style={{ color: '#000000', marginRight: '8px' }}>
-                              Rs. {item.price.toFixed(2)}
+                          </span>
+
+                          <div style={{ fontSize: '13px' }}>
+                            <span style={{ color: '#ff6700', fontWeight: 700, marginRight: '8px' }}>
+                              Rs. {Number(item.price).toFixed(2)}
                             </span>
                             {item.compare_at_price > item.price && (
-                              <span style={{ color: '#999999', textDecoration: 'line-through', fontSize: '12px', fontWeight: 400 }}>
-                                Rs. {item.compare_at_price.toFixed(2)}
+                              <span style={{ color: '#999999', textDecoration: 'line-through', fontSize: '12px' }}>
+                                Rs. {Number(item.compare_at_price).toFixed(2)}
                               </span>
                             )}
                           </div>
                         </div>
-                      </Link>
-                    ))}
-                  </div>
-                )
-              ) : (
-                /* Collections Tab */
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  {filteredCollections.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '30px 0', color: '#777' }}>
-                      <p style={{ fontSize: '14px', fontWeight: 600, color: '#333' }}>No collections matched &quot;{query}&quot;</p>
-                    </div>
-                  ) : (
-                    filteredCollections.map((col, idx) => (
-                      <Link
-                        key={idx}
-                        href={col.href}
-                        onClick={onClose}
-                        style={{
-                          padding: '12px 14px',
-                          borderRadius: '6px',
-                          backgroundColor: '#f8f8f8',
-                          fontSize: '13px',
-                          fontWeight: 600,
-                          color: '#111111',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          textDecoration: 'none',
-                          transition: 'background-color 0.15s ease',
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#eeeeee')}
-                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f8f8f8')}
+                      </div>
+
+                      {/* 1:1 Rezoni Right Arrow */}
+                      <svg
+                        focusable="false"
+                        width="17"
+                        height="14"
+                        viewBox="0 0 17 14"
+                        style={{ stroke: 'currentColor', fill: 'none', flexShrink: 0, color: '#888888' }}
                       >
-                        <span>{col.title}</span>
-                        <span style={{ color: '#888888', fontSize: '15px' }}>&rarr;</span>
-                      </Link>
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Bottom View All Results Button */}
-            {filteredProducts.length > 0 && (
-              <div style={{ padding: '14px 20px', borderTop: '1px solid #ebebeb' }}>
-                <Link
-                  href={`/collections/all?q=${encodeURIComponent(query)}`}
-                  onClick={onClose}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    backgroundColor: '#ff6700',
-                    color: '#ffffff',
-                    height: '46px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    fontWeight: 800,
-                    letterSpacing: '1.2px',
-                    textTransform: 'uppercase',
-                    textDecoration: 'none',
-                    transition: 'background-color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e65c00')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
-                >
-                  VIEW ALL {filteredProducts.length} RESULTS
-                </Link>
+                        <path d="M0 7h15M9 1l6 6-6 6" strokeWidth="1.9" />
+                      </svg>
+                    </Link>
+                  ))
+                )}
               </div>
-            )}
-          </>
-        ) : (
-          /* Empty state: Popular Searches & Featured Collections */
-          <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px' }}>
-            <div
-              style={{
-                fontSize: '11px',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                color: '#888888',
-                marginBottom: '12px',
-              }}
-            >
-              Popular Searches
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
-              {suggestedSearches.map((s, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setQuery(s)}
-                  style={{
-                    padding: '8px 14px',
-                    backgroundColor: '#f5f5f5',
-                    borderRadius: '20px',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    color: '#222222',
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#e8e8e8')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
+          )}
+        </div>
 
-            <div
+        {/* Drawer Footer matching Rezoni 1:1 */}
+        {query.trim() !== '' && filteredProducts.length > 0 && (
+          <footer
+            style={{
+              padding: '16px 20px',
+              borderTop: '1px solid #ebebeb',
+            }}
+          >
+            <Link
+              href={`/collections/all?q=${encodeURIComponent(query.trim())}`}
+              onClick={onClose}
               style={{
-                fontSize: '11px',
+                display: 'block',
+                width: '100%',
+                backgroundColor: '#000000',
+                color: '#ffffff',
+                textAlign: 'center',
+                padding: '14px 0',
+                fontSize: '13px',
                 fontWeight: 700,
                 textTransform: 'uppercase',
-                letterSpacing: '1px',
-                color: '#888888',
-                marginBottom: '12px',
+                letterSpacing: '0.08em',
+                borderRadius: '3px',
+                textDecoration: 'none',
+                transition: 'background-color 0.15s ease',
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#ff6700')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#000000')}
             >
-              Featured Collections
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {availableCollections.slice(0, 5).map((col, idx) => (
-                <Link
-                  key={idx}
-                  href={col.href}
-                  onClick={onClose}
-                  style={{
-                    padding: '12px 14px',
-                    borderRadius: '4px',
-                    backgroundColor: '#fafafa',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    color: '#111111',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    textDecoration: 'none',
-                    transition: 'background-color 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fafafa')}
-                >
-                  <span>{col.title}</span>
-                  <span style={{ color: '#888888', fontSize: '15px' }}>&rarr;</span>
-                </Link>
-              ))}
-            </div>
-          </div>
+              View all results
+            </Link>
+          </footer>
         )}
       </div>
     </div>

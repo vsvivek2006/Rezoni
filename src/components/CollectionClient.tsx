@@ -7,6 +7,7 @@ import ProductCard from '@/components/ProductCard';
 interface CollectionClientProps {
   handle: string;
   initialProducts: any[];
+  searchQuery?: string;
 }
 
 const subCollectionPills: { [key: string]: { label: string; href: string; iconText?: string; img?: string }[] } = {
@@ -24,14 +25,16 @@ const subCollectionPills: { [key: string]: { label: string; href: string; iconTe
   ]
 };
 
-export default function CollectionClient({ handle, initialProducts }: CollectionClientProps) {
+export default function CollectionClient({ handle, initialProducts, searchQuery }: CollectionClientProps) {
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc'>('featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  const title = handle
-    .split('-')
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+  const title = searchQuery
+    ? `Results for "${searchQuery}"`
+    : handle
+        .split('-')
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
 
   const sorted = [...initialProducts];
   if (sortBy === 'price-asc') {
@@ -178,26 +181,54 @@ export default function CollectionClient({ handle, initialProducts }: Collection
           </h1>
         )}
 
-        {/* Mobile 2-Column Product Grid matching live site */}
-        <div className="rezoni-product-grid">
-          {sorted.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={{
-                id: String(product.id),
-                title: product.title,
-                handle: product.handle,
-                category_tag: product.category_tag,
-                sub_title: product.sub_title,
-                price: product.price,
-                compare_at_price: product.compare_at_price,
-                primary_image: product.primary_image,
-                secondary_image: product.secondary_image,
-                swatches: product.swatches,
+        {/* Mobile 2-Column Product Grid or Empty State */}
+        {sorted.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '60px 20px', color: '#666' }}>
+            <p style={{ fontSize: '18px', fontWeight: 700, color: '#111', marginBottom: '8px' }}>
+              No products found {searchQuery ? `for "${searchQuery}"` : ''}
+            </p>
+            <p style={{ fontSize: '14px', marginBottom: '24px', color: '#666' }}>
+              Try searching with another keyword or explore all our phone cases.
+            </p>
+            <Link
+              href="/collections/all"
+              style={{
+                display: 'inline-block',
+                padding: '12px 28px',
+                backgroundColor: '#000000',
+                color: '#ffffff',
+                fontSize: '13px',
+                fontWeight: 700,
+                letterSpacing: '1px',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                borderRadius: '4px',
               }}
-            />
-          ))}
-        </div>
+            >
+              BROWSE ALL CASES
+            </Link>
+          </div>
+        ) : (
+          <div className="rezoni-product-grid">
+            {sorted.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={{
+                  id: String(product.id),
+                  title: product.title,
+                  handle: product.handle,
+                  category_tag: product.category_tag,
+                  sub_title: product.sub_title,
+                  price: product.price,
+                  compare_at_price: product.compare_at_price,
+                  primary_image: product.primary_image,
+                  secondary_image: product.secondary_image,
+                  swatches: product.swatches,
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

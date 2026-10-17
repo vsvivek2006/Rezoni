@@ -129,38 +129,42 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Price display: sale price in red accent, compare price in strikethrough */}
           <div style={{ fontSize: '11px', fontFamily: 'Montserrat, sans-serif', margin: '4px 0 6px' }}>
             <span style={{ color: '#de2a2a', marginRight: '8px', fontWeight: 500 }}>
-              Rs. {product.price.toFixed(2)}
+              Rs. {Number(product.price || 699).toFixed(2)}
             </span>
-            <span style={{ color: '#282828', textDecoration: 'line-through', fontWeight: 400 }}>
-              Rs. {product.compare_at_price.toFixed(2)}
-            </span>
+            {product.compare_at_price && (
+              <span style={{ color: '#282828', textDecoration: 'line-through', fontWeight: 400 }}>
+                Rs. {Number(product.compare_at_price).toFixed(2)}
+              </span>
+            )}
           </div>
 
           {/* Color Swatch Circles with concentric outline ring */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '5px', alignItems: 'center' }}>
-            {product.swatches.map((color, idx) => (
-              <span
-                key={idx}
-                onMouseEnter={() => setSelectedSwatch(idx)}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setSelectedSwatch(idx);
-                }}
-                style={{
-                  width: '15px',
-                  height: '15px',
-                  borderRadius: '50%',
-                  backgroundColor: color,
-                  border: color.toLowerCase() === '#ffffff' ? '1px solid #ddd' : 'none',
-                  outline: selectedSwatch === idx ? '1.5px solid #000000' : 'none',
-                  outlineOffset: '2px',
-                  cursor: 'pointer',
-                  display: 'inline-block',
-                }}
-              />
-            ))}
-          </div>
+          {product.swatches && product.swatches.length > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '5px', alignItems: 'center', minHeight: '18px' }}>
+              {product.swatches.map((color, idx) => (
+                <span
+                  key={idx}
+                  onMouseEnter={() => setSelectedSwatch(idx)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedSwatch(idx);
+                  }}
+                  style={{
+                    width: '15px',
+                    height: '15px',
+                    borderRadius: '50%',
+                    backgroundColor: color,
+                    border: color.toLowerCase() === '#ffffff' ? '1px solid #ddd' : 'none',
+                    outline: selectedSwatch === idx ? '1.5px solid #000000' : 'none',
+                    outlineOffset: '2px',
+                    cursor: 'pointer',
+                    display: 'inline-block',
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </Link>
     </div>
