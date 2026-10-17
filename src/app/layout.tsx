@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   icons: {
     icon: 'https://www.rezoni.com/cdn/shop/files/d3282d5e-8b1a-4631-95a0-2d76d4858e6d_96x96.png?v=1662053839',
   },
+  other: {
+    'p:domain_verify': 'af207071a0871ae92bad697aafd63a33',
+  },
 };
 
 export default function RootLayout({
@@ -30,6 +33,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="p:domain_verify" content="af207071a0871ae92bad697aafd63a33" />
+      </head>
       <body suppressHydrationWarning>
         <AuthProvider>
           <CartProvider>
