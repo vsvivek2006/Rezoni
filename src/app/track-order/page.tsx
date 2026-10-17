@@ -12,15 +12,16 @@ function TrackOrderContent() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [orderNotFound, setOrderNotFound] = useState(false);
+  const [lastSearchedQuery, setLastSearchedQuery] = useState('');
 
-  // Accordion state: Activity History open by default, others collapsed for clean curated view
+  // Accordion state: All collapsed by default for a clean, curated summary
   const [expandedSections, setExpandedSections] = useState<{
     activity: boolean;
     items: boolean;
     address: boolean;
   }>({
-    activity: true,
+    activity: false,
     items: false,
     address: false,
   });
@@ -33,26 +34,33 @@ function TrackOrderContent() {
   };
 
   const fetchTracking = async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
+    const trimmed = searchQuery.trim();
+    if (!trimmed) {
       setError('Please enter your Order ID, Phone Number, or Tracking Number.');
+      setOrderNotFound(false);
       return;
     }
     setLoading(true);
     setError(null);
-    setHasSearched(true);
+    setOrderNotFound(false);
+    setLastSearchedQuery(trimmed);
 
     try {
-      const res = await fetch(`/api/orders?query=${encodeURIComponent(searchQuery.trim())}`);
+      const res = await fetch(`/api/orders?query=${encodeURIComponent(trimmed)}`);
       const data = await res.json();
       if (res.ok && data.success && data.order) {
         setOrder(data.order);
+        setOrderNotFound(false);
+        setError(null);
       } else {
-        setError(data.message || 'No tracking information found for this query.');
         setOrder(null);
+        setOrderNotFound(true);
+        setError(data.message || 'Order not found');
       }
     } catch {
       setError('Unable to fetch live tracking status. Please check your connection.');
       setOrder(null);
+      setOrderNotFound(false);
     } finally {
       setLoading(false);
     }
@@ -71,21 +79,9 @@ function TrackOrderContent() {
   };
 
   return (
-    <div style={{ backgroundColor: '#fdfdfd', minHeight: '80vh', padding: '40px 20px 80px', fontFamily: 'Montserrat, sans-serif' }}>
-      {/* 1:1 Rezoni Shipway Search Card */}
-      <div
-        style={{
-          maxWidth: '520px',
-          margin: '2rem auto 2.5rem',
-          backgroundColor: '#ffffff',
-          borderRadius: '8px',
-          padding: '2.5rem 2rem',
-          boxShadow: '0 8px 30px rgba(0,0,0,0.08)',
-          textAlign: 'center',
-          color: '#000000',
-          border: '1px solid #f0f0f0',
-        }}
-      >
+    <div className="track-order-page-wrapper">
+      {/* Search Card */}
+      <div className="track-order-search-card">
         <h1
           style={{
             fontSize: '24px',
@@ -98,7 +94,7 @@ function TrackOrderContent() {
           Track Your Order
         </h1>
         <p style={{ fontSize: '13px', color: '#666666', margin: '0 0 22px' }}>
-          Real-time tracking directly synced from our logistics database.
+          Enter your Order ID or registered mobile number to check real-time courier status.
         </p>
 
         <form onSubmit={handleSearch}>
@@ -113,7 +109,7 @@ function TrackOrderContent() {
               marginBottom: '8px',
             }}
           >
-            Order ID / Phone / Tracking Number
+            Order ID / Mobile Number / AWB
           </label>
 
           <input
@@ -122,13 +118,13 @@ function TrackOrderContent() {
             name="order_tracking"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="e.g. RZ-206177 or 9876543210"
+            placeholder="e.g. #RZ-206177 or 9876543210"
             style={{
               width: '100%',
               height: '44px',
               padding: '10px 14px',
               borderRadius: '6px',
-              border: error ? '1.5px solid #ef4444' : '1px solid #d5d5d5',
+              border: error && !orderNotFound ? '1.5px solid #ef4444' : '1px solid #d5d5d5',
               backgroundColor: '#fbfbfb',
               color: '#000000',
               fontSize: '14px',
@@ -161,10 +157,10 @@ function TrackOrderContent() {
               opacity: loading ? 0.7 : 1,
             }}
           >
-            {loading ? 'Fetching from DB...' : 'Track Order'}
+            {loading ? 'Locating Order...' : 'Track Order'}
           </button>
 
-          {error && (
+          {error && !orderNotFound && (
             <span style={{ display: 'block', fontSize: '13px', color: '#dc2626', marginTop: '12px', fontWeight: 500 }}>
               {error}
             </span>
@@ -172,19 +168,74 @@ function TrackOrderContent() {
         </form>
       </div>
 
-      {/* Tracking Results Card */}
-      {order && (
+      {/* Reassuring Not Found Card */}
+      {orderNotFound && !loading && (
         <div
           style={{
-            maxWidth: '680px',
-            margin: '0 auto',
+            maxWidth: '520px',
+            margin: '1.2rem auto',
             backgroundColor: '#ffffff',
             borderRadius: '10px',
-            padding: '28px',
-            boxShadow: '0 10px 35px rgba(0,0,0,0.06)',
-            border: '1px solid #e8e8e8',
+            padding: '26px 20px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
+            border: '1px solid #fed7aa',
+            textAlign: 'center',
           }}
         >
+          <div
+            style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '50%',
+              backgroundColor: '#fff7ed',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 12px',
+              fontSize: '22px',
+            }}
+          >
+            🔍
+          </div>
+          <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#111827', margin: '0 0 8px' }}>
+            Order Details Not Found Yet
+          </h3>
+          <p style={{ fontSize: '13px', color: '#6b7280', lineHeight: 1.6, margin: '0 0 16px' }}>
+            We couldn&apos;t find an active order matching <strong style={{ color: '#111' }}>&ldquo;{lastSearchedQuery}&rdquo;</strong>.
+            Newly placed orders typically take <strong>15–30 minutes</strong> to sync with our courier partner.
+          </p>
+
+          <div
+            style={{
+              backgroundColor: '#f9fafb',
+              borderRadius: '6px',
+              padding: '12px 14px',
+              textAlign: 'left',
+              fontSize: '12px',
+              color: '#4b5563',
+              marginBottom: '16px',
+              border: '1px solid #f3f4f6',
+              lineHeight: 1.8,
+            }}
+          >
+            <div style={{ fontWeight: 700, color: '#111827', marginBottom: '4px' }}>Quick Checklist:</div>
+            <div>• Verify your Order ID format (e.g. <strong>RZ-206177</strong>).</div>
+            <div>• Or search using the <strong>10-digit mobile number</strong> provided during checkout.</div>
+            <div>• Check your order confirmation SMS or Email for direct status updates.</div>
+          </div>
+
+          <div style={{ fontSize: '12px', color: '#6b7280' }}>
+            Need help? Please write to our support team at{' '}
+            <a href="mailto:hello@rezoni.com" style={{ color: '#ff6700', fontWeight: 600, textDecoration: 'underline' }}>
+              hello@rezoni.com
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Tracking Results Card */}
+      {order && (
+        <div className="track-order-results-card">
           {/* Order Header */}
           <div
             style={{
@@ -205,22 +256,26 @@ function TrackOrderContent() {
                 </span>
                 <span
                   style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
                     backgroundColor: '#e6f4ea',
                     color: '#137333',
                     fontSize: '11px',
                     fontWeight: 700,
-                    padding: '2px 8px',
+                    padding: '3px 8px',
                     borderRadius: '999px',
                   }}
                 >
-                  Live DB Synced
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#16a34a' }} />
+                  Verified Order
                 </span>
               </div>
               <div style={{ fontSize: '18px', fontWeight: 800, color: '#111111', lineHeight: 1.3 }}>
                 {order.statusLabel}
               </div>
               <div style={{ fontSize: '13px', color: '#555555', marginTop: '4px' }}>
-                Carrier: <strong style={{ color: '#222' }}>{order.carrier}</strong> • Tracking ID: <strong style={{ color: '#ff6700' }}>{order.trackingNumber}</strong>
+                Carrier: <strong style={{ color: '#222' }}>{order.carrier}</strong> • Tracking AWB: <strong style={{ color: '#ff6700' }}>{order.trackingNumber}</strong>
               </div>
             </div>
 
@@ -235,7 +290,7 @@ function TrackOrderContent() {
             </div>
           </div>
 
-          {/* 5-Step Visual Status Progression Bar */}
+          {/* 5-Step Visual Status Progression Bar with Live Radar Ping */}
           <div style={{ padding: '6px 0 28px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', marginBottom: '14px' }}>
               {/* Connecting line */}
@@ -263,56 +318,91 @@ function TrackOrderContent() {
                         ? '50%'
                         : order.status === 'dispatched'
                         ? '25%'
-                        : '8%',
+                        : '6%',
                     transition: 'width 0.4s ease',
                   }}
                 />
               </div>
 
               {[
-                { label: 'Confirmed', active: true },
-                { label: 'Dispatched', active: ['dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(order.status) },
-                { label: 'In Transit', active: ['in_transit', 'out_for_delivery', 'delivered'].includes(order.status) },
-                { label: 'Out for Delivery', active: ['out_for_delivery', 'delivered'].includes(order.status) },
-                { label: 'Delivered', active: order.status === 'delivered' },
-              ].map((stage, idx) => (
-                <div key={idx} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '50%',
-                      backgroundColor: stage.active ? '#16a34a' : '#ffffff',
-                      border: stage.active ? 'none' : '2px solid #d1d5db',
-                      color: stage.active ? '#ffffff' : '#9ca3af',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '12px',
-                      fontWeight: 800,
-                      boxShadow: stage.active ? '0 2px 8px rgba(22, 163, 74, 0.4)' : 'none',
-                    }}
-                  >
-                    {stage.active ? '✓' : idx + 1}
+                { key: 'confirmed', label: 'Confirmed' },
+                { key: 'dispatched', label: 'Dispatched' },
+                { key: 'in_transit', label: 'In Transit' },
+                { key: 'out_for_delivery', label: 'Out for Delivery' },
+                { key: 'delivered', label: 'Delivered' },
+              ].map((stage, idx) => {
+                const currentStageIdx =
+                  order.status === 'delivered'
+                    ? 4
+                    : order.status === 'out_for_delivery'
+                    ? 3
+                    : order.status === 'in_transit'
+                    ? 2
+                    : order.status === 'dispatched'
+                    ? 1
+                    : 0;
+                const isCompleted = idx <= currentStageIdx;
+                const isCurrent = idx === currentStageIdx;
+
+                return (
+                  <div key={idx} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ position: 'relative', width: '28px', height: '28px' }}>
+                      {isCurrent && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            inset: '-4px',
+                            borderRadius: '50%',
+                            backgroundColor: 'rgba(22, 163, 74, 0.4)',
+                            animation: 'liveRadarPulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite',
+                            pointerEvents: 'none',
+                          }}
+                        />
+                      )}
+                      <div
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          backgroundColor: isCompleted ? '#16a34a' : '#ffffff',
+                          border: isCompleted ? 'none' : '2px solid #d1d5db',
+                          color: isCompleted ? '#ffffff' : '#9ca3af',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '12px',
+                          fontWeight: 800,
+                          position: 'relative',
+                          boxShadow: isCurrent
+                            ? '0 0 0 3px rgba(34, 197, 94, 0.3), 0 2px 8px rgba(22, 163, 74, 0.4)'
+                            : isCompleted
+                            ? '0 2px 6px rgba(22, 163, 74, 0.3)'
+                            : 'none',
+                        }}
+                      >
+                        {isCompleted ? '✓' : idx + 1}
+                      </div>
+                    </div>
+                    <span
+                      className="track-stage-label"
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: isCurrent ? 800 : isCompleted ? 700 : 500,
+                        color: isCurrent ? '#16a34a' : isCompleted ? '#111111' : '#888888',
+                        marginTop: '8px',
+                        textAlign: 'center',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {stage.label}
+                    </span>
                   </div>
-                  <span
-                    style={{
-                      fontSize: '11px',
-                      fontWeight: stage.active ? 700 : 500,
-                      color: stage.active ? '#111111' : '#888888',
-                      marginTop: '8px',
-                      textAlign: 'center',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {stage.label}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          {/* Curated Collapsible Details Accordions ("curted taki tap kar ke under ki dets de sake") */}
+          {/* Curated Collapsible Details Accordions (Collapsed by default) */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '10px' }}>
             
             {/* 1. Accordion: Activity History & Hub Scans */}
@@ -365,43 +455,88 @@ function TrackOrderContent() {
 
               {expandedSections.activity && (
                 <div style={{ padding: '16px 18px', borderTop: '1px solid #f0f0f0', backgroundColor: '#ffffff' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {order.timeline && order.timeline.length > 0 ? (
-                      order.timeline.map((item, tIdx) => (
-                        <div
-                          key={tIdx}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: '12px',
-                            fontSize: '13px',
-                          }}
-                        >
-                          <span
+                      order.timeline.map((item, tIdx) => {
+                        const isLatest = tIdx === 0;
+                        return (
+                          <div
+                            key={tIdx}
                             style={{
-                              color: item.completed ? '#16a34a' : '#cccccc',
-                              fontSize: '14px',
-                              lineHeight: 1,
-                              marginTop: '2px',
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              gap: '12px',
+                              fontSize: '13px',
                             }}
                           >
-                            {item.completed ? '●' : '○'}
-                          </span>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontWeight: item.current ? 700 : 500, color: item.completed ? '#111111' : '#777777' }}>
-                              {item.title} {item.location ? `— ${item.location}` : ''}
-                            </div>
-                            <div style={{ fontSize: '12px', color: '#666666', marginTop: '2px' }}>
-                              {item.description}
-                            </div>
-                            <div style={{ fontSize: '11px', color: '#999999', marginTop: '3px' }}>
-                              {item.date} {item.time ? `• ${item.time}` : ''}
+                            {isLatest ? (
+                              <div style={{ position: 'relative', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '2px', flexShrink: 0 }}>
+                                <span
+                                  style={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    borderRadius: '50%',
+                                    backgroundColor: 'rgba(22, 163, 74, 0.5)',
+                                    animation: 'liveRadarPulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite',
+                                  }}
+                                />
+                                <span
+                                  style={{
+                                    width: '8px',
+                                    height: '8px',
+                                    borderRadius: '50%',
+                                    backgroundColor: '#16a34a',
+                                    position: 'relative',
+                                  }}
+                                />
+                              </div>
+                            ) : (
+                              <span
+                                style={{
+                                  color: item.completed ? '#16a34a' : '#cccccc',
+                                  fontSize: '14px',
+                                  lineHeight: 1,
+                                  marginTop: '2px',
+                                  width: '16px',
+                                  textAlign: 'center',
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {item.completed ? '●' : '○'}
+                              </span>
+                            )}
+                            <div style={{ flex: 1 }}>
+                              <div style={{ fontWeight: isLatest ? 700 : item.current ? 700 : 500, color: item.completed ? '#111111' : '#777777', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                                <span>{item.title} {item.location ? `— ${item.location}` : ''}</span>
+                                {isLatest && (
+                                  <span
+                                    style={{
+                                      fontSize: '10px',
+                                      fontWeight: 800,
+                                      color: '#15803d',
+                                      backgroundColor: '#dcfce7',
+                                      padding: '2px 6px',
+                                      borderRadius: '4px',
+                                      textTransform: 'uppercase',
+                                      letterSpacing: '0.04em',
+                                    }}
+                                  >
+                                    Active Checkpoint
+                                  </span>
+                                )}
+                              </div>
+                              <div style={{ fontSize: '12px', color: '#666666', marginTop: '2px' }}>
+                                {item.description}
+                              </div>
+                              <div style={{ fontSize: '11px', color: '#999999', marginTop: '3px' }}>
+                                {item.date} {item.time ? `• ${item.time}` : ''}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
-                      <div style={{ fontSize: '12px', color: '#777' }}>Order received and registered in warehouse.</div>
+                      <div style={{ fontSize: '12px', color: '#777' }}>Order received and registered in logistics warehouse.</div>
                     )}
                   </div>
                 </div>
@@ -536,7 +671,7 @@ function TrackOrderContent() {
               )}
             </div>
 
-            {/* 3. Accordion: Delivery Address & Contact */}
+            {/* 3. Accordion: Delivery Address & Customer */}
             <div
               style={{
                 border: '1px solid #ebebeb',

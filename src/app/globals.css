@@ -1289,4 +1289,68 @@ img {
   }
 }
 
+/* Track Order Radar Ping & Responsive Mobile Styles */
+@keyframes liveRadarPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  60% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.track-order-page-wrapper {
+  background-color: #fdfdfd;
+  min-height: 80vh;
+  padding: 36px 16px 70px;
+  font-family: var(--font-family, Montserrat, sans-serif);
+}
+
+.track-order-search-card {
+  max-width: 520px;
+  margin: 1.5rem auto 2rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 2.2rem 2rem;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.06);
+  text-align: center;
+  border: 1px solid #ebebeb;
+}
+
+.track-order-results-card {
+  max-width: 680px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+  border: 1px solid #ebebeb;
+}
+
+@media (max-width: 640px) {
+  .track-order-page-wrapper {
+    padding: 14px 10px 36px !important;
+  }
+  .track-order-search-card {
+    margin: 0.6rem auto 1.2rem !important;
+    padding: 16px 14px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04) !important;
+  }
+  .track-order-results-card {
+    padding: 16px 12px !important;
+    border-radius: 8px !important;
+  }
+  .track-stage-label {
+    font-size: 10px !important;
+  }
+}
+
+
 
