@@ -524,9 +524,9 @@ img {
   transform: translate(-50%, -50%) rotate(90deg);
 }
 
-/* Mobile Nav Drawer Items */
+/* Mobile Nav Drawer Items matching rezoni.com 1:1 */
 .mobile-nav-item {
-  border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .mobile-nav-trigger {
@@ -534,17 +534,23 @@ img {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 18px 0;
+  padding: 21px 0;
   font-family: var(--font-family);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #111111;
   letter-spacing: -0.3px;
+  line-height: 1.2;
   text-decoration: none;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
+  transition: color 0.15s ease;
+}
+
+.mobile-nav-trigger:hover {
+  color: #555555;
 }
 
 .mobile-sub-trigger {
@@ -552,7 +558,7 @@ img {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 8px 0;
+  padding: 10px 0;
   font-family: var(--font-family);
   font-size: 15px;
   font-weight: 500;
@@ -566,16 +572,21 @@ img {
 
 .mobile-sub-link {
   display: block;
-  padding: 6px 0;
-  font-size: 14px;
+  padding: 8px 0;
+  font-size: 15px;
   font-weight: 400;
-  color: #555555;
+  color: #444444;
   text-decoration: none;
   transition: opacity 0.2s ease;
 }
 
 .mobile-sub-link:hover {
   opacity: 0.7;
+}
+
+.mobile-sub-link.link-orange {
+  color: #ff6700 !important;
+  font-weight: 600;
 }
 
 .mobile-images-scroller {

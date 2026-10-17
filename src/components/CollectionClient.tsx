@@ -25,13 +25,49 @@ const subCollectionPills: { [key: string]: { label: string; href: string; iconTe
   ]
 };
 
+const collectionTitleMap: Record<string, string> = {
+  'iphone-cases': 'iPhone Cases',
+  'anti-yellow-case': 'Anti-Yellow Clear Case',
+  'anti-yellow-case-1': 'Anti-Yellow Clear Case',
+  'airpods-gen-1-2': 'AirPods Gen 1 & 2 Cases',
+  'airpods-gen-3': 'AirPods Gen 3 Cases',
+  'airpods-pro': 'AirPods Pro Cases',
+  'airpods-pro-2nd-gen': 'AirPods Pro (2nd Gen) Cases',
+  'airpods-cases': 'AirPods Cases',
+  'phone-grips': 'Phone Grips',
+  'new-arrivals': 'New Arrivals',
+  'football': 'Football',
+  'mixtape': 'Mixtape',
+  'unisex': 'Unisex',
+  'custom-photo-case': 'Custom Photo Case',
+  'wild-cats': 'Wild Cats',
+  'prints-seen-on-social': 'Prints Seen On Social',
+  'y2k': 'Y2K',
+  'personalised': 'Personalized',
+  'personalized': 'Personalized',
+  'zodiac': 'Zodiac',
+  'featured-prints': 'Featured Prints',
+  'polaroid-photo-case': 'Polaroid Photo Case',
+  'heart': 'Hearts',
+  'hearts': 'Hearts',
+  'butterfly': 'Butterfly',
+  'floral': 'Floral',
+  'tie-dye': 'Tie Dye',
+  'stickers': 'Stickers',
+  'matching-sets': 'Matching Sets',
+  'best-sellers': 'Best Sellers',
+  'best-seller': 'Best Sellers',
+  'all': 'All Cases',
+};
+
 export default function CollectionClient({ handle, initialProducts, searchQuery }: CollectionClientProps) {
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc'>('featured');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const title = searchQuery
     ? `Results for "${searchQuery}"`
-    : handle
+    : collectionTitleMap[handle] ||
+      handle
         .split('-')
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
         .join(' ');

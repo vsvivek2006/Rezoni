@@ -297,16 +297,15 @@ export default function Header() {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.6)',
-            backdropFilter: 'blur(3px)',
+            backgroundColor: 'rgba(0,0,0,0.3)',
             zIndex: 150,
           }}
           onClick={closeMobileMenu}
         >
           <div
             style={{
-              width: '85vw',
-              maxWidth: '380px',
+              width: '89vw',
+              maxWidth: '400px',
               height: '100%',
               backgroundColor: '#ffffff',
               color: '#111111',
@@ -315,18 +314,19 @@ export default function Header() {
               justifyContent: 'space-between',
               animation: 'slideFromLeft 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
               overflowY: 'auto',
-              boxShadow: '16px 0 40px rgba(0,0,0,0.2)',
+              boxShadow: '16px 0 40px rgba(0,0,0,0.15)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drawer Header with Close Button on Top Right (1:1 Rezoni) */}
             <div
               style={{
+                position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                padding: '16px 20px',
-                borderBottom: '1px solid #ebebeb',
+                padding: '20px 24px 6px',
+                flexShrink: 0,
               }}
             >
               <button
@@ -335,7 +335,7 @@ export default function Header() {
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#222222',
+                  color: '#111111',
                   cursor: 'pointer',
                   padding: '6px',
                   display: 'flex',
@@ -343,14 +343,14 @@ export default function Header() {
                   justifyContent: 'center',
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.9">
-                  <path d="M13 13L1 1M13 1L1 13"></path>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.9">
+                  <path d="M13 13L1 1M13 1L1 13" stroke="currentColor" strokeWidth="1.9" fill="none"></path>
                 </svg>
               </button>
             </div>
 
             {/* Drawer Body Navigation List */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '0 20px' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '0 24px' }}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {/* 1. Shop By Category Accordion */}
                 <div className="mobile-nav-item">
@@ -491,18 +491,29 @@ export default function Header() {
                   )}
                 </div>
 
-                {/* 3. Anti-Yellow Case (Direct Link 1:1 Rezoni) */}
+                {/* 3. Anti-Yellow Clear Case (Direct Link 1:1 Rezoni) */}
                 <div className="mobile-nav-item">
                   <Link
                     href="/products/anti-yellow-magsafe-clear-case"
                     onClick={closeMobileMenu}
                     className="mobile-nav-trigger"
                   >
-                    <span>Anti-Yellow Case</span>
+                    <span>Anti-Yellow Clear Case</span>
                   </Link>
                 </div>
 
-                {/* 4. Collections Accordion (1:1 Rezoni) */}
+                {/* 4. Reverb 2.0 Clear Case (Direct Link 1:1 Rezoni) */}
+                <div className="mobile-nav-item">
+                  <Link
+                    href="/products/reverb-2-0-impact-magsafe-clear-case"
+                    onClick={closeMobileMenu}
+                    className="mobile-nav-trigger"
+                  >
+                    <span>Reverb 2.0 Clear Case</span>
+                  </Link>
+                </div>
+
+                {/* 5. Collections Accordion (1:1 Rezoni) */}
                 <div className="mobile-nav-item">
                   <button
                     onClick={() => toggleSection('collections')}
@@ -525,14 +536,17 @@ export default function Header() {
                       <Link href="/products/clearvue" onClick={closeMobileMenu} className="mobile-sub-link">
                         Reverb Clear Case
                       </Link>
-                      <Link href="/collections/custom-photo-case" onClick={closeMobileMenu} className="mobile-sub-link">
-                        Custom Photo Case
-                      </Link>
                       <Link href="/collections/football" onClick={closeMobileMenu} className="mobile-sub-link">
                         Football
                       </Link>
                       <Link href="/collections/mixtape" onClick={closeMobileMenu} className="mobile-sub-link">
                         Mixtape
+                      </Link>
+                      <Link href="/collections/unisex" onClick={closeMobileMenu} className="mobile-sub-link">
+                        Unisex
+                      </Link>
+                      <Link href="/collections/custom-photo-case" onClick={closeMobileMenu} className="mobile-sub-link">
+                        Custom Photo Case
                       </Link>
                       <Link href="/collections/wild-cats" onClick={closeMobileMenu} className="mobile-sub-link">
                         Wild Cats
@@ -546,32 +560,29 @@ export default function Header() {
                       <Link href="/collections/personalised" onClick={closeMobileMenu} className="mobile-sub-link">
                         Personalized
                       </Link>
-                      <Link href="/collections/polaroid-photo-case" onClick={closeMobileMenu} className="mobile-sub-link">
-                        Polaroid Photo Case
-                      </Link>
-                      <Link href="/collections/heart" onClick={closeMobileMenu} className="mobile-sub-link">
-                        Hearts
-                      </Link>
-                      <Link href="/collections/floral" onClick={closeMobileMenu} className="mobile-sub-link">
-                        Floral
-                      </Link>
-                      <Link href="/collections/stickers" onClick={closeMobileMenu} className="mobile-sub-link">
-                        Stickers
-                      </Link>
-                      <Link href="/collections/butterfly" onClick={closeMobileMenu} className="mobile-sub-link">
-                        Butterfly
-                      </Link>
-                      <Link href="/collections/unisex" onClick={closeMobileMenu} className="mobile-sub-link">
-                        Unisex
-                      </Link>
                       <Link href="/collections/zodiac" onClick={closeMobileMenu} className="mobile-sub-link">
                         Zodiac
                       </Link>
                       <Link href="/collections/featured-prints" onClick={closeMobileMenu} className="mobile-sub-link">
                         Featured Prints
                       </Link>
+                      <Link href="/collections/polaroid-photo-case" onClick={closeMobileMenu} className="mobile-sub-link">
+                        Polaroid Photo Case
+                      </Link>
+                      <Link href="/collections/heart" onClick={closeMobileMenu} className="mobile-sub-link">
+                        Hearts
+                      </Link>
+                      <Link href="/collections/butterfly" onClick={closeMobileMenu} className="mobile-sub-link">
+                        Butterfly
+                      </Link>
+                      <Link href="/collections/floral" onClick={closeMobileMenu} className="mobile-sub-link">
+                        Floral
+                      </Link>
                       <Link href="/collections/tie-dye" onClick={closeMobileMenu} className="mobile-sub-link">
                         Tie Dye
+                      </Link>
+                      <Link href="/collections/stickers" onClick={closeMobileMenu} className="mobile-sub-link">
+                        Stickers
                       </Link>
                       <Link href="/collections/matching-sets" onClick={closeMobileMenu} className="mobile-sub-link">
                         Matching Sets
@@ -580,7 +591,7 @@ export default function Header() {
                   )}
                 </div>
 
-                {/* 5. Our Story (Direct Link) */}
+                {/* 6. Our Story (Direct Link) */}
                 <div className="mobile-nav-item">
                   <Link
                     href="/pages/our-story"
@@ -591,7 +602,7 @@ export default function Header() {
                   </Link>
                 </div>
 
-                {/* 6. Contact Us (Direct Link) */}
+                {/* 7. Contact Us (Direct Link) */}
                 <div className="mobile-nav-item">
                   <Link
                     href="/pages/contact"
@@ -602,7 +613,7 @@ export default function Header() {
                   </Link>
                 </div>
 
-                {/* 7. Track Order (Direct Link) */}
+                {/* 8. Track Order (Direct Link) */}
                 <div className="mobile-nav-item" style={{ borderBottom: 'none' }}>
                   <Link
                     href="/track-order"
@@ -618,12 +629,12 @@ export default function Header() {
             {/* Mobile Drawer Footer (1:1 with Rezoni live store) */}
             <div
               style={{
-                borderTop: '1px solid #ebebeb',
-                padding: '20px',
+                borderTop: '1px solid rgba(0,0,0,0.08)',
+                padding: '20px 24px',
                 backgroundColor: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: 'flex-start',
               }}
             >
               {/* Account / Kwikpass Log In */}
@@ -655,20 +666,6 @@ export default function Header() {
                 </svg>
                 <span>{user ? 'Account' : 'Log in'}</span>
               </button>
-
-              {/* Currency / Country Badge */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '13px',
-                  fontWeight: 500,
-                  color: '#444444',
-                }}
-              >
-                <span>🇮🇳 India (INR ₹)</span>
-              </div>
             </div>
           </div>
         </div>
