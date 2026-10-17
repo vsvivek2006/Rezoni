@@ -156,8 +156,8 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
     cleanInitialModel || (currentBrandModels.length > 0 ? currentBrandModels[0] : 'iPhone 16 Pro Max')
   );
 
-  // Variant Switcher state: MagSafe vs Non-MagSafe (1:1 with Rezoni)
-  const [selectedVariantType, setSelectedVariantType] = useState<'magsafe' | 'clear'>('magsafe');
+  // Variant Switcher state: Non-MagSafe (clear) by default (1:1 with Rezoni)
+  const [selectedVariantType, setSelectedVariantType] = useState<'magsafe' | 'clear'>('clear');
 
   // Loox Reviews Dynamic Interactive States: show 5 reviews initially (matching rezoni data-limit="5")
   const [visibleReviewCount, setVisibleReviewCount] = useState<number>(5);
