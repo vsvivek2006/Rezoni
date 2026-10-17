@@ -65,67 +65,55 @@ export default function AccountPage() {
   }
 
   return (
-    <div style={{ backgroundColor: '#f9f9f9', minHeight: '80vh', padding: '40px 20px 80px', fontFamily: 'Montserrat, sans-serif' }}>
+    <div className="account-page-wrapper">
       <div style={{ maxWidth: '960px', margin: '0 auto' }}>
         {/* Breadcrumb */}
-        <div style={{ fontSize: '12px', color: '#888888', marginBottom: '20px' }}>
+        <div style={{ fontSize: '12px', color: '#888888', marginBottom: '14px' }}>
           <Link href="/" style={{ color: '#888888', textDecoration: 'none' }}>Home</Link>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ color: '#111111' }}>My Account</span>
         </div>
 
         {/* Profile Card Header */}
-        <div
-          style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '12px',
-            padding: '24px 28px',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.04)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '16px',
-            marginBottom: '26px',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div className="account-profile-card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div
               style={{
-                width: '54px',
-                height: '54px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '50%',
                 backgroundColor: '#111111',
                 color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '22px',
+                fontSize: '18px',
                 fontWeight: 800,
+                flexShrink: 0,
               }}
             >
               {user.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h1 style={{ fontSize: '20px', fontWeight: 800, color: '#111111', margin: 0 }}>
+              <h1 style={{ fontSize: '18px', fontWeight: 800, color: '#111111', margin: 0, lineHeight: 1.2 }}>
                 {user.name}
               </h1>
               <div style={{ fontSize: '13px', color: '#666666', marginTop: '2px' }}>
-                {user.email} • <span style={{ color: '#16a34a', fontWeight: 600 }}>Active Member</span>
+                {user.email}
               </div>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <Link
               href="/track-order"
               style={{
-                padding: '9px 18px',
+                padding: '7px 14px',
                 backgroundColor: '#fff4eb',
                 color: '#ff6700',
                 border: '1px solid #fed7aa',
                 borderRadius: '6px',
-                fontSize: '13px',
+                fontSize: '12.5px',
                 fontWeight: 700,
                 textDecoration: 'none',
                 display: 'inline-flex',
@@ -138,12 +126,12 @@ export default function AccountPage() {
             <button
               onClick={logout}
               style={{
-                padding: '9px 16px',
+                padding: '7px 14px',
                 backgroundColor: '#ffffff',
                 color: '#555555',
                 border: '1px solid #dddddd',
                 borderRadius: '6px',
-                fontSize: '13px',
+                fontSize: '12.5px',
                 fontWeight: 600,
                 cursor: 'pointer',
               }}
@@ -154,12 +142,12 @@ export default function AccountPage() {
         </div>
 
         {/* Orders Section */}
-        <div style={{ marginBottom: '36px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#111111', margin: 0 }}>
-              Order History & Details ({user.orders ? user.orders.length : 0})
+        <div style={{ marginBottom: '28px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <h2 style={{ fontSize: '17px', fontWeight: 800, color: '#111111', margin: 0 }}>
+              Order History ({user.orders ? user.orders.length : 0})
             </h2>
-            <Link href="/products/anti-yellow-magsafe-clear-case" style={{ fontSize: '13px', color: '#ff6700', fontWeight: 700, textDecoration: 'none' }}>
+            <Link href="/products/anti-yellow-magsafe-clear-case" style={{ fontSize: '12.5px', color: '#ff6700', fontWeight: 700, textDecoration: 'none' }}>
               + Shop More Cases
             </Link>
           </div>
@@ -203,13 +191,7 @@ export default function AccountPage() {
                 return (
                   <div
                     key={order.id}
-                    style={{
-                      backgroundColor: '#ffffff',
-                      borderRadius: '12px',
-                      padding: '22px 24px',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                      border: '1px solid #f0f0f0',
-                    }}
+                    className="account-order-card"
                   >
                     {/* Order Header */}
                     <div
