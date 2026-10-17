@@ -15,23 +15,8 @@ function TrackOrderContent() {
   const [orderNotFound, setOrderNotFound] = useState(false);
   const [lastSearchedQuery, setLastSearchedQuery] = useState('');
 
-  // Accordion state: All collapsed by default for a clean, curated summary
-  const [expandedSections, setExpandedSections] = useState<{
-    activity: boolean;
-    items: boolean;
-    address: boolean;
-  }>({
-    activity: false,
-    items: false,
-    address: false,
-  });
-
-  const toggleSection = (section: 'activity' | 'items' | 'address') => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  };
+  // Only Activity History & Hub Scans is a dropdown (collapsed by default)
+  const [isActivityOpen, setIsActivityOpen] = useState(false);
 
   const fetchTracking = async (searchQuery: string) => {
     const trimmed = searchQuery.trim();
@@ -77,6 +62,57 @@ function TrackOrderContent() {
     e.preventDefault();
     fetchTracking(query);
   };
+
+  const getActiveStageIndex = (status: string) => {
+    switch (status) {
+      case 'delivered':
+        return 4;
+      case 'out_for_delivery':
+        return 3;
+      case 'in_transit':
+        return 2;
+      case 'dispatched':
+        return 1;
+      case 'confirmed':
+      default:
+        return 0;
+    }
+  };
+
+  const currentStageIndex = order ? getActiveStageIndex(order.status) : 0;
+
+  const stagesFlow = [
+    {
+      key: 'confirmed',
+      title: 'Order Confirmed',
+      subtitle: 'Order received & prepaid payment verified',
+      location: 'Rezoni Central Logistics Hub',
+    },
+    {
+      key: 'dispatched',
+      title: 'Dispatched & Packed',
+      subtitle: `Undergoing quality check & handoff to ${order?.carrier || 'BlueDart'}`,
+      location: `${order?.carrier || 'BlueDart'} Dispatch Center`,
+    },
+    {
+      key: 'in_transit',
+      title: 'In Transit',
+      subtitle: `Shipment en route via ${order?.carrier || 'BlueDart'} express network`,
+      location: 'Air Cargo Sorting Facility',
+    },
+    {
+      key: 'out_for_delivery',
+      title: 'Out for Delivery',
+      subtitle: 'Courier executive assigned for doorstep delivery',
+      location: order?.shippingAddress?.city ? `${order.shippingAddress.city} Delivery Hub` : 'Local Delivery Center',
+    },
+    {
+      key: 'delivered',
+      title: 'Delivered',
+      subtitle: 'Direct doorstep delivery with 6-month product warranty',
+      location: order?.shippingAddress?.city ? `${order.shippingAddress.city} Destination` : 'Shipping Address',
+    },
+  ];
 
   return (
     <div className="track-order-page-wrapper">
@@ -290,7 +326,7 @@ function TrackOrderContent() {
             </div>
           </div>
 
-          {/* 5-Step Visual Status Progression Bar with Live Radar Ping */}
+          {/* 5-Step Horizontal Status Progression Bar with Live Radar Ping */}
           <div style={{ padding: '6px 0 28px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', marginBottom: '14px' }}>
               {/* Connecting line */}
@@ -310,13 +346,13 @@ function TrackOrderContent() {
                     height: '100%',
                     backgroundColor: '#16a34a',
                     width:
-                      order.status === 'delivered'
+                      currentStageIndex === 4
                         ? '100%'
-                        : order.status === 'out_for_delivery'
+                        : currentStageIndex === 3
                         ? '75%'
-                        : order.status === 'in_transit'
+                        : currentStageIndex === 2
                         ? '50%'
-                        : order.status === 'dispatched'
+                        : currentStageIndex === 1
                         ? '25%'
                         : '6%',
                     transition: 'width 0.4s ease',
@@ -324,25 +360,9 @@ function TrackOrderContent() {
                 />
               </div>
 
-              {[
-                { key: 'confirmed', label: 'Confirmed' },
-                { key: 'dispatched', label: 'Dispatched' },
-                { key: 'in_transit', label: 'In Transit' },
-                { key: 'out_for_delivery', label: 'Out for Delivery' },
-                { key: 'delivered', label: 'Delivered' },
-              ].map((stage, idx) => {
-                const currentStageIdx =
-                  order.status === 'delivered'
-                    ? 4
-                    : order.status === 'out_for_delivery'
-                    ? 3
-                    : order.status === 'in_transit'
-                    ? 2
-                    : order.status === 'dispatched'
-                    ? 1
-                    : 0;
-                const isCompleted = idx <= currentStageIdx;
-                const isCurrent = idx === currentStageIdx;
+              {stagesFlow.map((stage, idx) => {
+                const isCompleted = idx <= currentStageIndex;
+                const isCurrent = idx === currentStageIndex;
 
                 return (
                   <div key={idx} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -394,7 +414,7 @@ function TrackOrderContent() {
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      {stage.label}
+                      {stage.title.split(' & ')[0]}
                     </span>
                   </div>
                 );
@@ -402,10 +422,10 @@ function TrackOrderContent() {
             </div>
           </div>
 
-          {/* Curated Collapsible Details Accordions (Collapsed by default) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '10px' }}>
+          {/* Sections Stack: ONLY Activity History is a Dropdown Accordion */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '10px' }}>
             
-            {/* 1. Accordion: Activity History & Hub Scans */}
+            {/* 1. ONLY DROPDOWN: Activity History & Hub Scans */}
             <div
               style={{
                 border: '1px solid #ebebeb',
@@ -416,7 +436,7 @@ function TrackOrderContent() {
             >
               <button
                 type="button"
-                onClick={() => toggleSection('activity')}
+                onClick={() => setIsActivityOpen(!isActivityOpen)}
                 style={{
                   width: '100%',
                   padding: '14px 18px',
@@ -437,13 +457,13 @@ function TrackOrderContent() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontSize: '11px', color: '#666' }}>
-                    {expandedSections.activity ? 'Hide details' : 'Tap to expand'}
+                    {isActivityOpen ? 'Hide details' : 'Tap to expand'}
                   </span>
                   <span
                     style={{
                       display: 'inline-block',
                       transition: 'transform 0.2s',
-                      transform: expandedSections.activity ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transform: isActivityOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                       fontSize: '11px',
                       color: '#444',
                     }}
@@ -453,290 +473,251 @@ function TrackOrderContent() {
                 </div>
               </button>
 
-              {expandedSections.activity && (
-                <div style={{ padding: '16px 18px', borderTop: '1px solid #f0f0f0', backgroundColor: '#ffffff' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    {order.timeline && order.timeline.length > 0 ? (
-                      order.timeline.map((item, tIdx) => {
-                        const isLatest = tIdx === 0;
-                        return (
-                          <div
-                            key={tIdx}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              gap: '12px',
-                              fontSize: '13px',
-                            }}
-                          >
-                            {isLatest ? (
-                              <div style={{ position: 'relative', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '2px', flexShrink: 0 }}>
-                                <span
-                                  style={{
-                                    position: 'absolute',
-                                    inset: 0,
-                                    borderRadius: '50%',
-                                    backgroundColor: 'rgba(22, 163, 74, 0.5)',
-                                    animation: 'liveRadarPulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite',
-                                  }}
-                                />
-                                <span
-                                  style={{
-                                    width: '8px',
-                                    height: '8px',
-                                    borderRadius: '50%',
-                                    backgroundColor: '#16a34a',
-                                    position: 'relative',
-                                  }}
-                                />
-                              </div>
-                            ) : (
+              {isActivityOpen && (
+                <div style={{ padding: '20px 18px', borderTop: '1px solid #f0f0f0', backgroundColor: '#ffffff' }}>
+                  {/* Vertical 5-Stage Stepper Flow with Connecting Line & Ping */}
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {stagesFlow.map((stage, sIdx) => {
+                      const isCompleted = sIdx <= currentStageIndex;
+                      const isCurrent = sIdx === currentStageIndex;
+                      const isLast = sIdx === stagesFlow.length - 1;
+
+                      // Check for matching recorded timeline info if available
+                      const matchingTimeline = order.timeline?.find((t) =>
+                        t.title.toLowerCase().includes(stage.key.replace('_', ' ')) ||
+                        (stage.key === 'confirmed' && t.title.toLowerCase().includes('confirmed')) ||
+                        (stage.key === 'dispatched' && (t.title.toLowerCase().includes('dispatched') || t.title.toLowerCase().includes('packed'))) ||
+                        (stage.key === 'in_transit' && t.title.toLowerCase().includes('transit')) ||
+                        (stage.key === 'out_for_delivery' && t.title.toLowerCase().includes('delivery')) ||
+                        (stage.key === 'delivered' && t.title.toLowerCase().includes('delivered'))
+                      );
+
+                      const timestamp = matchingTimeline
+                        ? `${matchingTimeline.date}${matchingTimeline.time ? ` • ${matchingTimeline.time}` : ''}`
+                        : isCompleted
+                        ? `${order.date} • Verified`
+                        : isCurrent
+                        ? 'In Progress'
+                        : 'Upcoming Expected';
+
+                      return (
+                        <div key={stage.key} style={{ display: 'flex', position: 'relative' }}>
+                          {/* Continuous Vertical Connecting Line */}
+                          {!isLast && (
+                            <div
+                              style={{
+                                position: 'absolute',
+                                top: '26px',
+                                left: '13px',
+                                bottom: '-8px',
+                                width: '2px',
+                                backgroundColor: sIdx < currentStageIndex ? '#16a34a' : '#e5e7eb',
+                                zIndex: 1,
+                              }}
+                            />
+                          )}
+
+                          {/* Node with Live Radar Ping on Current Stage */}
+                          <div style={{ position: 'relative', zIndex: 2, marginRight: '16px', flexShrink: 0 }}>
+                            {isCurrent && (
                               <span
                                 style={{
-                                  color: item.completed ? '#16a34a' : '#cccccc',
-                                  fontSize: '14px',
-                                  lineHeight: 1,
-                                  marginTop: '2px',
-                                  width: '16px',
-                                  textAlign: 'center',
-                                  flexShrink: 0,
+                                  position: 'absolute',
+                                  inset: '-4px',
+                                  borderRadius: '50%',
+                                  backgroundColor: 'rgba(22, 163, 74, 0.4)',
+                                  animation: 'liveRadarPulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite',
+                                  pointerEvents: 'none',
                                 }}
-                              >
-                                {item.completed ? '●' : '○'}
-                              </span>
+                              />
                             )}
-                            <div style={{ flex: 1 }}>
-                              <div style={{ fontWeight: isLatest ? 700 : item.current ? 700 : 500, color: item.completed ? '#111111' : '#777777', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
-                                <span>{item.title} {item.location ? `— ${item.location}` : ''}</span>
-                                {isLatest && (
-                                  <span
-                                    style={{
-                                      fontSize: '10px',
-                                      fontWeight: 800,
-                                      color: '#15803d',
-                                      backgroundColor: '#dcfce7',
-                                      padding: '2px 6px',
-                                      borderRadius: '4px',
-                                      textTransform: 'uppercase',
-                                      letterSpacing: '0.04em',
-                                    }}
-                                  >
-                                    Active Checkpoint
-                                  </span>
-                                )}
-                              </div>
-                              <div style={{ fontSize: '12px', color: '#666666', marginTop: '2px' }}>
-                                {item.description}
-                              </div>
-                              <div style={{ fontSize: '11px', color: '#999999', marginTop: '3px' }}>
-                                {item.date} {item.time ? `• ${item.time}` : ''}
-                              </div>
+                            <div
+                              style={{
+                                width: '28px',
+                                height: '28px',
+                                borderRadius: '50%',
+                                backgroundColor: isCompleted ? '#16a34a' : '#ffffff',
+                                border: isCompleted ? 'none' : '2px solid #d1d5db',
+                                color: isCompleted ? '#ffffff' : '#9ca3af',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '12px',
+                                fontWeight: 800,
+                                position: 'relative',
+                                boxShadow: isCurrent
+                                  ? '0 0 0 3px rgba(34, 197, 94, 0.3), 0 2px 8px rgba(22, 163, 74, 0.4)'
+                                  : isCompleted
+                                  ? '0 2px 6px rgba(22, 163, 74, 0.25)'
+                                  : 'none',
+                              }}
+                            >
+                              {isCompleted ? '✓' : sIdx + 1}
                             </div>
                           </div>
-                        );
-                      })
-                    ) : (
-                      <div style={{ fontSize: '12px', color: '#777' }}>Order received and registered in logistics warehouse.</div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
 
-            {/* 2. Accordion: Shipment Items & Free Gifts */}
-            <div
-              style={{
-                border: '1px solid #ebebeb',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                backgroundColor: '#ffffff',
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => toggleSection('items')}
-                style={{
-                  width: '100%',
-                  padding: '14px 18px',
-                  backgroundColor: '#fbfbfb',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '16px' }}>📦</span>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#111111', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    Shipment Items & Free Gifts ({order.items?.length || 0})
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '11px', color: '#666' }}>
-                    {expandedSections.items ? 'Hide items' : 'Tap to expand'}
-                  </span>
-                  <span
-                    style={{
-                      display: 'inline-block',
-                      transition: 'transform 0.2s',
-                      transform: expandedSections.items ? 'rotate(180deg)' : 'rotate(0deg)',
-                      fontSize: '11px',
-                      color: '#444',
-                    }}
-                  >
-                    ▼
-                  </span>
-                </div>
-              </button>
-
-              {expandedSections.items && (
-                <div style={{ padding: '16px 18px', borderTop: '1px solid #f0f0f0', backgroundColor: '#ffffff' }}>
-                  {order.items && order.items.length > 0 ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      {order.items.map((prod, pIdx) => (
-                        <div
-                          key={pIdx}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '14px',
-                            paddingBottom: pIdx !== order.items.length - 1 ? '12px' : 0,
-                            borderBottom: pIdx !== order.items.length - 1 ? '1px solid #f5f5f5' : 'none',
-                          }}
-                        >
-                          <div
-                            style={{
-                              width: '52px',
-                              height: '58px',
-                              borderRadius: '4px',
-                              overflow: 'hidden',
-                              backgroundColor: '#f9f9f9',
-                              border: '1px solid #eee',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              flexShrink: 0,
-                            }}
-                          >
-                            <img
-                              src={prod.image}
-                              alt={prod.title}
-                              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                            />
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: '13px', fontWeight: 600, color: '#111111', lineHeight: 1.3 }}>
-                              {prod.title}
-                            </div>
-                            <div style={{ fontSize: '12px', color: '#666666', marginTop: '2px' }}>
-                              {prod.model || prod.variant ? `${prod.model || ''} • ` : ''}Qty: {prod.quantity}
-                            </div>
-                          </div>
-                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                            {Number(prod.price) === 0 ? (
-                              <span style={{ fontSize: '12px', fontWeight: 700, color: '#16a34a' }}>
-                                FREE GIFT
+                          {/* Stage Details */}
+                          <div style={{ flex: 1, paddingBottom: isLast ? 0 : '26px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '2px' }}>
+                              <span style={{ fontSize: '14px', fontWeight: isCurrent ? 800 : isCompleted ? 700 : 500, color: isCurrent ? '#16a34a' : isCompleted ? '#111111' : '#888888' }}>
+                                {stage.title}
                               </span>
-                            ) : (
-                              <span style={{ fontSize: '13px', fontWeight: 700, color: '#111111' }}>
-                                Rs. {Number(prod.price).toFixed(2)}
-                              </span>
-                            )}
+                              {isCurrent && (
+                                <span
+                                  style={{
+                                    fontSize: '10px',
+                                    fontWeight: 800,
+                                    color: '#15803d',
+                                    backgroundColor: '#dcfce7',
+                                    padding: '2px 7px',
+                                    borderRadius: '4px',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.04em',
+                                  }}
+                                >
+                                  Active Stage
+                                </span>
+                              )}
+                            </div>
+                            <div style={{ fontSize: '12px', color: '#555555', lineHeight: 1.5 }}>
+                              {matchingTimeline?.description || stage.subtitle} — {matchingTimeline?.location || stage.location}
+                            </div>
+                            <div style={{ fontSize: '11px', color: isCurrent ? '#16a34a' : '#888888', marginTop: '4px', fontWeight: isCurrent ? 600 : 400 }}>
+                              {timestamp}
+                            </div>
                           </div>
                         </div>
-                      ))}
-
-                      <div
-                        style={{
-                          marginTop: '8px',
-                          paddingTop: '12px',
-                          borderTop: '1px solid #eee',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <span style={{ fontSize: '13px', fontWeight: 600, color: '#444' }}>Total Order Value</span>
-                        <span style={{ fontSize: '15px', fontWeight: 800, color: '#000' }}>
-                          Rs. {Number(order.total || 0).toFixed(2)}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div style={{ fontSize: '12px', color: '#777' }}>No items listed for this order.</div>
-                  )}
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* 3. Accordion: Delivery Address & Customer */}
+            {/* 2. STATIC CARD: Shipment Items & Free Gifts (No Dropdown) */}
             <div
               style={{
                 border: '1px solid #ebebeb',
                 borderRadius: '8px',
-                overflow: 'hidden',
                 backgroundColor: '#ffffff',
+                padding: '18px 20px',
               }}
             >
-              <button
-                type="button"
-                onClick={() => toggleSection('address')}
-                style={{
-                  width: '100%',
-                  padding: '14px 18px',
-                  backgroundColor: '#fbfbfb',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span style={{ fontSize: '16px' }}>📍</span>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#111111', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    Delivery Address & Customer
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '11px', color: '#666' }}>
-                    {expandedSections.address ? 'Hide address' : 'Tap to expand'}
-                  </span>
-                  <span
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                <span style={{ fontSize: '16px' }}>📦</span>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: '#111111', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Shipment Items & Free Gifts ({order.items?.length || 0})
+                </span>
+              </div>
+
+              {order.items && order.items.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {order.items.map((prod, pIdx) => (
+                    <div
+                      key={pIdx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '14px',
+                        paddingBottom: pIdx !== order.items.length - 1 ? '12px' : 0,
+                        borderBottom: pIdx !== order.items.length - 1 ? '1px solid #f5f5f5' : 'none',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '52px',
+                          height: '58px',
+                          borderRadius: '4px',
+                          overflow: 'hidden',
+                          backgroundColor: '#f9f9f9',
+                          border: '1px solid #eee',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                        }}
+                      >
+                        <img
+                          src={prod.image}
+                          alt={prod.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '13px', fontWeight: 600, color: '#111111', lineHeight: 1.3 }}>
+                          {prod.title}
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666666', marginTop: '2px' }}>
+                          {prod.model || prod.variant ? `${prod.model || ''} • ` : ''}Qty: {prod.quantity}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        {Number(prod.price) === 0 ? (
+                          <span style={{ fontSize: '12px', fontWeight: 700, color: '#16a34a' }}>
+                            FREE GIFT
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: '13px', fontWeight: 700, color: '#111111' }}>
+                            Rs. {Number(prod.price).toFixed(2)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  <div
                     style={{
-                      display: 'inline-block',
-                      transition: 'transform 0.2s',
-                      transform: expandedSections.address ? 'rotate(180deg)' : 'rotate(0deg)',
-                      fontSize: '11px',
-                      color: '#444',
+                      marginTop: '6px',
+                      paddingTop: '12px',
+                      borderTop: '1px solid #eee',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                     }}
                   >
-                    ▼
-                  </span>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#444' }}>Total Order Value</span>
+                    <span style={{ fontSize: '15px', fontWeight: 800, color: '#000' }}>
+                      Rs. {Number(order.total || 0).toFixed(2)}
+                    </span>
+                  </div>
                 </div>
-              </button>
+              ) : (
+                <div style={{ fontSize: '12px', color: '#777' }}>No items listed for this order.</div>
+              )}
+            </div>
 
-              {expandedSections.address && (
-                <div style={{ padding: '16px 18px', borderTop: '1px solid #f0f0f0', backgroundColor: '#ffffff', fontSize: '13px', color: '#444' }}>
-                  <div style={{ fontWeight: 700, color: '#111', marginBottom: '4px' }}>
-                    {order.customerName || 'Valued Customer'}
-                  </div>
-                  <div style={{ lineHeight: 1.5, color: '#555' }}>
-                    {order.shippingAddress?.address}
-                  </div>
-                  <div style={{ color: '#555' }}>
-                    {[order.shippingAddress?.city, order.shippingAddress?.state, order.shippingAddress?.pincode]
-                      .filter(Boolean)
-                      .join(', ')}
-                  </div>
-                  {order.customerPhone && (
-                    <div style={{ marginTop: '8px', fontSize: '12px', color: '#777' }}>
-                      Contact: <strong>{order.customerPhone.replace(/(\d{2})(\d{4})(\d{4})/, '$1-XXXX-$3')}</strong>
-                    </div>
-                  )}
+            {/* 3. STATIC CARD: Delivery Address & Customer (No Dropdown) */}
+            <div
+              style={{
+                border: '1px solid #ebebeb',
+                borderRadius: '8px',
+                backgroundColor: '#ffffff',
+                padding: '18px 20px',
+                fontSize: '13px',
+                color: '#444',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <span style={{ fontSize: '16px' }}>📍</span>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: '#111111', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Delivery Address & Recipient
+                </span>
+              </div>
+
+              <div style={{ fontWeight: 700, color: '#111', marginBottom: '4px' }}>
+                {order.customerName || 'Valued Customer'}
+              </div>
+              <div style={{ lineHeight: 1.5, color: '#555' }}>
+                {order.shippingAddress?.address}
+              </div>
+              <div style={{ color: '#555' }}>
+                {[order.shippingAddress?.city, order.shippingAddress?.state, order.shippingAddress?.pincode]
+                  .filter(Boolean)
+                  .join(', ')}
+              </div>
+              {order.customerPhone && (
+                <div style={{ marginTop: '8px', fontSize: '12px', color: '#777' }}>
+                  Contact: <strong>{order.customerPhone.replace(/(\d{2})(\d{4})(\d{4})/, '$1-XXXX-$3')}</strong>
                 </div>
               )}
             </div>
