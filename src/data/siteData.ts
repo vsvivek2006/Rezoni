@@ -54,7 +54,7 @@ export interface InstagramPhoto {
 export const announcements: Announcement[] = [
   {
     "id": "1",
-    "text": "Buy 1 @ 699 | Buy 2 @ 899 | Buy 3 @ 999"
+    "text": "Buy 1 @ 299 | Buy 2 @ 499 | Buy 3 @ 699"
   },
   {
     "id": "2",
@@ -62,7 +62,7 @@ export const announcements: Announcement[] = [
   },
   {
     "id": "3",
-    "text": "Big Summer Sale \u2013 Up to 60% Off Sitewide"
+    "text": "🚚 100% Free Shipping Sitewide | Limited Time Only"
   }
 ];
 
@@ -403,8 +403,8 @@ export const bestSellers: ProductItem[] = [
     "handle": "the-weeknd",
     "category_tag": "Reverb Case",
     "sub_title": "Mixtape",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/1_87635ba5-31c5-4d04-99ef-e9d35aa351b3_950x.jpg?v=1725349229",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_9fac1ea5-71ef-4f31-84c4-20edd3ee57ea_950x.jpg?v=1725349229",
     "swatches": [
@@ -421,8 +421,8 @@ export const bestSellers: ProductItem[] = [
     "handle": "serpentine",
     "category_tag": "Reverb Case",
     "sub_title": "Y2K",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/1_198ca594-5830-42ba-aff0-ebe2306194a6_950x.jpg?v=1712562796",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_7b832b00-9063-4c5a-8d3f-2f850f4eea01_950x.jpg?v=1712562796",
     "swatches": [
@@ -439,8 +439,8 @@ export const bestSellers: ProductItem[] = [
     "handle": "explicit",
     "category_tag": "Reverb Case",
     "sub_title": "Stickers",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/1_d1dd6cde-4f21-448b-b467-3190b372131e_950x.jpg?v=1712571168",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_ec123fdd-59fa-4232-bd2f-e2e5b30d1514_950x.jpg?v=1712571168",
     "swatches": [
@@ -457,8 +457,8 @@ export const bestSellers: ProductItem[] = [
     "handle": "coldplay",
     "category_tag": "Reverb Case",
     "sub_title": "Mixtape",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/1_3848db44-611c-4ab4-8365-7ff2abc550af_950x.jpg?v=1725346268",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_472f6945-f3be-4c5d-9692-148aa938eeef_950x.jpg?v=1725346267",
     "swatches": [
@@ -475,8 +475,8 @@ export const bestSellers: ProductItem[] = [
     "handle": "metallica",
     "category_tag": "Reverb Case",
     "sub_title": "Mixtape",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/1_032ddca2-4a2e-47fb-bb14-bdabe84b1af8_950x.jpg?v=1725343737",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_5f940516-42c5-4ba0-a92c-06e61198ce94_950x.jpg?v=1725343737",
     "swatches": [
@@ -493,8 +493,8 @@ export const bestSellers: ProductItem[] = [
     "handle": "linkin-park",
     "category_tag": "Reverb Case",
     "sub_title": "Mixtape",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/1_bd08b697-700f-4aca-a774-c06d2c42011a_950x.jpg?v=1725346469",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_1bc53bee-606f-4a06-ad1d-443de1a6a2de_950x.jpg?v=1725346469",
     "swatches": [
@@ -511,8 +511,8 @@ export const bestSellers: ProductItem[] = [
     "handle": "nirvana",
     "category_tag": "Reverb Case",
     "sub_title": "Mixtape",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/1_595832ef-93a8-49ff-b356-3f766dd4fca7_950x.jpg?v=1725343963",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/2_9b4b15ca-b010-4289-a8ae-96b1aa0f3a6b_950x.jpg?v=1725343963",
     "swatches": [
@@ -532,8 +532,8 @@ export const newArrivals: ProductItem[] = [
     "handle": "barcelona",
     "category_tag": "Reverb Case",
     "sub_title": "Football",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/3_dc46c3ae-5044-4389-999b-126576050332_950x.jpg?v=1733204519",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_8d5465a5-c2cb-403f-9ad9-8c5fa00e1022_950x.jpg?v=1733204519",
     "swatches": [
@@ -550,8 +550,8 @@ export const newArrivals: ProductItem[] = [
     "handle": "chelsea",
     "category_tag": "Reverb Case",
     "sub_title": "Football",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/3_b70ce69f-f4f0-4a29-81b1-5f3f9786086e_950x.jpg?v=1733203978",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_e4cd7207-76dc-4ac7-9091-50e51d1c19a9_950x.jpg?v=1733203978",
     "swatches": [
@@ -568,8 +568,8 @@ export const newArrivals: ProductItem[] = [
     "handle": "arsenal",
     "category_tag": "Reverb Case",
     "sub_title": "Football",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/3_5045f5e9-01c5-45c3-811c-04724b225c2d_950x.jpg?v=1733203667",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_2e85e2e6-ed6f-413b-a2a4-66bab51046a7_950x.jpg?v=1733203666",
     "swatches": [
@@ -586,8 +586,8 @@ export const newArrivals: ProductItem[] = [
     "handle": "manchester-united",
     "category_tag": "Reverb Case",
     "sub_title": "Football",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/6_2195dfd1-8886-4c36-afd7-02ecd9630ea6_950x.jpg?v=1733203339",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/4_feb18307-0220-46ba-acf3-c86c743e9097_950x.jpg?v=1733203339",
     "swatches": [
@@ -604,8 +604,8 @@ export const newArrivals: ProductItem[] = [
     "handle": "juventus",
     "category_tag": "Reverb Case",
     "sub_title": "Football",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/6_fc5981f0-970b-438e-b24f-8c8bf6336c0f_950x.jpg?v=1733203020",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/4_19160534-0b6c-4a76-bb44-c3f073f95f63_950x.jpg?v=1733203020",
     "swatches": [
@@ -622,8 +622,8 @@ export const newArrivals: ProductItem[] = [
     "handle": "real-madrid",
     "category_tag": "Reverb Case",
     "sub_title": "Football",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/3_44c90687-aecb-43f8-9d79-ef6591d19f99_950x.jpg?v=1733202693",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_22b157eb-2aca-4bc4-9c8d-d16edbab73c5_950x.jpg?v=1733202693",
     "swatches": [
@@ -640,8 +640,8 @@ export const newArrivals: ProductItem[] = [
     "handle": "manchester-city",
     "category_tag": "Reverb Case",
     "sub_title": "Football",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/3_013734d9-c1c7-4659-bcb1-467fdbd07fd0_950x.jpg?v=1733202401",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/1_48b73e72-6845-4ff9-8ad3-d93208a7a4cd_950x.jpg?v=1733202400",
     "swatches": [
@@ -658,8 +658,8 @@ export const newArrivals: ProductItem[] = [
     "handle": "bayern-munich",
     "category_tag": "Reverb Case",
     "sub_title": "Football",
-    "price": 699,
-    "compare_at_price": 999,
+    "price": 299,
+    "compare_at_price": 799,
     "primary_image": "https://www.rezoni.com/cdn/shop/files/6_618f485b-2c50-48e4-bb9c-58bed54605d8_950x.jpg?v=1733202082",
     "secondary_image": "https://www.rezoni.com/cdn/shop/files/4_7adfa8eb-5a19-4971-af4c-f0fedc76ed37_950x.jpg?v=1733202082",
     "swatches": [

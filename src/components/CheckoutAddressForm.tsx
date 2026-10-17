@@ -972,7 +972,7 @@ export default function CheckoutAddressForm({
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#6b7280', marginBottom: '10px' }}>
                 <span>Nationwide Express Shipping</span>
                 {isFreeShipping ? (
-                  <span style={{ color: '#059669', fontWeight: 700 }}>FREE (Orders ₹999+)</span>
+                  <span style={{ color: '#059669', fontWeight: 700 }}>FREE (All Orders)</span>
                 ) : (
                   <span style={{ color: '#111827', fontWeight: 700 }}>Rs. {deliveryFee.toFixed(2)}</span>
                 )}

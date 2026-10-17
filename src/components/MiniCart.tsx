@@ -25,10 +25,9 @@ export default function MiniCart() {
 
   if (!isCartOpen) return null;
 
-  const freeShippingThreshold = 999;
   const safeTotalPrice = Number(totalPrice) || 0;
-  const progress = Math.min(100, (safeTotalPrice / freeShippingThreshold) * 100);
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - safeTotalPrice);
+  const progress = 100;
+  const remainingForFreeShipping = 0;
 
   return (
     <div
@@ -157,7 +156,7 @@ export default function MiniCart() {
                     style={{
                       width: `${progress}%`,
                       height: '100%',
-                      backgroundColor: '#ff6700',
+                      backgroundColor: '#2d6a4f',
                       transition: 'width 0.3s ease',
                     }}
                   />

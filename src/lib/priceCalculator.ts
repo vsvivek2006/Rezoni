@@ -14,8 +14,8 @@ const productMap = new Map<string, ProductLookup>();
   productMap.set(p.id, p);
 });
 
-export const FREE_SHIPPING_THRESHOLD = 999;
-export const STANDARD_SHIPPING_FEE = 49;
+export const FREE_SHIPPING_THRESHOLD = 0;
+export const STANDARD_SHIPPING_FEE = 0;
 
 export interface ValidatedCartResult {
   isValid: boolean;
@@ -49,7 +49,7 @@ export function validateAndCalculateCart(incomingItems: any[]): ValidatedCartRes
     let canonicalProduct = productMap.get(productId);
 
     if (!canonicalProduct) {
-      // Lookup by prefix for compound variant IDs (e.g. the-weeknd-iPhone 16 Pro-White)
+      // Lookup by prefix for compound variant IDs (e.g. the-weeknd-iPhone 16 Pro-White-magsafe)
       for (const [id, prod] of productMap.entries()) {
         if (productId === id || productId.startsWith(id + '-')) {
           canonicalProduct = prod;
@@ -58,13 +58,17 @@ export function validateAndCalculateCart(incomingItems: any[]): ValidatedCartRes
       }
     }
 
-    // Canonical price from server data, fallback to item.price if strictly positive number
+    // Determine variant unit price: MagSafe = 399, Non-MagSafe / Standard = 299
     let unitPrice = 0;
     let title = item.title || (canonicalProduct ? canonicalProduct.title : 'Rezoni Designer Phone Case');
     let image = item.image || (canonicalProduct ? canonicalProduct.primary_image : '');
 
-    if (canonicalProduct) {
-      unitPrice = canonicalProduct.price;
+    if (productId.endsWith('-magsafe') || (item.title && item.title.includes('MagSafe') && !item.title.includes('Non-MagSafe'))) {
+      unitPrice = 399;
+    } else if (typeof item.price === 'number' && (item.price === 399 || item.price === 299)) {
+      unitPrice = Math.round(item.price);
+    } else if (canonicalProduct) {
+      unitPrice = canonicalProduct.price || 299;
     } else if (typeof item.price === 'number' && item.price > 0) {
       unitPrice = Math.round(item.price);
     } else {
@@ -91,8 +95,8 @@ export function validateAndCalculateCart(incomingItems: any[]): ValidatedCartRes
     });
   }
 
-  // Delivery Fee calculation: Free for orders >= 999, otherwise standard fee (Rs. 49)
-  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_FEE;
+  // Delivery Fee calculation: 100% Free Shipping sitewide on all orders
+  const shippingFee = 0;
   const totalAmount = subtotal + shippingFee;
 
   // Razorpay requires amount in Paise (integer)

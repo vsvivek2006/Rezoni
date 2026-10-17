@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       customerName: customerName || 'Valued Customer',
       customerPhone: customerPhone || '',
       date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      total: Number(total || 699),
+      total: Number(total || 299),
       shippingAddress: shippingAddress || {
         address: 'Delivery Address Provided',
         city: 'New Delhi',
