@@ -4,6 +4,14 @@ import { getAdminSessionFromRequest } from '@/lib/auth';
 import fs from 'fs';
 import path from 'path';
 
+function isOrderActuallyPaid(o: any): boolean {
+  const paymentId = o.razorpay_payment_id || o.payment_id || o.razorpayPaymentId;
+  const hasValidPaymentId = typeof paymentId === 'string' && paymentId.startsWith('pay_');
+  const hasPaidAt = Boolean(o.paid_at || o.paidAt);
+  const isStatusExplicitPaid = (o.status || '').toLowerCase() === 'paid';
+  return hasValidPaymentId || hasPaidAt || isStatusExplicitPaid;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const session = getAdminSessionFromRequest(req);
@@ -19,35 +27,49 @@ export async function GET(req: NextRequest) {
     let orders: any[] = [];
 
     if (supabase) {
-      let q = supabase.from('orders').select('*').order('created_at', { ascending: false });
-      if (status && status !== 'all') {
-        if (status === 'confirmed') {
-          q = q.in('status', ['confirmed', 'paid', 'created']);
-        } else {
-          q = q.eq('status', status);
-        }
-      }
-      const { data, error } = await q;
+      const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
       if (!error && data) {
         orders = data.map((o) => {
-          let orderStatus = (o.status || 'confirmed').toLowerCase();
-          if (orderStatus === 'paid' || orderStatus === 'created') {
-            orderStatus = 'confirmed';
+          const rawStatus = (o.status || 'pending').toLowerCase();
+          const paid = isOrderActuallyPaid(o);
+
+          let orderStatus = rawStatus;
+          if (!paid) {
+            // If payment was never captured/paid in Razorpay, it is an unpaid/failed checkout
+            orderStatus = rawStatus === 'pending' ? 'pending' : 'failed';
+          } else {
+            if (rawStatus === 'paid' || rawStatus === 'created' || rawStatus === 'pending') {
+              orderStatus = 'confirmed';
+            }
           }
+
+          const rawAddr = o.shipping_address || o.customer || {};
+          const shippingAddress = {
+            address: rawAddr.address || rawAddr.addressLine1 || rawAddr.address_line1 || 'Address on file',
+            city: rawAddr.city || 'Delhi',
+            state: rawAddr.state || 'Delhi',
+            pincode: rawAddr.pincode || rawAddr.postal_code || rawAddr.zip || '110001',
+          };
           return {
             id: o.order_id || o.id,
             customerName: o.customer?.fullName || o.customer?.name || o.customer_name || 'Rezoni Customer',
             customerEmail: o.customer?.email || o.customer_email || 'customer@rezoni.com',
             customerPhone: o.customer?.phone || o.customer_phone || '',
-            shippingAddress: o.shipping_address || o.customer,
+            shippingAddress,
             items: o.items || [],
             total: Number(o.amount || o.total_amount || o.total) || 0,
             status: orderStatus,
+            paymentId: o.razorpay_payment_id || null,
+            razorpayOrderId: o.razorpay_order_id || null,
             carrier: o.customer?.carrier || o.carrier || 'BlueDart Express',
-            trackingNumber: o.customer?.trackingNumber || o.tracking_number || o.razorpay_order_id || '',
+            trackingNumber: o.customer?.trackingNumber || o.tracking_number || '',
             date: o.created_at ? new Date(o.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recent',
           };
         });
+
+        if (status && status !== 'all') {
+          orders = orders.filter((o) => o.status === status);
+        }
       }
     }
 
@@ -57,19 +79,35 @@ export async function GET(req: NextRequest) {
         const ordersJsonPath = path.resolve(process.cwd(), '..', 'src', 'data', 'orders.json');
         if (fs.existsSync(ordersJsonPath)) {
           const ords = JSON.parse(fs.readFileSync(ordersJsonPath, 'utf8'));
-          orders = ords.map((o: any) => ({
-            id: o.orderId || o.id,
-            customerName: o.customer?.fullName || 'Rezoni Customer',
-            customerEmail: o.customer?.email || 'customer@rezoni.com',
-            customerPhone: o.customer?.phone || '',
-            shippingAddress: o.customer,
-            items: o.items || [],
-            total: Number(o.amount || 0),
-            status: o.status === 'created' || o.status === 'paid' ? 'confirmed' : o.status || 'confirmed',
-            carrier: o.carrier || 'BlueDart Express',
-            trackingNumber: o.trackingNumber || o.razorpayOrderId || '',
-            date: o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent',
-          }));
+          orders = ords.map((o: any) => {
+            const rawStatus = (o.status || 'pending').toLowerCase();
+            const paid = isOrderActuallyPaid(o);
+
+            let orderStatus = rawStatus;
+            if (!paid) {
+              orderStatus = rawStatus === 'pending' ? 'pending' : 'failed';
+            } else {
+              if (rawStatus === 'paid' || rawStatus === 'created' || rawStatus === 'pending') {
+                orderStatus = 'confirmed';
+              }
+            }
+
+            return {
+              id: o.orderId || o.id,
+              customerName: o.customer?.fullName || 'Rezoni Customer',
+              customerEmail: o.customer?.email || 'customer@rezoni.com',
+              customerPhone: o.customer?.phone || '',
+              shippingAddress: o.customer,
+              items: o.items || [],
+              total: Number(o.amount || 0),
+              status: orderStatus,
+              paymentId: o.razorpayPaymentId || null,
+              razorpayOrderId: o.razorpayOrderId || null,
+              carrier: o.carrier || 'BlueDart Express',
+              trackingNumber: o.trackingNumber || '',
+              date: o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent',
+            };
+          });
           if (status && status !== 'all') {
             orders = orders.filter((o) => o.status === status);
           }
@@ -145,9 +183,6 @@ export async function PATCH(req: NextRequest) {
       };
 
       updatePayload.customer = mergedCustomer;
-      if (trackingNumber) {
-        updatePayload.razorpay_order_id = trackingNumber;
-      }
 
       // 2. Perform Supabase update with error checking
       const { data: updatedData, error } = await supabase

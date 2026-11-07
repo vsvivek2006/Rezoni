@@ -84,12 +84,16 @@ export async function GET(req: NextRequest) {
         contact: p.contact || p.notes?.customer_phone || '',
         customerName: p.notes?.customer_name || 'Rezoni Customer',
         vpa: p.vpa || p.upi?.vpa || '',
+        upiVpa: p.vpa || p.upi?.vpa || '',
+        cardNetwork: p.card?.network || p.card_network || '',
+        cardLast4: p.card?.last4 || p.card_last4 || '',
         bank: p.bank || '',
         wallet: p.wallet || '',
         errorCode: p.error_code || null,
         errorDescription: p.error_description || null,
         date: dateStr,
-        createdAt: p.created_at * 1000,
+        createdAt: p.created_at ? new Date(p.created_at * 1000).toISOString() : new Date().toISOString(),
+        notes: p.notes || {},
       };
     });
 
@@ -97,9 +101,27 @@ export async function GET(req: NextRequest) {
       ? Math.round((successfulCount / payments.length) * 100)
       : 100;
 
+    const keyMasked = `${keyId.substring(0, 8)}...${keyId.slice(-4)}`;
+
     return NextResponse.json({
       success: true,
-      keyIdMasked: `${keyId.substring(0, 8)}...${keyId.slice(-4)}`,
+      keyIdMasked: keyMasked,
+      gateway: {
+        configured: true,
+        keyId: keyMasked,
+      },
+      balance: {
+        totalCaptured,
+        totalCapturedPaise: Math.round(totalCaptured * 100),
+        currency: 'INR',
+        totalTransactions: payments.length,
+        capturedCount: successfulCount,
+        failedCount,
+        refundedCount,
+        totalRefunded,
+        netBalance: totalCaptured - totalRefunded,
+        successRate,
+      },
       gatewayStatus: 'LIVE',
       totalCount: payments.length,
       successfulCount,

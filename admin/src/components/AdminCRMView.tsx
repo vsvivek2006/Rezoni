@@ -62,8 +62,10 @@ interface Order {
   customerName?: string;
   date: string;
   total: number;
-  status: 'confirmed' | 'dispatched' | 'in_transit' | 'out_for_delivery' | 'delivered';
+  status: 'confirmed' | 'dispatched' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'pending' | 'failed';
   statusLabel?: string;
+  paymentId?: string;
+  razorpayOrderId?: string;
   carrier: string;
   trackingNumber: string;
   estimatedDelivery?: string;
@@ -104,6 +106,8 @@ interface AdminMetrics {
   inTransitCount: number;
   outForDeliveryCount: number;
   deliveredCount: number;
+  pendingOrdersCount?: number;
+  failedOrdersCount?: number;
   averageOrderValue: number;
   totalCustomers: number;
   totalRegisteredUsers?: number;
@@ -275,6 +279,23 @@ export default function AdminCRMView({
     checkSession();
   }, []);
 
+  // Sync tab with browser back / forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      if (typeof window !== 'undefined') {
+        const path = window.location.pathname.replace(/^\//, '') as TabKey;
+        const validTabs: TabKey[] = ['overview', 'orders', 'returns', 'financials', 'customers', 'inquiries', 'reviews'];
+        if (validTabs.includes(path)) {
+          setActiveTab(path);
+        } else if (!path) {
+          setActiveTab('overview');
+        }
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const switchTab = (tab: TabKey) => {
     setActiveTab(tab);
     if (typeof window !== 'undefined') {
@@ -327,8 +348,8 @@ export default function AdminCRMView({
     try {
       const [statsRes, ordersRes, returnsRes, customersRes, reviewsRes, inquiriesRes, razorpayRes] = await Promise.all([
         fetch('/api/stats'),
-        fetch(`/api/orders?status=${orderStatusFilter}&q=${encodeURIComponent(orderSearch)}`),
-        fetch(`/api/returns?status=${returnStatusFilter}`),
+        fetch('/api/orders'),
+        fetch('/api/returns'),
         fetch('/api/customers'),
         fetch('/api/reviews'),
         fetch('/api/contact'),
@@ -374,7 +395,7 @@ export default function AdminCRMView({
     if (isAuthenticated) {
       fetchAllData();
     }
-  }, [isAuthenticated, orderStatusFilter, returnStatusFilter]);
+  }, [isAuthenticated]);
 
   // Update order status with instant Optimistic UI update
   const handleUpdateOrderStatus = async (
@@ -512,6 +533,34 @@ export default function AdminCRMView({
     }
   };
 
+  // Filtered orders with memoization
+  const filteredOrders = useMemo(() => {
+    let list = orders;
+    if (orderStatusFilter !== 'all') {
+      list = list.filter((o) => o.status === orderStatusFilter);
+    }
+    if (!orderSearch.trim()) return list;
+    const q = orderSearch.toLowerCase();
+    return list.filter(
+      (o) =>
+        (o.id && o.id.toLowerCase().includes(q)) ||
+        (o.customerName && o.customerName.toLowerCase().includes(q)) ||
+        (o.customerEmail && o.customerEmail.toLowerCase().includes(q)) ||
+        (o.customerPhone && o.customerPhone.includes(q)) ||
+        (o.carrier && o.carrier.toLowerCase().includes(q)) ||
+        (o.trackingNumber && o.trackingNumber.toLowerCase().includes(q))
+    );
+  }, [orders, orderStatusFilter, orderSearch]);
+
+  // Filtered returns with memoization
+  const filteredReturns = useMemo(() => {
+    let list = returns;
+    if (returnStatusFilter !== 'all') {
+      list = list.filter((r) => r.status === returnStatusFilter);
+    }
+    return list;
+  }, [returns, returnStatusFilter]);
+
   // Filtered customers with memoization
   const filteredCustomers = useMemo(() => {
     let list = customers;
@@ -524,9 +573,9 @@ export default function AdminCRMView({
     const q = customerSearch.toLowerCase();
     return list.filter(
       (c) =>
-        c.name.toLowerCase().includes(q) ||
-        c.email.toLowerCase().includes(q) ||
-        c.phone.includes(q)
+        (c.name && c.name.toLowerCase().includes(q)) ||
+        (c.email && c.email.toLowerCase().includes(q)) ||
+        (c.phone && c.phone.includes(q))
     );
   }, [customers, customerSearch, customerTypeFilter]);
 
@@ -551,12 +600,13 @@ export default function AdminCRMView({
     const q = inquirySearch.toLowerCase();
     return list.filter(
       (i) =>
-        i.name.toLowerCase().includes(q) ||
-        i.email.toLowerCase().includes(q) ||
+        (i.name && i.name.toLowerCase().includes(q)) ||
+        (i.email && i.email.toLowerCase().includes(q)) ||
         (i.phone && i.phone.includes(q)) ||
         (i.subject && i.subject.toLowerCase().includes(q)) ||
-        i.message.toLowerCase().includes(q) ||
-        i.ticketId.toLowerCase().includes(q)
+        (i.message && i.message.toLowerCase().includes(q)) ||
+        (i.id && i.id.toLowerCase().includes(q)) ||
+        (i.ticketId && i.ticketId.toLowerCase().includes(q))
     );
   }, [inquiries, inquiryStatusFilter, inquirySearch]);
 
@@ -1204,10 +1254,13 @@ export default function AdminCRMView({
                               o.status === 'delivered' ? 'shadcn-badge-success' :
                               o.status === 'out_for_delivery' ? 'shadcn-badge-pink' :
                               o.status === 'in_transit' ? 'shadcn-badge-purple' :
-                              o.status === 'dispatched' ? 'shadcn-badge-info' : 'shadcn-badge-warning'
+                              o.status === 'dispatched' ? 'shadcn-badge-info' :
+                              o.status === 'confirmed' ? 'shadcn-badge-success' :
+                              o.status === 'failed' ? 'shadcn-badge-destructive' :
+                              'shadcn-badge-warning'
                             }`}
                           >
-                            {o.status.replace('_', ' ')}
+                            {o.status === 'pending' ? 'Payment Pending' : o.status === 'failed' ? 'Payment Failed' : o.status.replace('_', ' ')}
                           </span>
                         </td>
                       </tr>
@@ -1249,7 +1302,9 @@ export default function AdminCRMView({
                 style={{ width: 'auto', minWidth: '150px' }}
               >
                 <option value="all">All Statuses</option>
-                <option value="confirmed">Confirmed</option>
+                <option value="confirmed">Confirmed (Paid)</option>
+                <option value="pending">Payment Pending (Unpaid)</option>
+                <option value="failed">Payment Failed</option>
                 <option value="dispatched">Dispatched</option>
                 <option value="in_transit">In Transit</option>
                 <option value="out_for_delivery">Out for Delivery</option>
@@ -1273,10 +1328,18 @@ export default function AdminCRMView({
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((o) => {
-                    const safeStatus: Order['status'] = ['confirmed', 'dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(o.status)
+                  {filteredOrders.map((o) => {
+                    const safeStatus: Order['status'] = [
+                      'confirmed',
+                      'dispatched',
+                      'in_transit',
+                      'out_for_delivery',
+                      'delivered',
+                      'pending',
+                      'failed',
+                    ].includes(o.status)
                       ? o.status
-                      : 'confirmed';
+                      : 'pending';
 
                     return (
                       <tr key={o.id}>
@@ -1293,10 +1356,13 @@ export default function AdminCRMView({
                               safeStatus === 'delivered' ? 'shadcn-badge-success' :
                               safeStatus === 'out_for_delivery' ? 'shadcn-badge-pink' :
                               safeStatus === 'in_transit' ? 'shadcn-badge-purple' :
-                              safeStatus === 'dispatched' ? 'shadcn-badge-info' : 'shadcn-badge-warning'
+                              safeStatus === 'dispatched' ? 'shadcn-badge-info' :
+                              safeStatus === 'confirmed' ? 'shadcn-badge-success' :
+                              safeStatus === 'failed' ? 'shadcn-badge-destructive' :
+                              'shadcn-badge-warning'
                             }`}
                           >
-                            {safeStatus.replace('_', ' ')}
+                            {safeStatus === 'pending' ? 'Payment Pending' : safeStatus === 'failed' ? 'Payment Failed' : safeStatus.replace('_', ' ')}
                           </span>
                         </td>
                         <td>
@@ -1311,6 +1377,8 @@ export default function AdminCRMView({
                             style={{ padding: '4px 8px', fontSize: '12px', width: 'auto', cursor: 'pointer' }}
                           >
                             <option value="confirmed">Confirmed</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
                             <option value="dispatched">Dispatched</option>
                             <option value="in_transit">In Transit</option>
                             <option value="out_for_delivery">Out for Delivery</option>
@@ -1330,7 +1398,7 @@ export default function AdminCRMView({
                       </tr>
                     );
                   })}
-                  {orders.length === 0 && (
+                  {filteredOrders.length === 0 && (
                     <tr>
                       <td colSpan={8} style={{ textAlign: 'center', color: '#71717a', padding: '32px' }}>
                         No orders match the current search or filter.
@@ -1375,7 +1443,7 @@ export default function AdminCRMView({
                   </tr>
                 </thead>
                 <tbody>
-                  {returns.map((r) => (
+                  {filteredReturns.map((r) => (
                     <tr key={r.id}>
                       <td style={{ fontWeight: 700, color: '#f87171' }}>{r.id}</td>
                       <td style={{ color: '#38bdf8' }}>{r.orderId}</td>
@@ -1420,7 +1488,7 @@ export default function AdminCRMView({
                       </td>
                     </tr>
                   ))}
-                  {returns.length === 0 && (
+                  {filteredReturns.length === 0 && (
                     <tr>
                       <td colSpan={7} style={{ textAlign: 'center', color: '#71717a', padding: '32px' }}>
                         No warranty claims or return requests found.
@@ -1517,7 +1585,7 @@ export default function AdminCRMView({
                       <span className="shadcn-badge shadcn-badge-success" style={{ fontSize: '10px' }}>Connected</span>
                     </div>
                     <div style={{ fontSize: '11.5px', color: '#a1a1aa', marginTop: '2px' }}>
-                      Key ID: <span style={{ fontFamily: 'monospace', color: '#ff6700' }}>{razorpayData?.gateway?.keyId || 'rzp_live_ToZAuEOwENq9Ka'}</span> • INR Currency
+                      Key ID: <span style={{ fontFamily: 'monospace', color: '#ff6700' }}>{razorpayData?.gateway?.keyId || 'Live Gateway'}</span> • INR Currency
                     </div>
                   </div>
                 </div>
@@ -1730,7 +1798,7 @@ export default function AdminCRMView({
                   </thead>
                   <tbody>
                     {filteredCustomers.map((c, i) => (
-                      <tr key={i}>
+                      <tr key={c.id || c.email || i}>
                         <td style={{ fontWeight: 600 }}>{c.name}</td>
                         <td>
                           {c.isRegistered ? (
@@ -2069,6 +2137,39 @@ export default function AdminCRMView({
                 marginBottom: '16px',
               }}
             >
+              {/* Caution Banner for Unpaid / Failed Orders */}
+              {(selectedOrder.status === 'pending' || selectedOrder.status === 'failed') && (
+                <div
+                  style={{
+                    backgroundColor: selectedOrder.status === 'failed' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                    border: `1px solid ${selectedOrder.status === 'failed' ? '#ef4444' : '#f59e0b'}`,
+                    borderRadius: '6px',
+                    padding: '10px 12px',
+                    marginBottom: '12px',
+                    color: selectedOrder.status === 'failed' ? '#fca5a5' : '#fde68a',
+                    fontSize: '12px',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  <div style={{ fontWeight: 800, marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span>⚠️</span>
+                    <span>
+                      {selectedOrder.status === 'failed'
+                        ? 'PAYMENT FAILED / DECLINED - DO NOT DISPATCH'
+                        : 'PAYMENT NOT CONFIRMED - DO NOT DISPATCH'}
+                    </span>
+                  </div>
+                  <div>
+                    This order was not confirmed paid by Razorpay. Do not package or dispatch goods unless payment is verified.
+                  </div>
+                  {selectedOrder.paymentId && (
+                    <div style={{ marginTop: '4px', fontSize: '11px', color: '#ffffff' }}>
+                      Payment Ref: <code>{selectedOrder.paymentId}</code>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#fafafa', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <Truck size={14} color="#ff6700" />
                 <span>Live Supabase Order Status & Logistics Editor</span>
@@ -2085,7 +2186,9 @@ export default function AdminCRMView({
                     className="shadcn-input"
                     style={{ fontSize: '12px', padding: '6px 8px' }}
                   >
-                    <option value="confirmed">Confirmed</option>
+                    <option value="confirmed">Confirmed (Paid)</option>
+                    <option value="pending">Pending (Unpaid)</option>
+                    <option value="failed">Failed (Declined)</option>
                     <option value="dispatched">Dispatched</option>
                     <option value="in_transit">In Transit</option>
                     <option value="out_for_delivery">Out for Delivery</option>

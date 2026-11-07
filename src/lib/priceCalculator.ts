@@ -10,8 +10,11 @@ interface ProductLookup {
 
 const productMap = new Map<string, ProductLookup>();
 
-(productsData as ProductLookup[]).forEach((p) => {
-  productMap.set(p.id, p);
+(productsData as any[]).forEach((p) => {
+  productMap.set(String(p.id), p);
+  if (p.handle) {
+    productMap.set(String(p.handle), p);
+  }
 });
 
 export const FREE_SHIPPING_THRESHOLD = 0;
@@ -58,29 +61,15 @@ export function validateAndCalculateCart(incomingItems: any[]): ValidatedCartRes
       }
     }
 
-    // Determine variant unit price: MagSafe = 399, Non-MagSafe / Standard = 299
-    let unitPrice = 0;
+    // Determine unit price: strictly canonical product price (₹599)
+    let unitPrice = 599;
     let title = item.title || (canonicalProduct ? canonicalProduct.title : 'Rezoni Designer Phone Case');
     let image = item.image || (canonicalProduct ? canonicalProduct.primary_image : '');
 
-    if (productId.endsWith('-magsafe') || (item.title && item.title.includes('MagSafe') && !item.title.includes('Non-MagSafe'))) {
-      unitPrice = 399;
-    } else if (typeof item.price === 'number' && (item.price === 399 || item.price === 299)) {
-      unitPrice = Math.round(item.price);
-    } else if (canonicalProduct) {
-      unitPrice = canonicalProduct.price || 299;
-    } else if (typeof item.price === 'number' && item.price > 0) {
-      unitPrice = Math.round(item.price);
+    if (canonicalProduct && typeof canonicalProduct.price === 'number' && canonicalProduct.price > 0) {
+      unitPrice = canonicalProduct.price;
     } else {
-      return {
-        isValid: false,
-        error: `Invalid product in cart (${productId || 'unknown'}).`,
-        items: [],
-        subtotal: 0,
-        shippingFee: 0,
-        totalAmount: 0,
-        totalPaise: 0,
-      };
+      unitPrice = 599;
     }
 
     subtotal += unitPrice * qty;

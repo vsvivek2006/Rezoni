@@ -42,7 +42,7 @@ export interface Order {
   customerName?: string;
   date: string;
   total: number;
-  status: 'confirmed' | 'dispatched' | 'in_transit' | 'out_for_delivery' | 'delivered';
+  status: 'confirmed' | 'dispatched' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'pending' | 'failed';
   statusLabel: string;
   carrier: string;
   trackingNumber: string;
@@ -615,6 +615,8 @@ export function updateOrderStatus(
 
   order.status = status;
   const labels: Record<Order['status'], string> = {
+    pending: 'Payment Pending - Awaiting Gateway Confirmation',
+    failed: 'Payment Failed - Transaction Incomplete',
     confirmed: 'Order Confirmed - Processing for Dispatch',
     dispatched: 'Dispatched & Packed - Handoff to Courier',
     in_transit: 'In Transit - Out for Hub Sorting',

@@ -36,14 +36,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
-          const validItems = parsed.filter(
-            (i): i is CartItem =>
-              Boolean(i) &&
-              typeof i === 'object' &&
-              Boolean(i.id) &&
-              typeof i.price === 'number' &&
-              !isNaN(i.price)
-          );
+          const validItems = parsed
+            .filter(
+              (i): i is CartItem =>
+                Boolean(i) &&
+                typeof i === 'object' &&
+                Boolean(i.id) &&
+                typeof i.price === 'number' &&
+                !isNaN(i.price)
+            )
+            .map((i) => ({
+              ...i,
+              // Normalize any old cached cart prices (e.g. 299/399) to flat ₹599
+              price: i.price === 0 ? 0 : 599,
+            }));
           setCart(validItems);
         }
       }

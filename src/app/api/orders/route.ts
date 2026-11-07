@@ -68,18 +68,33 @@ function formatISTShortTime(d: Date): string {
   }
 }
 
+function isOrderActuallyPaid(raw: any): boolean {
+  const paymentId = raw.razorpay_payment_id || raw.payment_id || raw.razorpayPaymentId;
+  const hasValidPaymentId = typeof paymentId === 'string' && paymentId.startsWith('pay_');
+  const hasPaidAt = Boolean(raw.paid_at || raw.paidAt);
+  const isStatusExplicitPaid = (raw.order_status || raw.status || '').toLowerCase() === 'paid';
+  return hasValidPaymentId || hasPaidAt || isStatusExplicitPaid;
+}
+
 function normalizeToOrder(raw: any): Order {
   const orderId = raw.order_id || raw.id || raw.orderId || 'RZ-10001';
-  const rawStatus = (raw.order_status || raw.status || 'confirmed').toLowerCase();
+  const rawStatus = (raw.order_status || raw.status || 'pending').toLowerCase();
+  const paid = isOrderActuallyPaid(raw);
 
-  let status: Order['status'] = 'confirmed';
-  if (['dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(rawStatus)) {
-    status = rawStatus as Order['status'];
+  let status: Order['status'] = 'pending';
+  if (!paid) {
+    status = rawStatus === 'pending' ? 'pending' : 'failed';
   } else {
-    status = 'confirmed';
+    if (['dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(rawStatus)) {
+      status = rawStatus as Order['status'];
+    } else {
+      status = 'confirmed';
+    }
   }
 
   const statusLabelMap: Record<Order['status'], string> = {
+    pending: 'Payment Pending - Awaiting Gateway Confirmation',
+    failed: 'Payment Failed - Transaction Incomplete',
     confirmed: 'Order Confirmed - Preparing for Dispatch',
     dispatched: 'Dispatched - Handed over to Logistics',
     in_transit: 'In Transit - Moving to Delivery Hub',
@@ -205,17 +220,19 @@ function normalizeToOrder(raw: any): Order {
     deliveredTime = estDate;
   }
 
+  const isPaidOrBeyond = !['pending', 'failed'].includes(status);
+
   const timeline = [
     {
       key: 'confirmed',
-      title: 'Order Confirmed',
-      description: 'Order placed & prepaid payment verified',
+      title: status === 'failed' ? 'Payment Failed' : status === 'pending' ? 'Payment Awaiting Confirmation' : 'Order Confirmed',
+      description: status === 'failed' ? 'Transaction was declined by payment gateway' : status === 'pending' ? 'Order initiated - awaiting payment confirmation' : 'Order placed & prepaid payment verified',
       date: formatISTDate(confirmedTime),
       time: formatISTTime(confirmedTime),
       shortDate: formatISTShortDate(confirmedTime),
       shortTime: formatISTShortTime(confirmedTime),
-      completed: true,
-      current: status === 'confirmed',
+      completed: isPaidOrBeyond,
+      current: status === 'confirmed' || status === 'pending' || status === 'failed',
       location: 'Rezoni Central Logistics Hub, Gurugram',
     },
     {
@@ -428,7 +445,7 @@ export async function POST(req: NextRequest) {
       customerName: customerName || 'Valued Customer',
       customerPhone: customerPhone || '',
       date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      total: Number(total || 299),
+      total: Number(total || 599),
       shippingAddress: shippingAddress || {
         address: 'Delivery Address Provided',
         city: 'New Delhi',

@@ -138,11 +138,7 @@ export default function CheckoutAddressForm({
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
 
-  // Production Performance Optimizations: Background pre-warmed SDK & pre-order intent
-  const preOrderPromiseRef = useRef<Promise<any> | null>(null);
-  const [cachedOrderData, setCachedOrderData] = useState<any>(null);
-
-  // 1. Production Standard: Pre-warm Razorpay SDK in the background immediately
+  // Pre-warm Razorpay SDK in the background immediately
   useEffect(() => {
     loadRazorpayScript().catch(() => {});
   }, []);
@@ -181,27 +177,6 @@ export default function CheckoutAddressForm({
         ) {
           setHasSavedAddress(true);
           setIsConfirmed(true);
-
-          // Silently pre-create order in background for instant checkout
-          if (cart && cart.length > 0) {
-            preOrderPromiseRef.current = fetch('/api/razorpay/create-order', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                items: cart,
-                customer: data,
-              }),
-            })
-              .then((res) => res.json())
-              .then((orderData) => {
-                if (orderData && orderData.success) {
-                  setCachedOrderData(orderData);
-                  return orderData;
-                }
-                return null;
-              })
-              .catch(() => null);
-          }
         }
       }
     } catch {
@@ -303,32 +278,6 @@ export default function CheckoutAddressForm({
     }
 
     setIsConfirmed(true);
-
-    // 2. Production Standard: Silently pre-create Payment Order in the background
-    try {
-      preOrderPromiseRef.current = fetch('/api/razorpay/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: cart,
-          customer: addressPayload,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && data.success) {
-            setCachedOrderData(data);
-            return data;
-          }
-          return null;
-        })
-        .catch((err) => {
-          console.warn('Pre-order background fetch note:', err);
-          return null;
-        });
-    } catch {
-      // Non-blocking background intent
-    }
   };
 
   const handlePayWithRazorpay = async () => {
@@ -349,29 +298,20 @@ export default function CheckoutAddressForm({
     };
 
     try {
-      // 1. Check if order was already pre-created in background
-      let data = cachedOrderData;
-
-      if (!data && preOrderPromiseRef.current) {
-        // Await the in-flight pre-order request
-        data = await preOrderPromiseRef.current;
-      }
-
-      // If pre-order wasn't ready or failed, fetch on-demand in parallel with SDK ensure
-      if (!data || !data.success) {
-        const [res] = await Promise.all([
-          fetch('/api/razorpay/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              items: cart,
-              customer: addressPayload,
-            }),
+      // Create Razorpay order on demand when customer clicks Pay
+      const [res] = await Promise.all([
+        fetch('/api/razorpay/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: cart,
+            customer: addressPayload,
           }),
-          loadRazorpayScript(),
-        ]);
-        data = await res.json();
-      }
+        }),
+        loadRazorpayScript(),
+      ]);
+
+      const data = await res.json();
 
       if (!data || !data.success) {
         if (data?.isConfigError) {
@@ -385,7 +325,7 @@ export default function CheckoutAddressForm({
         return;
       }
 
-      // 2. Open official Razorpay Checkout Modal (instant because SDK & order are ready)
+      // Open official Razorpay Checkout Modal
       await openRazorpayCheckout({
         keyId: data.keyId,
         orderId: data.razorpayOrderId,
@@ -396,7 +336,7 @@ export default function CheckoutAddressForm({
         customerPhone: addressPayload.phone,
         onSuccess: async (rzpRes) => {
           try {
-            // 3. Cryptographically verify signature on server (HMAC-SHA256)
+            // Cryptographically verify signature on server (HMAC-SHA256) & live status check
             const verifyRes = await fetch('/api/razorpay/verify-payment', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -444,6 +384,18 @@ export default function CheckoutAddressForm({
             failRes.error?.description ||
               'Payment failed or was declined by issuing bank. Please select an alternate payment method or retry.'
           );
+          // Immediately mark order as failed in backend
+          if (data?.orderId) {
+            fetch('/api/razorpay/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                orderId: data.orderId,
+                failed: true,
+                error: failRes.error?.description || 'Payment failed or declined',
+              }),
+            }).catch(() => {});
+          }
         },
       });
     } catch (err: any) {
@@ -876,8 +828,6 @@ export default function CheckoutAddressForm({
                   type="button"
                   onClick={() => {
                     setIsConfirmed(false);
-                    setCachedOrderData(null);
-                    preOrderPromiseRef.current = null;
                   }}
                   style={{
                     background: '#fff7ed',
@@ -1284,8 +1234,6 @@ export default function CheckoutAddressForm({
                 type="button"
                 onClick={() => {
                   setIsConfirmed(false);
-                  setCachedOrderData(null);
-                  preOrderPromiseRef.current = null;
                 }}
                 disabled={isProcessingPayment}
                 style={{

@@ -67,24 +67,37 @@ export async function GET(req: NextRequest) {
       } catch (e) {}
     }
 
-    const totalOrders = orders.length;
-    const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.total_amount || o.total || o.amount) || 0), 0);
+    function isOrderActuallyPaid(o: any): boolean {
+      const paymentId = o.razorpay_payment_id || o.payment_id || o.razorpayPaymentId;
+      const hasValidPaymentId = typeof paymentId === 'string' && paymentId.startsWith('pay_');
+      const hasPaidAt = Boolean(o.paid_at || o.paidAt);
+      const isStatusExplicitPaid = (o.order_status || o.status || '').toLowerCase() === 'paid';
+      return hasValidPaymentId || hasPaidAt || isStatusExplicitPaid;
+    }
+
+    // Separate verified paid orders from unpaid checkout drop-offs and failed payments
+    const paidOrders = orders.filter((o) => isOrderActuallyPaid(o));
+    const failedOrders = orders.filter((o) => !isOrderActuallyPaid(o));
+    const pendingOrders = orders.filter((o) => !isOrderActuallyPaid(o) && (o.order_status || o.status || '').toLowerCase() === 'pending');
+
+    const totalOrders = paidOrders.length;
+    const totalRevenue = paidOrders.reduce((sum, o) => sum + (Number(o.total_amount || o.total || o.amount) || 0), 0);
     const totalReturns = returns.length;
     const totalRefunded = returns
       .filter((r) => r.status === 'refunded')
       .reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
 
-    const pendingDispatches = orders.filter(
+    const pendingDispatches = paidOrders.filter(
       (o) => (o.order_status || o.status) === 'confirmed' || (o.order_status || o.status) === 'paid'
     ).length;
-    const dispatchedCount = orders.filter((o) => (o.order_status || o.status) === 'dispatched').length;
-    const inTransitCount = orders.filter((o) => (o.order_status || o.status) === 'in_transit').length;
-    const outForDeliveryCount = orders.filter((o) => (o.order_status || o.status) === 'out_for_delivery').length;
-    const deliveredCount = orders.filter((o) => (o.order_status || o.status) === 'delivered').length;
+    const dispatchedCount = paidOrders.filter((o) => (o.order_status || o.status) === 'dispatched').length;
+    const inTransitCount = paidOrders.filter((o) => (o.order_status || o.status) === 'in_transit').length;
+    const outForDeliveryCount = paidOrders.filter((o) => (o.order_status || o.status) === 'out_for_delivery').length;
+    const deliveredCount = paidOrders.filter((o) => (o.order_status || o.status) === 'delivered').length;
 
     const averageOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
     const distinctEmails = new Set(
-      orders
+      paidOrders
         .map((o) => (o.customer_email || o.customerEmail || o.customer?.email || '').toLowerCase())
         .filter(Boolean)
     );
@@ -96,8 +109,8 @@ export async function GET(req: NextRequest) {
     let razorpayCaptured = 0;
     let razorpaySuccessCount = 0;
     try {
-      const keyId = process.env.RAZORPAY_KEY_ID || 'rzp_live_ToZAuEOwENq9Ka';
-      const keySecret = process.env.RAZORPAY_KEY_SECRET || 'zyu2pKggRDqb7pbvzPfLOlxo';
+      const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      const keySecret = process.env.RAZORPAY_KEY_SECRET;
       if (keyId && keySecret) {
         const auth = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
         const rzRes = await fetch('https://api.razorpay.com/v1/payments?count=100', {
@@ -129,6 +142,8 @@ export async function GET(req: NextRequest) {
         inTransitCount,
         outForDeliveryCount,
         deliveredCount,
+        pendingOrdersCount: pendingOrders.length,
+        failedOrdersCount: failedOrders.length,
         averageOrderValue,
         totalCustomers: Math.max(registeredUsersCount, distinctEmails.size),
         totalRegisteredUsers: registeredUsersCount,

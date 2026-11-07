@@ -15,40 +15,46 @@ function SuccessContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    // Fire festive celebration confetti
-    try {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#ff6700', '#059669', '#2563eb', '#f59e0b', '#ec4899'],
-      });
-    } catch {
-      // ignore
-    }
-
+  const fetchOrder = () => {
     if (!orderId) {
       setLoading(false);
       return;
     }
-
-    // Fetch order details from API
+    setLoading(true);
     fetch(`/api/orders/${encodeURIComponent(orderId)}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.order) {
           setOrder(data.order);
+          // Fire celebration confetti ONLY if payment is successfully completed
+          if (data.order.status === 'paid' || (data.order as any).status === 'confirmed') {
+            try {
+              confetti({
+                particleCount: 80,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff6700', '#059669', '#2563eb', '#f59e0b', '#ec4899'],
+              });
+            } catch {}
+          }
         } else {
           setError(data.message || 'Order could not be found.');
         }
       })
       .catch((err) => {
         console.error('Failed to fetch order details:', err);
-        setError('Network error loading order confirmation.');
+        setError('Network error loading order status.');
       })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchOrder();
   }, [orderId]);
+
+  const isPaid = order && (order.status === 'paid' || (order as any).status === 'confirmed');
+  const isFailed = order && order.status === 'failed';
+  const isPending = order && !isPaid && !isFailed;
 
   return (
     <div
@@ -97,39 +103,111 @@ function SuccessContent() {
             overflow: 'hidden',
           }}
         >
-          {/* Header Banner */}
-          <div
-            style={{
-              padding: '36px 24px',
-              textAlign: 'center',
-              backgroundColor: '#f0fdf4',
-              borderBottom: '1px solid #bbf7d0',
-            }}
-          >
+          {/* Header Banner - Conditional on actual payment status */}
+          {loading ? (
+            <div style={{ padding: '36px 24px', textAlign: 'center', backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: '#4b5563' }}>Verifying payment status with Razorpay...</div>
+            </div>
+          ) : isPaid ? (
             <div
               style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                backgroundColor: '#059669',
-                color: '#ffffff',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '32px',
-                marginBottom: '16px',
-                boxShadow: '0 8px 16px rgba(5, 150, 105, 0.25)',
+                padding: '36px 24px',
+                textAlign: 'center',
+                backgroundColor: '#f0fdf4',
+                borderBottom: '1px solid #bbf7d0',
               }}
             >
-              ✓
+              <div
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  backgroundColor: '#059669',
+                  color: '#ffffff',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '32px',
+                  marginBottom: '16px',
+                  boxShadow: '0 8px 16px rgba(5, 150, 105, 0.25)',
+                }}
+              >
+                ✓
+              </div>
+              <h1 style={{ fontSize: '24px', fontWeight: 900, margin: '0 0 8px', color: '#064e3b' }}>
+                Payment Successful & Order Confirmed!
+              </h1>
+              <p style={{ fontSize: '13px', color: '#047857', margin: 0, lineHeight: 1.5 }}>
+                Thank you for choosing REZONI! A confirmation email and tracking link have been dispatched.
+              </p>
             </div>
-            <h1 style={{ fontSize: '24px', fontWeight: 900, margin: '0 0 8px', color: '#064e3b' }}>
-              Payment Successful & Order Confirmed!
-            </h1>
-            <p style={{ fontSize: '13px', color: '#047857', margin: 0, lineHeight: 1.5 }}>
-              Thank you for choosing REZONI! A confirmation email and tracking link have been dispatched.
-            </p>
-          </div>
+          ) : isFailed ? (
+            <div
+              style={{
+                padding: '36px 24px',
+                textAlign: 'center',
+                backgroundColor: '#fef2f2',
+                borderBottom: '1px solid #fecaca',
+              }}
+            >
+              <div
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  backgroundColor: '#dc2626',
+                  color: '#ffffff',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '30px',
+                  marginBottom: '16px',
+                  boxShadow: '0 8px 16px rgba(220, 38, 38, 0.25)',
+                }}
+              >
+                ✕
+              </div>
+              <h1 style={{ fontSize: '24px', fontWeight: 900, margin: '0 0 8px', color: '#991b1b' }}>
+                Payment Failed / Transaction Declined
+              </h1>
+              <p style={{ fontSize: '13px', color: '#b91c1c', margin: 0, lineHeight: 1.5 }}>
+                Your bank or payment gateway did not complete this transaction. If any amount was debited, your bank will refund it within 3–5 working days.
+              </p>
+            </div>
+          ) : (
+            <div
+              style={{
+                padding: '36px 24px',
+                textAlign: 'center',
+                backgroundColor: '#fffbeb',
+                borderBottom: '1px solid #fde68a',
+              }}
+            >
+              <div
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  backgroundColor: '#d97706',
+                  color: '#ffffff',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '28px',
+                  marginBottom: '16px',
+                  boxShadow: '0 8px 16px rgba(217, 119, 6, 0.25)',
+                }}
+              >
+                ⏳
+              </div>
+              <h1 style={{ fontSize: '24px', fontWeight: 900, margin: '0 0 8px', color: '#92400e' }}>
+                Payment Awaiting Confirmation
+              </h1>
+              <p style={{ fontSize: '13px', color: '#b45309', margin: 0, lineHeight: 1.5 }}>
+                Your order was initiated, but payment confirmation has not yet been received from Razorpay.
+              </p>
+            </div>
+          )}
 
           {/* Details Section */}
           <div style={{ padding: '24px' }}>
@@ -163,19 +241,27 @@ function SuccessContent() {
 
                   <div>
                     <span style={{ fontSize: '10px', textTransform: 'uppercase', color: '#6b7280', fontWeight: 700, letterSpacing: '0.5px' }}>
-                      Payment Reference ID
+                      Payment Status / ID
                     </span>
-                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#059669', marginTop: '4px', wordBreak: 'break-all' }}>
-                      {order.razorpayPaymentId || 'Verified'}
+                    <div
+                      style={{
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        color: isPaid ? '#059669' : isFailed ? '#dc2626' : '#d97706',
+                        marginTop: '4px',
+                        wordBreak: 'break-all',
+                      }}
+                    >
+                      {isPaid ? (order.razorpayPaymentId || 'Verified') : isFailed ? 'Failed / Declined' : 'Pending Confirmation'}
                     </div>
                   </div>
 
                   <div>
                     <span style={{ fontSize: '10px', textTransform: 'uppercase', color: '#6b7280', fontWeight: 700, letterSpacing: '0.5px' }}>
-                      Estimated Delivery
+                      {isPaid ? 'Estimated Delivery' : 'Gateway Order Reference'}
                     </span>
                     <div style={{ fontSize: '13px', fontWeight: 700, color: '#111827', marginTop: '4px' }}>
-                      2 - 4 Business Days (Express)
+                      {isPaid ? '2 - 4 Business Days (Express)' : (order.razorpayOrderId || 'N/A')}
                     </div>
                   </div>
                 </div>
@@ -270,7 +356,7 @@ function SuccessContent() {
                     )}
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: 900, color: '#111827', borderTop: '1px dashed #e5e7eb', paddingTop: '8px' }}>
-                    <span>Total Paid</span>
+                    <span>Total Amount</span>
                     <span style={{ color: '#ff6700' }}>Rs. {order.amount.toFixed(2)}</span>
                   </div>
                 </div>
@@ -278,11 +364,11 @@ function SuccessContent() {
             ) : (
               <div style={{ textAlign: 'center', padding: '30px 0', color: '#4b5563' }}>
                 <p style={{ fontSize: '14px', marginBottom: '12px' }}>
-                  {error || 'Thank you! Your payment has been received.'}
+                  {error || 'Unable to locate order records.'}
                 </p>
                 {orderId && (
                   <p style={{ fontSize: '13px', color: '#6b7280' }}>
-                    Order ID: <strong>{orderId}</strong>
+                    Order Reference: <strong>{orderId}</strong>
                   </p>
                 )}
               </div>
@@ -290,44 +376,131 @@ function SuccessContent() {
 
             {/* Action Buttons */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginTop: '16px' }}>
-              <Link
-                href="/track-order"
-                style={{
-                  height: '48px',
-                  backgroundColor: '#000000',
-                  color: '#ffffff',
-                  borderRadius: '6px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 700,
-                  fontSize: '12px',
-                  letterSpacing: '1px',
-                  textDecoration: 'none',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Track Your Order &rarr;
-              </Link>
-              <Link
-                href="/collections/all"
-                style={{
-                  height: '48px',
-                  backgroundColor: '#ffffff',
-                  border: '1px solid #d1d5db',
-                  color: '#111827',
-                  borderRadius: '6px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 700,
-                  fontSize: '12px',
-                  textDecoration: 'none',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Continue Shopping
-              </Link>
+              {isPaid ? (
+                <>
+                  <Link
+                    href="/track-order"
+                    style={{
+                      height: '48px',
+                      backgroundColor: '#000000',
+                      color: '#ffffff',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 700,
+                      fontSize: '12px',
+                      letterSpacing: '1px',
+                      textDecoration: 'none',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Track Your Order &rarr;
+                  </Link>
+                  <Link
+                    href="/collections/all"
+                    style={{
+                      height: '48px',
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #d1d5db',
+                      color: '#111827',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 700,
+                      fontSize: '12px',
+                      textDecoration: 'none',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Continue Shopping
+                  </Link>
+                </>
+              ) : isFailed ? (
+                <>
+                  <Link
+                    href="/checkout"
+                    style={{
+                      height: '48px',
+                      backgroundColor: '#ff6700',
+                      color: '#ffffff',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 700,
+                      fontSize: '12px',
+                      letterSpacing: '1px',
+                      textDecoration: 'none',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Retry Checkout / Payment &rarr;
+                  </Link>
+                  <Link
+                    href="/collections/all"
+                    style={{
+                      height: '48px',
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #d1d5db',
+                      color: '#111827',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 700,
+                      fontSize: '12px',
+                      textDecoration: 'none',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Browse Collections
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={fetchOrder}
+                    style={{
+                      height: '48px',
+                      backgroundColor: '#000000',
+                      color: '#ffffff',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 700,
+                      fontSize: '12px',
+                      letterSpacing: '1px',
+                      cursor: 'pointer',
+                      border: 'none',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Refresh Payment Status ↻
+                  </button>
+                  <Link
+                    href="/checkout"
+                    style={{
+                      height: '48px',
+                      backgroundColor: '#ffffff',
+                      border: '1px solid #d1d5db',
+                      color: '#111827',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 700,
+                      fontSize: '12px',
+                      textDecoration: 'none',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Return to Checkout
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* 3 Core Trust Badges */}
