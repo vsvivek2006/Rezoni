@@ -124,6 +124,32 @@ export function generateOrderId(): string {
   return `RZ-${randomNum}`;
 }
 
+export async function saveOrderAsync(order: OrderRecord): Promise<void> {
+  // 1. Instant in-memory cache update
+  memoryOrders.set(order.orderId, order);
+
+  // 2. Local JSON fallback persistence
+  try {
+    const currentOrders = readOrdersFromFile();
+    const existingIdx = currentOrders.findIndex((o) => o.orderId === order.orderId);
+    if (existingIdx >= 0) {
+      currentOrders[existingIdx] = order;
+    } else {
+      currentOrders.unshift(order);
+    }
+    writeOrdersToFile(currentOrders);
+  } catch (e) {
+    console.warn('Local fallback write skipped:', e);
+  }
+
+  // 3. Guaranteed synchronous cloud persistence to Supabase PostgreSQL
+  try {
+    await syncOrderToSupabase(order);
+  } catch (err) {
+    console.error('Failed to sync order to Supabase:', err);
+  }
+}
+
 export function saveOrder(order: OrderRecord): void {
   // 1. Instant in-memory cache update
   memoryOrders.set(order.orderId, order);
@@ -294,7 +320,7 @@ export async function markOrderPaidAsync(
   }
   order.paidAt = new Date().toISOString();
 
-  saveOrder(order);
+  await saveOrderAsync(order);
   return order;
 }
 
@@ -315,7 +341,105 @@ export async function markOrderFailedAsync(orderId: string): Promise<OrderRecord
   if (!order) return null;
 
   order.status = 'failed';
-  saveOrder(order);
+  await saveOrderAsync(order);
   return order;
+}
+
+export async function recoverAndSavePaidOrderAsync({
+  razorpayOrderId,
+  razorpayPaymentId,
+  notes,
+  amount,
+  receipt,
+}: {
+  razorpayOrderId: string;
+  razorpayPaymentId?: string;
+  notes?: Record<string, any>;
+  amount: number;
+  receipt?: string;
+}): Promise<OrderRecord> {
+  const supabase = getSupabaseAdminClient();
+  const email = (notes?.customer_email || '').trim().toLowerCase();
+  let customerDetails: CustomerDetails = {
+    fullName: notes?.customer_name || 'Customer',
+    email: email,
+    phone: notes?.customer_phone || '',
+    addressLine1: 'India',
+    city: 'India',
+    state: 'India',
+    pincode: '',
+  };
+
+  if (supabase && email) {
+    try {
+      const { data: custRows } = await supabase
+        .from('customers')
+        .select('*')
+        .ilike('email', email)
+        .limit(1);
+
+      if (custRows && custRows.length > 0) {
+        const c = custRows[0];
+        customerDetails = {
+          fullName: c.full_name || customerDetails.fullName,
+          email: c.email || customerDetails.email,
+          phone: c.phone || customerDetails.phone,
+          addressLine1: c.city || 'India',
+          city: c.city || '',
+          state: c.state || '',
+          pincode: c.pincode || '',
+        };
+      }
+    } catch (e) {
+      console.warn('Customer lookup during order auto-recovery failed:', e);
+    }
+  }
+
+  const orderId = notes?.rezoni_order_id || generateOrderId();
+  const recoveredOrder: OrderRecord = {
+    orderId,
+    receipt: receipt || `rcpt_${orderId.replace(/[^a-zA-Z0-9]/g, '')}`,
+    razorpayOrderId,
+    razorpayPaymentId,
+    amount,
+    currency: 'INR',
+    status: 'paid',
+    customer: customerDetails,
+    items: [
+      {
+        id: 'recovered-order-items',
+        title: 'Premium Phone Cases & Accessories Bundle',
+        price: amount,
+        quantity: 1,
+        image: 'https://cdn.shopify.com/s/files/1/0621/7829/6040/files/1_41915488-fb22-4972-91a6-8d3a01e1f022.jpg?v=1783663584',
+      },
+      {
+        id: 'free-gift-sticky-pod',
+        image: '/images/gifts/sticky_pod.jpg',
+        price: 0,
+        title: 'Sticky Pod (Universal Phone Suction Mount) [FREE GIFT]',
+        quantity: 1,
+      },
+      {
+        id: 'free-gift-cable-protector',
+        image: '/images/gifts/cable_protector.jpg',
+        price: 0,
+        title: 'Cable Protector (4 Pcs Spiral Guards) [FREE GIFT]',
+        quantity: 1,
+      },
+      {
+        id: 'free-gift-usb-cable',
+        image: '/images/gifts/usb_cable.jpg',
+        price: 0,
+        title: 'USB Fast Charging Cable [FREE GIFT]',
+        quantity: 1,
+      },
+    ],
+    createdAt: new Date().toISOString(),
+    paidAt: new Date().toISOString(),
+  };
+
+  await saveOrderAsync(recoveredOrder);
+  return recoveredOrder;
 }
 

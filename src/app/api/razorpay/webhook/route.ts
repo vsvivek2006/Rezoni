@@ -5,6 +5,7 @@ import {
   getOrderByRazorpayOrderIdAsync,
   markOrderPaidAsync,
   markOrderFailedAsync,
+  recoverAndSavePaidOrderAsync,
 } from '@/lib/orderStore';
 import { getSupabaseAdminClient } from '@/lib/supabaseServer';
 
@@ -145,9 +146,21 @@ export async function POST(req: NextRequest) {
               processingNotes = `Order ${order.orderId} was already paid. Idempotency confirmed.`;
             }
           } else {
-            processingStatus = 'failed';
-            processingNotes = `No local/Supabase order found matching Razorpay Order ${rzpOrderId}`;
-            console.warn(`[Webhook] ${processingNotes}`);
+            // Auto-recovery: Order was paid on Razorpay but not yet in Supabase (e.g. serverless race/interruption)
+            console.warn(`[Webhook] Order ${rzpOrderId} not in Supabase. Executing auto-recovery...`);
+            const notes = orderEntity?.notes || paymentEntity?.notes || {};
+            const amount = Math.round((orderEntity?.amount || paymentEntity?.amount || 0) / 100);
+            const receipt = orderEntity?.receipt || paymentEntity?.receipt;
+            const recovered = await recoverAndSavePaidOrderAsync({
+              razorpayOrderId: rzpOrderId,
+              razorpayPaymentId: rzpPaymentId,
+              notes,
+              amount,
+              receipt,
+            });
+            processingStatus = 'processed';
+            processingNotes = `Order ${recovered.orderId} auto-recovered and marked as paid via order.paid`;
+            console.log(`[Webhook] ${processingNotes}`);
           }
         }
         break;
@@ -171,6 +184,22 @@ export async function POST(req: NextRequest) {
               processingStatus = 'processed';
               processingNotes = `Order ${order.orderId} already paid. Capture noted.`;
             }
+          } else {
+            // Auto-recovery: Payment captured on Razorpay but order not yet in Supabase
+            console.warn(`[Webhook] Payment ${rzpPaymentId} for order ${rzpOrderId} not in Supabase. Executing auto-recovery...`);
+            const notes = paymentEntity?.notes || {};
+            const amount = Math.round((paymentEntity?.amount || 0) / 100);
+            const receipt = paymentEntity?.receipt;
+            const recovered = await recoverAndSavePaidOrderAsync({
+              razorpayOrderId: rzpOrderId,
+              razorpayPaymentId: rzpPaymentId,
+              notes,
+              amount,
+              receipt,
+            });
+            processingStatus = 'processed';
+            processingNotes = `Order ${recovered.orderId} auto-recovered and captured with payment ID ${rzpPaymentId}`;
+            console.log(`[Webhook] ${processingNotes}`);
           }
         }
         break;
@@ -211,7 +240,7 @@ export async function POST(req: NextRequest) {
       entityId,
       status: processingStatus,
       payload: parsedPayload,
-      errorMessage: processingStatus === 'failed' ? processingNotes : undefined,
+      errorMessage: (processingStatus as string) === 'failed' ? processingNotes : undefined,
     });
 
     // 7. Always return HTTP 200 to Razorpay within timeout threshold

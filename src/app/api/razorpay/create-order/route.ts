@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRazorpayInstance, getRazorpayKeys } from '@/lib/razorpayServer';
 import { validateAndCalculateCart } from '@/lib/priceCalculator';
-import { generateOrderId, saveOrder, OrderRecord } from '@/lib/orderStore';
+import { generateOrderId, saveOrderAsync, OrderRecord } from '@/lib/orderStore';
 
 export const dynamic = 'force-dynamic';
 export const preferredRegion = 'bom1'; // Edge placement in Mumbai for low-latency Razorpay API calls
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    saveOrder(initialOrder);
+    await saveOrderAsync(initialOrder);
 
     return NextResponse.json({
       success: true,
