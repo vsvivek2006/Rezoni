@@ -1060,7 +1060,7 @@ export default function AdminCRMView({
               </h1>
             </div>
             <p style={{ fontSize: '12px', color: 'var(--muted-foreground)', marginTop: '3px' }}>
-              Real-time telemetry • Direct Supabase & Razorpay API sync at admin.rezoni.shop
+              Real-time telemetry • Direct Supabase & Razorpay API sync • v1.1.0 (Live)
             </p>
           </div>
           <button
