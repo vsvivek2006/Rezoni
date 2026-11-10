@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminSessionFromRequest } from '@/lib/auth';
+import { getSupabaseAdminClient } from '@/lib/supabaseServer';
 import fs from 'fs';
 import path from 'path';
 
@@ -47,6 +48,56 @@ function saveContacts(items: ContactInquiry[]) {
   }
 }
 
+async function fetchInquiriesFromDatabase(): Promise<ContactInquiry[]> {
+  const supabase = getSupabaseAdminClient();
+  if (!supabase) return [];
+
+  try {
+    // 1. Try contacts table if available
+    const { data: contactsData, error: cErr } = await supabase
+      .from('contacts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!cErr && contactsData && contactsData.length > 0) {
+      return contactsData.map((c: any) => ({
+        id: c.id,
+        name: c.name || 'Customer',
+        email: c.email || '',
+        phone: c.phone || '',
+        message: c.message || '',
+        createdAt: c.created_at || new Date().toISOString(),
+        status: (c.status || 'unread') as 'unread' | 'read' | 'replied',
+        notes: c.notes || '',
+      }));
+    }
+
+    // 2. Query cloud inquiry events from webhook_logs
+    const { data: logData, error: lErr } = await supabase
+      .from('webhook_logs')
+      .select('*')
+      .eq('event_type', 'contact_inquiry')
+      .order('created_at', { ascending: false });
+
+    if (!lErr && logData && logData.length > 0) {
+      return logData.map((l: any) => ({
+        id: l.payload?.id || l.event_id || l.id,
+        name: l.payload?.name || 'Customer',
+        email: l.payload?.email || l.entity_id || '',
+        phone: l.payload?.phone || '',
+        message: l.payload?.message || '',
+        createdAt: l.payload?.createdAt || l.created_at,
+        status: (l.status || l.payload?.status || 'unread') as 'unread' | 'read' | 'replied',
+        notes: l.payload?.notes || '',
+      }));
+    }
+  } catch (err) {
+    console.error('Error fetching inquiries from Supabase:', err);
+  }
+
+  return [];
+}
+
 export async function GET(req: NextRequest) {
   try {
     const session = getAdminSessionFromRequest(req);
@@ -58,7 +109,15 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get('status');
     const query = searchParams.get('q')?.toLowerCase();
 
-    let all = readContacts();
+    // 1. Fetch from live Supabase cloud database
+    let all = await fetchInquiriesFromDatabase();
+
+    // 2. Fallback to local contacts.json if database has no records
+    if (all.length === 0) {
+      all = readContacts();
+    }
+
+    const unreadCount = all.filter((c) => c.status === 'unread').length;
 
     if (status && status !== 'all') {
       all = all.filter((c) => c.status === status);
@@ -73,8 +132,6 @@ export async function GET(req: NextRequest) {
           c.message.toLowerCase().includes(query)
       );
     }
-
-    const unreadCount = readContacts().filter((c) => c.status === 'unread').length;
 
     return NextResponse.json({
       success: true,
@@ -104,22 +161,63 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Inquiry ID is required' }, { status: 400 });
     }
 
-    const all = readContacts();
-    const found = all.find((c) => c.id === id);
+    const supabase = getSupabaseAdminClient();
+    let updatedInSupabase = false;
 
-    if (!found) {
-      return NextResponse.json({ success: false, message: 'Inquiry not found' }, { status: 404 });
+    if (supabase) {
+      try {
+        // A. Update in contacts table
+        const { error: cErr } = await supabase
+          .from('contacts')
+          .update({
+            ...(status ? { status } : {}),
+            ...(notes !== undefined ? { notes } : {}),
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', id);
+
+        if (!cErr) updatedInSupabase = true;
+      } catch {}
+
+      try {
+        // B. Update in webhook_logs store
+        const { data: existingLog } = await supabase
+          .from('webhook_logs')
+          .select('payload')
+          .eq('event_id', id)
+          .single();
+
+        const updatedPayload = {
+          ...(existingLog?.payload || {}),
+          ...(status ? { status } : {}),
+          ...(notes !== undefined ? { notes } : {}),
+        };
+
+        const { error: lErr } = await supabase
+          .from('webhook_logs')
+          .update({
+            ...(status ? { status } : {}),
+            payload: updatedPayload,
+          })
+          .eq('event_id', id);
+
+        if (!lErr) updatedInSupabase = true;
+      } catch {}
     }
 
-    if (status) found.status = status;
-    if (notes !== undefined) found.notes = notes;
-
-    saveContacts(all);
+    // Also update local file if present
+    const all = readContacts();
+    const found = all.find((c) => c.id === id);
+    if (found) {
+      if (status) found.status = status;
+      if (notes !== undefined) found.notes = notes;
+      saveContacts(all);
+    }
 
     return NextResponse.json({
       success: true,
       message: `Inquiry ${id} updated to ${status || 'saved'}.`,
-      inquiry: found,
+      inquiry: found || { id, status, notes },
     });
   } catch (error: any) {
     return NextResponse.json(

@@ -70,15 +70,11 @@ export async function POST(req: NextRequest) {
       status: 'unread',
     };
 
-    // 1. Save to persistent files
-    const all = readContacts();
-    all.unshift(newInquiry);
-    saveContacts(all);
-
-    // 2. Attempt sync to Supabase if table exists
-    try {
-      const supabase = getSupabaseAdminClient();
-      if (supabase) {
+    // 1. Synchronously persist to Supabase PostgreSQL (Production cloud database)
+    const supabase = getSupabaseAdminClient();
+    if (supabase) {
+      try {
+        // A. Primary: Insert into contacts table (if present)
         await supabase.from('contacts').insert([
           {
             id: newInquiry.id,
@@ -90,10 +86,31 @@ export async function POST(req: NextRequest) {
             status: newInquiry.status,
           },
         ]);
+      } catch (err) {
+        // table might not exist yet
       }
-    } catch (e) {
-      // Non-fatal if Supabase table is not configured
+
+      try {
+        // B. Guaranteed cloud storage: Insert inquiry event into Supabase webhook_logs / inquiries store
+        await supabase.from('webhook_logs').insert({
+          event_id: newInquiry.id,
+          event_type: 'contact_inquiry',
+          entity_id: newInquiry.email,
+          status: 'unread',
+          payload: newInquiry,
+          created_at: newInquiry.createdAt,
+        });
+      } catch (err) {
+        console.error('Failed to write inquiry to Supabase cloud log:', err);
+      }
     }
+
+    // 2. Local fallback persistence
+    try {
+      const all = readContacts();
+      all.unshift(newInquiry);
+      saveContacts(all);
+    } catch {}
 
     return NextResponse.json({
       success: true,
@@ -109,6 +126,36 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  const supabase = getSupabaseAdminClient();
+  if (supabase) {
+    try {
+      const { data: contactsData, error: cErr } = await supabase.from('contacts').select('*').order('created_at', { ascending: false });
+      if (!cErr && contactsData && contactsData.length > 0) {
+        return NextResponse.json({ success: true, count: contactsData.length, inquiries: contactsData });
+      }
+
+      const { data: logsData, error: lErr } = await supabase
+        .from('webhook_logs')
+        .select('*')
+        .eq('event_type', 'contact_inquiry')
+        .order('created_at', { ascending: false });
+
+      if (!lErr && logsData && logsData.length > 0) {
+        const mapped = logsData.map((l: any) => ({
+          id: l.payload?.id || l.event_id,
+          name: l.payload?.name || 'Customer',
+          email: l.payload?.email || l.entity_id,
+          phone: l.payload?.phone || '',
+          message: l.payload?.message || '',
+          createdAt: l.payload?.createdAt || l.created_at,
+          status: l.status || l.payload?.status || 'unread',
+          notes: l.payload?.notes || '',
+        }));
+        return NextResponse.json({ success: true, count: mapped.length, inquiries: mapped });
+      }
+    } catch {}
+  }
+
   const all = readContacts();
   return NextResponse.json({ success: true, count: all.length, inquiries: all });
 }

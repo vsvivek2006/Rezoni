@@ -102,8 +102,26 @@ export async function GET(req: NextRequest) {
         .filter(Boolean)
     );
 
-    // Inquiries stats
-    const inquiriesData = readContactsCount();
+    // Inquiries stats from Supabase
+    let totalInquiries = 0;
+    let unreadInquiries = 0;
+    if (supabase) {
+      try {
+        const { data: logInq } = await supabase
+          .from('webhook_logs')
+          .select('status')
+          .eq('event_type', 'contact_inquiry');
+        if (logInq && logInq.length > 0) {
+          totalInquiries = logInq.length;
+          unreadInquiries = logInq.filter((i: any) => i.status === 'unread').length;
+        }
+      } catch {}
+    }
+    if (totalInquiries === 0) {
+      const fallbackInq = readContactsCount();
+      totalInquiries = fallbackInq.total;
+      unreadInquiries = fallbackInq.unread;
+    }
 
     // Fetch Razorpay live balance/captured summary
     let razorpayCaptured = 0;
@@ -148,8 +166,8 @@ export async function GET(req: NextRequest) {
         totalCustomers: Math.max(registeredUsersCount, distinctEmails.size),
         totalRegisteredUsers: registeredUsersCount,
         totalReviews: reviewsCount,
-        totalInquiries: inquiriesData.total,
-        unreadInquiries: inquiriesData.unread,
+        totalInquiries,
+        unreadInquiries,
         razorpayCaptured,
         razorpaySuccessCount,
       },
