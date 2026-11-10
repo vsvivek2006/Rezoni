@@ -129,7 +129,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Price display: sale price in red accent, compare price in strikethrough */}
           <div style={{ fontSize: '11px', fontFamily: 'Montserrat, sans-serif', margin: '4px 0 6px' }}>
             <span style={{ color: '#de2a2a', marginRight: '8px', fontWeight: 500 }}>
-              Rs. {Number(product.price || 599).toFixed(2)}
+              Rs. {Number(product.price || 299).toFixed(2)}
             </span>
             {product.compare_at_price && (
               <span style={{ color: '#282828', textDecoration: 'line-through', fontWeight: 400 }}>
