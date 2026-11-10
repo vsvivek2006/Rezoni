@@ -75,8 +75,8 @@ async function syncOrderToSupabase(order: OrderRecord): Promise<void> {
   if (!supabase) return;
 
   try {
-    // 1. Upsert order into 'orders' table
-    const { error: orderError } = await supabase.from('orders').upsert(
+    // 1. Concurrent upsert into 'orders' and 'customers' tables for lowest latency
+    const orderPromise = supabase.from('orders').upsert(
       {
         id: order.orderId,
         order_id: order.orderId,
@@ -95,24 +95,28 @@ async function syncOrderToSupabase(order: OrderRecord): Promise<void> {
       { onConflict: 'order_id' }
     );
 
-    if (orderError) {
-      console.error('Supabase order sync error:', orderError.message);
-    }
+    const customerPromise = order.customer?.email
+      ? supabase.from('customers').upsert(
+          {
+            full_name: order.customer.fullName,
+            email: order.customer.email.toLowerCase().trim(),
+            phone: order.customer.phone,
+            city: order.customer.city,
+            state: order.customer.state,
+            pincode: order.customer.pincode,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'email' }
+        )
+      : Promise.resolve({ error: null });
 
-    // 2. Upsert customer into 'customers' table if email exists
-    if (order.customer?.email) {
-      await supabase.from('customers').upsert(
-        {
-          full_name: order.customer.fullName,
-          email: order.customer.email.toLowerCase().trim(),
-          phone: order.customer.phone,
-          city: order.customer.city,
-          state: order.customer.state,
-          pincode: order.customer.pincode,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'email' }
-      );
+    const [orderRes, custRes] = await Promise.all([orderPromise, customerPromise]);
+
+    if (orderRes?.error) {
+      console.error('Supabase order sync error:', orderRes.error.message);
+    }
+    if (custRes?.error) {
+      console.error('Supabase customer sync error:', (custRes as any).error.message);
     }
   } catch (err) {
     console.error('Supabase background sync exception:', err);

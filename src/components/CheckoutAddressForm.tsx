@@ -138,10 +138,77 @@ export default function CheckoutAddressForm({
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
 
+  // Background order pre-creation cache & inflight promise for instantaneous popup launch
+  const preCreatedOrderRef = useRef<any>(null);
+  const preCreatePromiseRef = useRef<Promise<any> | null>(null);
+  const preCreateKeyRef = useRef<string>('');
+
   // Pre-warm Razorpay SDK & Serverless backend in the background immediately
   useEffect(() => {
     prewarmRazorpay();
   }, []);
+
+  // When user is on confirmation screen, pre-create Razorpay order in background
+  // so when user taps 'Pay', modal opens instantly with 0ms network latency
+  useEffect(() => {
+    if (!isConfirmed) {
+      preCreatedOrderRef.current = null;
+      preCreatePromiseRef.current = null;
+      preCreateKeyRef.current = '';
+      return;
+    }
+
+    if (
+      !fullName.trim() ||
+      !phone.trim() ||
+      !pincode.trim() ||
+      !addressLine1.trim() ||
+      !city.trim() ||
+      !state.trim()
+    ) {
+      return;
+    }
+
+    const currentKey = `${totalPrice}_${cart.length}_${email}_${phone}_${pincode}_${addressLine1}`;
+    if (preCreateKeyRef.current === currentKey && (preCreatedOrderRef.current || preCreatePromiseRef.current)) {
+      return;
+    }
+
+    preCreateKeyRef.current = currentKey;
+    const addressPayload: AddressData = {
+      email: email.trim(),
+      phone: phone.trim(),
+      fullName: fullName.trim(),
+      pincode: pincode.trim(),
+      addressLine1: addressLine1.trim(),
+      addressLine2: addressLine2.trim(),
+      city: city.trim(),
+      state: state.trim(),
+      saveInfo,
+    };
+
+    const promise = fetch('/api/razorpay/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: cart,
+        customer: addressPayload,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success) {
+          preCreatedOrderRef.current = data;
+        }
+        return data;
+      })
+      .catch((err) => {
+        console.warn('Pre-order background generation deferred to click:', err);
+        return null;
+      });
+
+    preCreatePromiseRef.current = promise;
+  }, [isConfirmed, totalPrice, cart, email, phone, fullName, pincode, addressLine1, addressLine2, city, state, saveInfo]);
 
   // Delivery fee tracking logic
   const safeCart = Array.isArray(cart) ? cart.filter(Boolean) : [];
@@ -298,20 +365,30 @@ export default function CheckoutAddressForm({
     };
 
     try {
-      // Create Razorpay order on demand when customer clicks Pay
-      const [res] = await Promise.all([
-        fetch('/api/razorpay/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items: cart,
-            customer: addressPayload,
-          }),
-        }),
-        loadRazorpayScript(),
-      ]);
+      // 1. Instant check: Has order already been pre-created in the background?
+      let data = preCreatedOrderRef.current;
 
-      const data = await res.json();
+      // 2. If background request is still in-flight, await it directly without redundant fetch
+      if (!data && preCreatePromiseRef.current) {
+        data = await preCreatePromiseRef.current;
+      }
+
+      // 3. Fallback: If pre-creation was missing or failed, create immediately on demand
+      if (!data || !data.success) {
+        const [res] = await Promise.all([
+          fetch('/api/razorpay/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: cart,
+              customer: addressPayload,
+            }),
+          }),
+          loadRazorpayScript(),
+        ]);
+
+        data = await res.json();
+      }
 
       if (!data || !data.success) {
         if (data?.isConfigError) {
@@ -1153,7 +1230,7 @@ export default function CheckoutAddressForm({
                     Final Payable Amount
                   </div>
                   <div style={{ fontSize: '20px', fontWeight: 900, color: '#111827' }}>
-                    Rs. {finalPayable.toFixed(2)}
+                    ₹{Math.round(finalPayable)}
                   </div>
                 </div>
                 <div
@@ -1224,7 +1301,7 @@ export default function CheckoutAddressForm({
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                       <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
-                    <span>PAY • RS. {finalPayable.toFixed(2)}</span>
+                    <span>PAY • ₹{Math.round(finalPayable)}</span>
                     <span>&rarr;</span>
                   </>
                 )}

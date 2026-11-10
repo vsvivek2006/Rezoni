@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 import { getRazorpayInstance, getRazorpayKeys } from '@/lib/razorpayServer';
 import { validateAndCalculateCart } from '@/lib/priceCalculator';
 import { generateOrderId, saveOrderAsync, OrderRecord } from '@/lib/orderStore';
@@ -100,7 +100,16 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    await saveOrderAsync(initialOrder);
+    // Non-blocking asynchronous cloud persistence using Next.js after()
+    // Returns HTTP response immediately (instant Razorpay popup) while guaranteeing
+    // Vercel serverless keeps executing until Supabase DB write completes.
+    after(async () => {
+      try {
+        await saveOrderAsync(initialOrder);
+      } catch (saveErr) {
+        console.error('Async order persistence exception:', saveErr);
+      }
+    });
 
     return NextResponse.json({
       success: true,
