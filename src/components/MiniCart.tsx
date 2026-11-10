@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import CheckoutAddressForm from './CheckoutAddressForm';
 import { FREE_GIFTS } from '@/data/freeGifts';
+import { prewarmRazorpay } from '@/lib/razorpayClient';
 
 export default function MiniCart() {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, totalPrice } = useCart();
@@ -15,6 +16,7 @@ export default function MiniCart() {
   useEffect(() => {
     if (isCartOpen) {
       document.body.style.overflow = 'hidden';
+      prewarmRazorpay();
     } else {
       document.body.style.overflow = '';
       setDrawerStep('cart');

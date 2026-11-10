@@ -6,6 +6,16 @@ import { generateOrderId, saveOrderAsync, OrderRecord } from '@/lib/orderStore';
 export const dynamic = 'force-dynamic';
 export const preferredRegion = 'bom1'; // Edge placement in Mumbai for low-latency Razorpay API calls
 
+/**
+ * Health check & pre-warming endpoint for serverless cold start mitigation
+ */
+export async function GET() {
+  return NextResponse.json(
+    { status: 'ready', prewarmed: true, timestamp: Date.now() },
+    { status: 200 }
+  );
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

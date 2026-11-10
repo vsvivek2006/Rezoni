@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
-import { openRazorpayCheckout, loadRazorpayScript } from '@/lib/razorpayClient';
+import { openRazorpayCheckout, loadRazorpayScript, prewarmRazorpay } from '@/lib/razorpayClient';
 import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_FEE } from '@/lib/priceCalculator';
 import { FREE_GIFTS, TOTAL_FREE_GIFTS_VALUE } from '@/data/freeGifts';
 import CheckoutTrustBadges from './CheckoutTrustBadges';
@@ -138,9 +138,9 @@ export default function CheckoutAddressForm({
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
 
-  // Pre-warm Razorpay SDK in the background immediately
+  // Pre-warm Razorpay SDK & Serverless backend in the background immediately
   useEffect(() => {
-    loadRazorpayScript().catch(() => {});
+    prewarmRazorpay();
   }, []);
 
   // Delivery fee tracking logic

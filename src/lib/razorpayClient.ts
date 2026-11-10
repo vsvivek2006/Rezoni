@@ -41,6 +41,34 @@ export function loadRazorpayScript(): Promise<boolean> {
   return scriptLoadingPromise;
 }
 
+let lastPrewarmedAt = 0;
+
+/**
+ * Pre-warms both the Razorpay Frontend SDK (checkout.js) and the Vercel Serverless API
+ * to eliminate cold starts and ensure instant payment popup execution.
+ */
+export function prewarmRazorpay(): void {
+  if (typeof window === 'undefined') return;
+
+  const now = Date.now();
+  // Throttle prewarming to at most once per 60 seconds
+  if (now - lastPrewarmedAt < 60000) return;
+  lastPrewarmedAt = now;
+
+  // 1. Preload checkout.js script in the background
+  loadRazorpayScript().catch(() => {});
+
+  // 2. Pre-warm serverless create-order function
+  try {
+    fetch('/api/razorpay/create-order', {
+      method: 'GET',
+      headers: { 'x-prewarm': '1' },
+    }).catch(() => {});
+  } catch (e) {
+    // Non-blocking
+  }
+}
+
 export interface RazorpaySuccessResponse {
   razorpay_payment_id: string;
   razorpay_order_id: string;
