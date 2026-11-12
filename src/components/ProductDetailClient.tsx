@@ -377,10 +377,10 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
     !product.handle?.toLowerCase().includes('airpod') &&
     !product.title?.toLowerCase().includes('airpod');
 
-  // Product pricing: Flat ₹299 sitewide (compare @ ₹999)
+  // Product pricing: Flat ₹699 sitewide (compare @ ₹1199)
   const isMagSafe = selectedVariantType === 'magsafe';
-  const effectivePrice = product.price || 299;
-  const effectiveComparePrice = product.compare_at_price || 999;
+  const effectivePrice = product.price || 699;
+  const effectiveComparePrice = product.compare_at_price || 1199;
   const savePercentage = Math.max(10, Math.round(((effectiveComparePrice - effectivePrice) / effectiveComparePrice) * 100));
 
   const handleAddToCart = () => {
@@ -851,7 +851,7 @@ export default function ProductDetailClient({ product, initialModel }: ProductDe
                 <span>Special Offers & Deals</span>
               </div>
               <div style={{ fontSize: '12.5px', color: '#444444', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div>• <strong>Bundle Offer:</strong> Buy 1 @ ₹299 | Buy 2 @ ₹499 | Buy 3 @ ₹699</div>
+                <div>• <strong>Bundle Offer:</strong> Buy 1 @ ₹699 | Buy 2 @ ₹1199 | Buy 3 @ ₹1599</div>
                 <div>• <strong>100% Free Shipping</strong> on All Orders (Limited Time Sitewide)</div>
                 <div>• <strong>Extra 10% Off</strong> on all Prepaid Orders (Auto applied at checkout)</div>
                 <div>• <strong>Buy 2 Get 20% Off</strong> — Use Code: <span style={{ color: '#ff6700', fontWeight: 700 }}>BUY2</span></div>

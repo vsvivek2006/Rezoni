@@ -47,8 +47,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             )
             .map((i) => ({
               ...i,
-              // Normalize any old cached cart prices (e.g. 599/399) to flat ₹299
-              price: i.price === 0 ? 0 : 299,
+              // Normalize any old cached cart prices (e.g. 599/299) to flat ₹699
+              price: i.price === 0 ? 0 : 699,
             }));
           setCart(validItems);
         }

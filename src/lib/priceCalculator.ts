@@ -61,15 +61,15 @@ export function validateAndCalculateCart(incomingItems: any[]): ValidatedCartRes
       }
     }
 
-    // Determine unit price: strictly canonical product price (₹299)
-    let unitPrice = 299;
+    // Determine unit price: strictly canonical product price (₹699)
+    let unitPrice = 699;
     let title = item.title || (canonicalProduct ? canonicalProduct.title : 'Rezoni Designer Phone Case');
     let image = item.image || (canonicalProduct ? canonicalProduct.primary_image : '');
 
     if (canonicalProduct && typeof canonicalProduct.price === 'number' && canonicalProduct.price > 0) {
       unitPrice = canonicalProduct.price;
     } else {
-      unitPrice = 299;
+      unitPrice = 699;
     }
 
     subtotal += unitPrice * qty;

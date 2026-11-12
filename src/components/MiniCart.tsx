@@ -224,7 +224,7 @@ export default function MiniCart() {
                               Rs. {(Number(item?.price) || 0).toFixed(2)}
                             </div>
                             <div style={{ fontSize: '12px', textDecoration: 'line-through', color: '#888' }}>
-                              Rs. {((Number(item?.price) || 299) * 2.2).toFixed(2)}
+                              Rs. {((Number(item?.price) || 699) * 2.2).toFixed(2)}
                             </div>
                           </div>
                         </div>
