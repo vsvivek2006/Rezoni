@@ -8,6 +8,8 @@ const collectionMappings: Record<string, string[]> = collectionMappingsRaw as Re
 // Build lookup map of products by handle
 const productByHandle = new Map(productsData.map((p) => [p.handle, p]));
 
+export const revalidate = 3600;
+
 export function generateStaticParams() {
   const handles = Object.keys(collectionMappings);
   return ['all', ...handles].map((h) => ({ handle: h }));

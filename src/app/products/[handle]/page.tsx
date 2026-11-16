@@ -3,6 +3,8 @@ import productsData from '@/data/products.json';
 import ProductDetailClient from '@/components/ProductDetailClient';
 import { notFound } from 'next/navigation';
 
+export const revalidate = 86400;
+
 export function generateStaticParams() {
   return productsData.map((p) => ({
     handle: p.handle,
@@ -11,13 +13,10 @@ export function generateStaticParams() {
 
 interface PageProps {
   params: Promise<{ handle: string }>;
-  searchParams?: Promise<{ model?: string; variant?: string }>;
 }
 
-export default async function ProductPage({ params, searchParams }: PageProps) {
+export default async function ProductPage({ params }: PageProps) {
   const { handle } = await params;
-  const sParams = searchParams ? await searchParams : {};
-  const initialModel = sParams.model ? decodeURIComponent(sParams.model) : undefined;
   let product = productsData.find((p) => p.handle === handle);
 
 
@@ -54,6 +53,6 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
     notFound();
   }
 
-  return <ProductDetailClient product={product as any} initialModel={initialModel} />;
+  return <ProductDetailClient product={product as any} />;
 }
 
