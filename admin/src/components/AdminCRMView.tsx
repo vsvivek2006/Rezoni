@@ -232,10 +232,11 @@ export default function AdminCRMView({
 
   // Search & Filter state
   const [orderSearch, setOrderSearch] = useState<string>('');
-  const [orderStatusFilter, setOrderStatusFilter] = useState<string>('paid');
+  const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
   const [returnStatusFilter, setReturnStatusFilter] = useState<string>('all');
   const [customerSearch, setCustomerSearch] = useState<string>('');
   const [liveOnlineUsers, setLiveOnlineUsers] = useState<number>(1);
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
 
 
   // Selected Order for Detail Drawer / Modal
@@ -438,6 +439,7 @@ export default function AdminCRMView({
   ) => {
     const prevOrders = [...orders];
     const prevMetrics = metrics ? { ...metrics } : null;
+    setUpdatingOrderId(orderId);
 
     // 1. Optimistic Update in UI state
     setOrders((prev) =>
@@ -475,10 +477,14 @@ export default function AdminCRMView({
       const data = await res.json();
       if (data.success) {
         showToast(`✓ Order ${orderId} status updated to ${newStatus.replace('_', ' ')}`);
-        // Refresh metrics in background to stay 100% in sync
+        // Refresh metrics and orders silently in background to stay 100% in sync with database
         fetch('/api/stats')
           .then((r) => r.json())
           .then((st) => st.success && setMetrics(st.metrics))
+          .catch(() => {});
+        fetch('/api/orders')
+          .then((r) => r.json())
+          .then((ord) => ord.success && setOrders(ord.orders))
           .catch(() => {});
       } else {
         // Revert on failure
@@ -490,6 +496,8 @@ export default function AdminCRMView({
       setOrders(prevOrders);
       if (prevMetrics) setMetrics(prevMetrics);
       alert('Error updating order status: ' + e.message);
+    } finally {
+      setUpdatingOrderId(null);
     }
   };
 
@@ -564,6 +572,25 @@ export default function AdminCRMView({
       alert('Error deleting review: ' + e.message);
     }
   };
+
+  // Dynamic order status count map
+  const statusCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      all: orders.length,
+      confirmed: 0,
+      dispatched: 0,
+      in_transit: 0,
+      out_for_delivery: 0,
+      delivered: 0,
+      abandoned: 0,
+      failed: 0,
+      pending: 0,
+    };
+    for (const o of orders) {
+      counts[o.status] = (counts[o.status] || 0) + 1;
+    }
+    return counts;
+  }, [orders]);
 
   // Filtered orders with memoization
   const filteredOrders = useMemo(() => {
@@ -891,6 +918,13 @@ export default function AdminCRMView({
   // ================= AUTHENTICATED EXECUTIVE SHADCN DASHBOARD =================
   return (
     <div className="crm-layout">
+      {/* Top Non-Destructive Loading Progress Bar */}
+      {loading && (
+        <div className="crm-top-loader">
+          <div className="crm-top-loader-bar" />
+        </div>
+      )}
+
       {/* Toast Notification */}
       {toastMessage && (
         <div
@@ -1143,7 +1177,7 @@ export default function AdminCRMView({
         {/* TAB 1: OVERVIEW */}
         {activeTab === 'overview' && (
           <div>
-            {loading ? (
+            {loading && !metrics ? (
               <MetricSkeletonGrid />
             ) : (
               /* KPI Cards */
@@ -1350,102 +1384,116 @@ export default function AdminCRMView({
                 value={orderStatusFilter}
                 onChange={(e) => setOrderStatusFilter(e.target.value)}
                 className="shadcn-input"
-                style={{ width: 'auto', minWidth: '180px' }}
+                style={{ width: 'auto', minWidth: '190px' }}
               >
-                <option value="paid">Actionable Orders (Paid)</option>
-                <option value="all">All Statuses</option>
-                <option value="confirmed">Confirmed (Paid)</option>
-                <option value="abandoned">Abandoned Checkouts</option>
-                <option value="failed">Payment Failed</option>
-                <option value="dispatched">Dispatched</option>
-                <option value="in_transit">In Transit</option>
-                <option value="out_for_delivery">Out for Delivery</option>
-                <option value="delivered">Delivered</option>
+                <option value="all">All Statuses ({statusCounts.all || 0})</option>
+                <option value="delivered">Delivered ({statusCounts.delivered || 0})</option>
+                <option value="in_transit">In Transit ({statusCounts.in_transit || 0})</option>
+                <option value="dispatched">Dispatched ({statusCounts.dispatched || 0})</option>
+                <option value="out_for_delivery">Out for Delivery ({statusCounts.out_for_delivery || 0})</option>
+                <option value="confirmed">Confirmed ({statusCounts.confirmed || 0})</option>
+                <option value="abandoned">Abandoned Checkouts ({statusCounts.abandoned || 0})</option>
+                <option value="failed">Payment Failed ({statusCounts.failed || 0})</option>
               </select>
             </div>
 
             {/* Orders Table */}
-            <div className="shadcn-table-wrapper">
-              <table className="shadcn-table">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Carrier / Tracking</th>
-                    <th>Change Status (Live)</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredOrders.map((o) => {
-                    const safeStatus: Order['status'] = [
-                      'confirmed',
-                      'dispatched',
-                      'in_transit',
-                      'out_for_delivery',
-                      'delivered',
-                      'pending',
-                      'failed',
-                      'abandoned',
-                    ].includes(o.status)
-                      ? o.status
-                      : 'confirmed';
+            {loading && orders.length === 0 ? (
+              <TableSkeleton rows={6} cols={8} />
+            ) : (
+              <div className="shadcn-table-wrapper">
+                <table className="shadcn-table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Date</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Carrier / Tracking</th>
+                      <th>Change Status (Live)</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredOrders.map((o) => {
+                      const safeStatus: Order['status'] = [
+                        'confirmed',
+                        'dispatched',
+                        'in_transit',
+                        'out_for_delivery',
+                        'delivered',
+                        'pending',
+                        'failed',
+                        'abandoned',
+                      ].includes(o.status)
+                        ? o.status
+                        : 'confirmed';
 
-                    return (
-                      <tr key={o.id}>
-                        <td style={{ fontWeight: 700, color: '#ff6700' }}>{o.id}</td>
-                        <td>
-                          <div style={{ fontWeight: 600 }}>{o.customerName || 'Rezoni Customer'}</div>
-                          <div style={{ fontSize: '11px', color: '#71717a' }}>{o.customerEmail}</div>
-                        </td>
-                        <td style={{ color: '#a1a1aa' }}>{o.date}</td>
-                        <td style={{ fontWeight: 700, color: '#10b981' }}>₹{Number(o.total).toLocaleString()}</td>
-                        <td>
-                          <span
-                            className={`shadcn-badge ${
-                              safeStatus === 'delivered' ? 'shadcn-badge-success' :
-                              safeStatus === 'out_for_delivery' ? 'shadcn-badge-pink' :
-                              safeStatus === 'in_transit' ? 'shadcn-badge-purple' :
-                              safeStatus === 'dispatched' ? 'shadcn-badge-info' :
-                              safeStatus === 'confirmed' ? 'shadcn-badge-success' :
-                              safeStatus === 'failed' ? 'shadcn-badge-destructive' :
-                              safeStatus === 'abandoned' ? 'shadcn-badge-warning' :
-                              'shadcn-badge-warning'
-                            }`}
-                          >
-                            {safeStatus === 'abandoned'
-                              ? 'Abandoned Checkout'
-                              : safeStatus === 'pending'
-                              ? 'Payment Pending'
-                              : safeStatus === 'failed'
-                              ? 'Payment Failed'
-                              : safeStatus.replace('_', ' ')}
-                          </span>
-                        </td>
-                        <td>
-                          <div style={{ fontSize: '12px', fontWeight: 600 }}>{o.carrier || 'BlueDart Express'}</div>
-                          <div style={{ fontSize: '11px', color: '#38bdf8' }}>{o.trackingNumber || 'Unassigned'}</div>
-                        </td>
-                        <td>
-                          <select
-                            value={safeStatus}
-                            onChange={(e) => handleUpdateOrderStatus(o.id, e.target.value as any, o.carrier, o.trackingNumber)}
-                            className="shadcn-input"
-                            style={{ padding: '4px 8px', fontSize: '12px', width: 'auto', cursor: 'pointer' }}
-                          >
-                            <option value="confirmed">Confirmed</option>
-                            <option value="pending">Pending</option>
-                            <option value="abandoned">Abandoned</option>
-                            <option value="failed">Failed</option>
-                            <option value="dispatched">Dispatched</option>
-                            <option value="in_transit">In Transit</option>
-                            <option value="out_for_delivery">Out for Delivery</option>
-                            <option value="delivered">Delivered</option>
-                          </select>
-                        </td>
+                      return (
+                        <tr key={o.id}>
+                          <td style={{ fontWeight: 700, color: '#ff6700' }}>{o.id}</td>
+                          <td>
+                            <div style={{ fontWeight: 600 }}>{o.customerName || 'Rezoni Customer'}</div>
+                            <div style={{ fontSize: '11px', color: '#71717a' }}>{o.customerEmail}</div>
+                          </td>
+                          <td style={{ color: '#a1a1aa' }}>{o.date}</td>
+                          <td style={{ fontWeight: 700, color: '#10b981' }}>₹{Number(o.total).toLocaleString()}</td>
+                          <td>
+                            <span
+                              className={`shadcn-badge ${
+                                safeStatus === 'delivered' ? 'shadcn-badge-success' :
+                                safeStatus === 'out_for_delivery' ? 'shadcn-badge-pink' :
+                                safeStatus === 'in_transit' ? 'shadcn-badge-purple' :
+                                safeStatus === 'dispatched' ? 'shadcn-badge-info' :
+                                safeStatus === 'confirmed' ? 'shadcn-badge-success' :
+                                safeStatus === 'failed' ? 'shadcn-badge-destructive' :
+                                safeStatus === 'abandoned' ? 'shadcn-badge-warning' :
+                                'shadcn-badge-warning'
+                              }`}
+                            >
+                              {safeStatus === 'abandoned'
+                                ? 'Abandoned Checkout'
+                                : safeStatus === 'pending'
+                                ? 'Payment Pending'
+                                : safeStatus === 'failed'
+                                ? 'Payment Failed'
+                                : safeStatus.replace('_', ' ')}
+                            </span>
+                          </td>
+                          <td>
+                            <div style={{ fontSize: '12px', fontWeight: 600 }}>{o.carrier || 'BlueDart Express'}</div>
+                            <div style={{ fontSize: '11px', color: '#38bdf8' }}>{o.trackingNumber || 'Unassigned'}</div>
+                          </td>
+                          <td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <select
+                                value={safeStatus}
+                                disabled={updatingOrderId === o.id}
+                                onChange={(e) => handleUpdateOrderStatus(o.id, e.target.value as any, o.carrier, o.trackingNumber)}
+                                className="shadcn-input"
+                                style={{
+                                  padding: '4px 8px',
+                                  fontSize: '12px',
+                                  width: 'auto',
+                                  cursor: updatingOrderId === o.id ? 'wait' : 'pointer',
+                                  opacity: updatingOrderId === o.id ? 0.6 : 1,
+                                }}
+                              >
+                                <option value="confirmed">Confirmed</option>
+                                <option value="pending">Pending</option>
+                                <option value="abandoned">Abandoned</option>
+                                <option value="failed">Failed</option>
+                                <option value="dispatched">Dispatched</option>
+                                <option value="in_transit">In Transit</option>
+                                <option value="out_for_delivery">Out for Delivery</option>
+                                <option value="delivered">Delivered</option>
+                              </select>
+                              {updatingOrderId === o.id && (
+                                <RefreshCw size={13} className="animate-spin" color="#ff6700" />
+                              )}
+                            </div>
+                          </td>
                         <td>
                           <button
                             onClick={() => openOrderModal(o)}
@@ -1469,6 +1517,7 @@ export default function AdminCRMView({
                 </tbody>
               </table>
             </div>
+            )}
           </div>
         )}
 
@@ -1565,7 +1614,7 @@ export default function AdminCRMView({
         {/* TAB 4: FINANCIALS & RAZORPAY GATEWAY */}
         {activeTab === 'financials' && (
           <div>
-            {loading ? (
+            {loading && !metrics ? (
               <MetricSkeletonGrid />
             ) : (
               /* Revenue & Gateway Balance Overview */
