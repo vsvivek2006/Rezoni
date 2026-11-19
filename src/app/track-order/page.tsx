@@ -275,19 +275,133 @@ function TrackOrderContent() {
       {/* Tracking Results Card */}
       {order && (
         <div className="track-order-results-card">
-          {/* Order Header */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              flexWrap: 'wrap',
-              gap: '14px',
-              borderBottom: '1px solid #f0f0f0',
-              paddingBottom: '20px',
-              marginBottom: '24px',
-            }}
-          >
+          {(order.status === 'failed' || order.status === 'pending' || (order.status as any) === 'abandoned') ? (
+            <div
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '10px',
+                padding: '32px 24px',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '50%',
+                  backgroundColor: '#fef2f2',
+                  color: '#dc2626',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px',
+                  fontSize: '28px',
+                  border: '1px solid #fee2e2',
+                }}
+              >
+                ⚠️
+              </div>
+
+              <div
+                style={{
+                  display: 'inline-block',
+                  backgroundColor: '#fee2e2',
+                  color: '#991b1b',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  padding: '3px 12px',
+                  borderRadius: '999px',
+                  marginBottom: '10px',
+                }}
+              >
+                Payment Unsuccessful / Incomplete
+              </div>
+
+              <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#111827', margin: '0 0 8px' }}>
+                Order #{order.id} is Not Confirmed
+              </h2>
+
+              <p style={{ fontSize: '13.5px', color: '#4b5563', lineHeight: 1.6, margin: '0 auto 20px', maxWidth: '480px' }}>
+                We could not verify the payment for this order. No shipment has been initiated or dispatched.
+              </p>
+
+              <div
+                style={{
+                  backgroundColor: '#f9fafb',
+                  borderRadius: '8px',
+                  padding: '16px 18px',
+                  textAlign: 'left',
+                  fontSize: '12.5px',
+                  color: '#374151',
+                  lineHeight: 1.7,
+                  marginBottom: '24px',
+                  border: '1px solid #e5e7eb',
+                  maxWidth: '500px',
+                  margin: '0 auto 24px',
+                }}
+              >
+                <div style={{ fontWeight: 700, color: '#111827', marginBottom: '6px' }}>
+                  Important Information:
+                </div>
+                <div>• The payment transaction was cancelled, expired, or declined by your bank/UPI gateway.</div>
+                <div>
+                  • <strong>Amount deducted?</strong> If any amount was debited from your account, Razorpay & your bank will automatically reverse and refund it within <strong>2–4 business days</strong>.
+                </div>
+                <div>• If you still wish to purchase, please place a fresh order below.</div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a
+                  href="/collections/all"
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: '#ff6700',
+                    color: '#ffffff',
+                    fontWeight: 700,
+                    fontSize: '13px',
+                    padding: '11px 24px',
+                    borderRadius: '6px',
+                    textDecoration: 'none',
+                    boxShadow: '0 3px 12px rgba(255, 103, 0, 0.25)',
+                  }}
+                >
+                  Retry / Place New Order →
+                </a>
+                <a
+                  href="/pages/contact"
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: '#f3f4f6',
+                    color: '#374151',
+                    fontWeight: 600,
+                    fontSize: '13px',
+                    padding: '11px 18px',
+                    borderRadius: '6px',
+                    textDecoration: 'none',
+                    border: '1px solid #d1d5db',
+                  }}
+                >
+                  Need Help? Contact Us
+                </a>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Order Header */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  flexWrap: 'wrap',
+                  gap: '14px',
+                  borderBottom: '1px solid #f0f0f0',
+                  paddingBottom: '20px',
+                  marginBottom: '24px',
+                }}
+              >
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#777777', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>
@@ -761,6 +875,8 @@ function TrackOrderContent() {
             </div>
 
           </div>
+          </>
+          )}
         </div>
       )}
     </div>

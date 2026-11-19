@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { getSupabaseClient } from '@/lib/supabaseClient';
 import {
   LayoutDashboard,
   Package,
@@ -62,7 +63,7 @@ interface Order {
   customerName?: string;
   date: string;
   total: number;
-  status: 'confirmed' | 'dispatched' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'pending' | 'failed';
+  status: 'confirmed' | 'dispatched' | 'in_transit' | 'out_for_delivery' | 'delivered' | 'pending' | 'failed' | 'abandoned';
   statusLabel?: string;
   paymentId?: string;
   razorpayOrderId?: string;
@@ -231,9 +232,10 @@ export default function AdminCRMView({
 
   // Search & Filter state
   const [orderSearch, setOrderSearch] = useState<string>('');
-  const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
+  const [orderStatusFilter, setOrderStatusFilter] = useState<string>('paid');
   const [returnStatusFilter, setReturnStatusFilter] = useState<string>('all');
   const [customerSearch, setCustomerSearch] = useState<string>('');
+  const [liveOnlineUsers, setLiveOnlineUsers] = useState<number>(1);
 
 
   // Selected Order for Detail Drawer / Modal
@@ -277,6 +279,36 @@ export default function AdminCRMView({
       }
     }
     checkSession();
+  }, []);
+
+  // Real-time Live Visitors telemetry (Supabase Presence)
+  useEffect(() => {
+    const supabase = getSupabaseClient();
+    if (!supabase) return;
+
+    const channel = supabase.channel('rezoni-live-presence');
+
+    const updatePresenceCount = () => {
+      const state = channel.presenceState();
+      const count = Object.keys(state).length;
+      setLiveOnlineUsers(Math.max(count, 1));
+    };
+
+    channel.on('presence', { event: 'sync' }, updatePresenceCount);
+    channel.on('presence', { event: 'join' }, updatePresenceCount);
+    channel.on('presence', { event: 'leave' }, updatePresenceCount);
+
+    channel.subscribe((status) => {
+      if (status === 'SUBSCRIBED') {
+        updatePresenceCount();
+      }
+    });
+
+    return () => {
+      try {
+        channel.unsubscribe();
+      } catch {}
+    };
   }, []);
 
   // Sync tab with browser back / forward navigation
@@ -536,7 +568,11 @@ export default function AdminCRMView({
   // Filtered orders with memoization
   const filteredOrders = useMemo(() => {
     let list = orders;
-    if (orderStatusFilter !== 'all') {
+    if (orderStatusFilter === 'paid') {
+      list = list.filter((o) =>
+        ['confirmed', 'dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(o.status)
+      );
+    } else if (orderStatusFilter !== 'all') {
       list = list.filter((o) => o.status === orderStatusFilter);
     }
     if (!orderSearch.trim()) return list;
@@ -1063,15 +1099,45 @@ export default function AdminCRMView({
               Real-time telemetry • Direct Supabase & Razorpay API sync • v1.1.0 (Live)
             </p>
           </div>
-          <button
-            onClick={fetchAllData}
-            disabled={loading}
-            className="shadcn-btn shadcn-btn-outline"
-            style={{ padding: '7px 13px', fontSize: '12.5px' }}
-          >
-            <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
-            <span>{loading ? 'Refreshing...' : 'Refresh Data'}</span>
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                borderRadius: '999px',
+                padding: '6px 14px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                color: '#34d399',
+              }}
+            >
+              <span
+                style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  backgroundColor: '#10b981',
+                  boxShadow: '0 0 10px #10b981',
+                  display: 'inline-block',
+                }}
+                className="animate-pulse"
+              />
+              <span>{liveOnlineUsers} Online Now</span>
+            </div>
+
+            <button
+              onClick={fetchAllData}
+              disabled={loading}
+              className="shadcn-btn shadcn-btn-outline"
+              style={{ padding: '7px 13px', fontSize: '12.5px' }}
+            >
+              <RefreshCw size={13} className={loading ? 'animate-spin' : ''} />
+              <span>{loading ? 'Refreshing...' : 'Refresh Data'}</span>
+            </button>
+          </div>
         </div>
 
         {/* TAB 1: OVERVIEW */}
@@ -1132,23 +1198,7 @@ export default function AdminCRMView({
                   </div>
                 </div>
 
-                {/* Card 4: Registered Users */}
-                <div className="shadcn-card" style={{ borderColor: 'rgba(16, 185, 129, 0.25)' }}>
-                  <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span className="shadcn-card-title">Registered Users</span>
-                    <UserCheck size={16} color="#10b981" />
-                  </div>
-                  <div className="shadcn-card-content">
-                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#34d399' }}>
-                      {metrics?.totalRegisteredUsers !== undefined ? metrics.totalRegisteredUsers : registeredCustomersCount}
-                    </div>
-                    <div style={{ fontSize: '11.5px', color: '#a1a1aa', marginTop: '4px' }}>
-                      Supabase customer accounts
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 5: Contact Inquiries */}
+                {/* Card 4: Contact Inquiries */}
                 <div className="shadcn-card" style={{ borderColor: unreadInquiriesCount > 0 ? 'rgba(245, 158, 11, 0.4)' : undefined }}>
                   <div className="shadcn-card-header" style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span className="shadcn-card-title">Contact Inquiries</span>
@@ -1257,10 +1307,11 @@ export default function AdminCRMView({
                               o.status === 'dispatched' ? 'shadcn-badge-info' :
                               o.status === 'confirmed' ? 'shadcn-badge-success' :
                               o.status === 'failed' ? 'shadcn-badge-destructive' :
+                              o.status === 'abandoned' ? 'shadcn-badge-warning' :
                               'shadcn-badge-warning'
                             }`}
                           >
-                            {o.status === 'pending' ? 'Payment Pending' : o.status === 'failed' ? 'Payment Failed' : o.status.replace('_', ' ')}
+                            {o.status === 'abandoned' ? 'Abandoned Checkout' : o.status === 'pending' ? 'Payment Pending' : o.status === 'failed' ? 'Payment Failed' : o.status.replace('_', ' ')}
                           </span>
                         </td>
                       </tr>
@@ -1299,11 +1350,12 @@ export default function AdminCRMView({
                 value={orderStatusFilter}
                 onChange={(e) => setOrderStatusFilter(e.target.value)}
                 className="shadcn-input"
-                style={{ width: 'auto', minWidth: '150px' }}
+                style={{ width: 'auto', minWidth: '180px' }}
               >
+                <option value="paid">Actionable Orders (Paid)</option>
                 <option value="all">All Statuses</option>
                 <option value="confirmed">Confirmed (Paid)</option>
-                <option value="pending">Payment Pending (Unpaid)</option>
+                <option value="abandoned">Abandoned Checkouts</option>
                 <option value="failed">Payment Failed</option>
                 <option value="dispatched">Dispatched</option>
                 <option value="in_transit">In Transit</option>
@@ -1337,9 +1389,10 @@ export default function AdminCRMView({
                       'delivered',
                       'pending',
                       'failed',
+                      'abandoned',
                     ].includes(o.status)
                       ? o.status
-                      : 'pending';
+                      : 'confirmed';
 
                     return (
                       <tr key={o.id}>
@@ -1359,10 +1412,17 @@ export default function AdminCRMView({
                               safeStatus === 'dispatched' ? 'shadcn-badge-info' :
                               safeStatus === 'confirmed' ? 'shadcn-badge-success' :
                               safeStatus === 'failed' ? 'shadcn-badge-destructive' :
+                              safeStatus === 'abandoned' ? 'shadcn-badge-warning' :
                               'shadcn-badge-warning'
                             }`}
                           >
-                            {safeStatus === 'pending' ? 'Payment Pending' : safeStatus === 'failed' ? 'Payment Failed' : safeStatus.replace('_', ' ')}
+                            {safeStatus === 'abandoned'
+                              ? 'Abandoned Checkout'
+                              : safeStatus === 'pending'
+                              ? 'Payment Pending'
+                              : safeStatus === 'failed'
+                              ? 'Payment Failed'
+                              : safeStatus.replace('_', ' ')}
                           </span>
                         </td>
                         <td>
@@ -1378,6 +1438,7 @@ export default function AdminCRMView({
                           >
                             <option value="confirmed">Confirmed</option>
                             <option value="pending">Pending</option>
+                            <option value="abandoned">Abandoned</option>
                             <option value="failed">Failed</option>
                             <option value="dispatched">Dispatched</option>
                             <option value="in_transit">In Transit</option>
@@ -2138,7 +2199,7 @@ export default function AdminCRMView({
               }}
             >
               {/* Caution Banner for Unpaid / Failed Orders */}
-              {(selectedOrder.status === 'pending' || selectedOrder.status === 'failed') && (
+              {(selectedOrder.status === 'pending' || selectedOrder.status === 'failed' || selectedOrder.status === 'abandoned') && (
                 <div
                   style={{
                     backgroundColor: selectedOrder.status === 'failed' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(245, 158, 11, 0.15)',
@@ -2156,6 +2217,8 @@ export default function AdminCRMView({
                     <span>
                       {selectedOrder.status === 'failed'
                         ? 'PAYMENT FAILED / DECLINED - DO NOT DISPATCH'
+                        : selectedOrder.status === 'abandoned'
+                        ? 'ABANDONED CHECKOUT (UNPAID) - DO NOT DISPATCH'
                         : 'PAYMENT NOT CONFIRMED - DO NOT DISPATCH'}
                     </span>
                   </div>
@@ -2188,6 +2251,7 @@ export default function AdminCRMView({
                   >
                     <option value="confirmed">Confirmed (Paid)</option>
                     <option value="pending">Pending (Unpaid)</option>
+                    <option value="abandoned">Abandoned (Unpaid)</option>
                     <option value="failed">Failed (Declined)</option>
                     <option value="dispatched">Dispatched</option>
                     <option value="in_transit">In Transit</option>

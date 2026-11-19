@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import MiniCart from '@/components/MiniCart';
 import Footer from '@/components/Footer';
 import AuthModal from '@/components/AuthModal';
+import VisitorTracker from '@/components/VisitorTracker';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -71,6 +72,7 @@ fbq('track', 'PageView');
       </head>
       <body suppressHydrationWarning>
         <AuthProvider>
+          <VisitorTracker />
           <CartProvider>
             <AnnouncementBar />
             <Header />

@@ -35,8 +35,8 @@ export async function GET(req: NextRequest) {
 
           let orderStatus = rawStatus;
           if (!paid) {
-            // If payment was never captured/paid in Razorpay, it is an unpaid/failed checkout
-            orderStatus = rawStatus === 'pending' ? 'pending' : 'failed';
+            // Distinguish actual bank/gateway failures from checkout drop-offs
+            orderStatus = rawStatus === 'failed' ? 'failed' : 'abandoned';
           } else {
             if (rawStatus === 'paid' || rawStatus === 'created' || rawStatus === 'pending') {
               orderStatus = 'confirmed';
@@ -68,7 +68,11 @@ export async function GET(req: NextRequest) {
         });
 
         if (status && status !== 'all') {
-          orders = orders.filter((o) => o.status === status);
+          if (status === 'paid') {
+            orders = orders.filter((o) => ['confirmed', 'dispatched', 'in_transit', 'out_for_delivery', 'delivered'].includes(o.status));
+          } else {
+            orders = orders.filter((o) => o.status === status);
+          }
         }
       }
     }
@@ -85,7 +89,7 @@ export async function GET(req: NextRequest) {
 
             let orderStatus = rawStatus;
             if (!paid) {
-              orderStatus = rawStatus === 'pending' ? 'pending' : 'failed';
+              orderStatus = rawStatus === 'failed' ? 'failed' : 'abandoned';
             } else {
               if (rawStatus === 'paid' || rawStatus === 'created' || rawStatus === 'pending') {
                 orderStatus = 'confirmed';
