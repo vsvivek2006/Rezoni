@@ -235,7 +235,7 @@ export default function AdminCRMView({
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
   const [returnStatusFilter, setReturnStatusFilter] = useState<string>('all');
   const [customerSearch, setCustomerSearch] = useState<string>('');
-  const [liveOnlineUsers, setLiveOnlineUsers] = useState<number>(1);
+  const [liveOnlineUsers, setLiveOnlineUsers] = useState<number>(0);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
 
 
@@ -292,7 +292,7 @@ export default function AdminCRMView({
     const updatePresenceCount = () => {
       const state = channel.presenceState();
       const count = Object.keys(state).length;
-      setLiveOnlineUsers(Math.max(count, 1));
+      setLiveOnlineUsers(count);
     };
 
     channel.on('presence', { event: 'sync' }, updatePresenceCount);
@@ -1139,13 +1139,14 @@ export default function AdminCRMView({
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
+                backgroundColor: liveOnlineUsers > 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(113, 113, 122, 0.1)',
+                border: `1px solid ${liveOnlineUsers > 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(113, 113, 122, 0.25)'}`,
                 borderRadius: '999px',
                 padding: '6px 14px',
                 fontSize: '12.5px',
                 fontWeight: 700,
-                color: '#34d399',
+                color: liveOnlineUsers > 0 ? '#34d399' : '#a1a1aa',
+                transition: 'all 0.3s ease',
               }}
             >
               <span
@@ -1153,11 +1154,11 @@ export default function AdminCRMView({
                   width: '8px',
                   height: '8px',
                   borderRadius: '50%',
-                  backgroundColor: '#10b981',
-                  boxShadow: '0 0 10px #10b981',
+                  backgroundColor: liveOnlineUsers > 0 ? '#10b981' : '#71717a',
+                  boxShadow: liveOnlineUsers > 0 ? '0 0 10px #10b981' : 'none',
                   display: 'inline-block',
                 }}
-                className="animate-pulse"
+                className={liveOnlineUsers > 0 ? 'animate-pulse' : ''}
               />
               <span>{liveOnlineUsers} Online Now</span>
             </div>
